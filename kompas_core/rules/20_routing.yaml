@@ -1,0 +1,122 @@
+# ЧЕРНОВИК маршрутизации. Пороги тяжести ≠ пороги направления: категории шкалы
+# описывают выраженность симптомов, решение о направлении утверждает клиническая команда.
+
+- id: SCOPE-001
+  version: "0.1"
+  status: draft
+  title: "Пациент вне заявленной области применения (младше 18 лет)"
+  when: {fact: patient.age, op: "<", value: 18}
+  output:
+    kind: scope
+    priority: urgent
+    routing: mandatory
+    message: >
+      Первая версия рассчитана на взрослых. Шкалы и правила для несовершеннолетних не утверждены.
+      Нужен маршрут детско-подросткового специалиста.
+    patient_message: null
+    auto_actions: [notify_doctor]
+  sources:
+    - "Проектный документ «Компас», раздел 3: границы первой версии"
+
+- id: ROUT-001
+  version: "0.1"
+  status: draft
+  title: "PHQ-9 в диапазоне тяжёлой выраженности (≥20)"
+  when: {fact: phq9.total, op: ">=", value: 20}
+  output:
+    kind: routing
+    priority: urgent
+    routing: mandatory
+    message: "PHQ-9 = {phq9.total} (тяжёлая выраженность симптомов). Консультация психиатра — обязательно (черновой порог)."
+    patient_message: null
+    auto_actions: [notify_doctor, create_review_task]
+  sources:
+    - "Kroenke K. et al. J Gen Intern Med. 2001;16:606–613 — категории тяжести"
+    - "Порог направления — решение клинического лида (не из источника)"
+
+- id: ROUT-002
+  version: "0.1"
+  status: draft
+  title: "PHQ-9 в диапазоне умеренно тяжёлой выраженности (15–19)"
+  when:
+    all:
+      - {fact: phq9.total, op: ">=", value: 15}
+      - {fact: phq9.total, op: "<=", value: 19}
+  output:
+    kind: routing
+    priority: planned
+    routing: desirable
+    message: "PHQ-9 = {phq9.total}. Консультация психиатра — желательно (черновой порог)."
+    patient_message: null
+    auto_actions: [create_review_task]
+  sources:
+    - "Kroenke K. et al. 2001 — категории тяжести"
+    - "Порог направления — решение клинического лида"
+
+- id: ROUT-003
+  version: "0.1"
+  status: draft
+  title: "GAD-7 в диапазоне тяжёлой выраженности (≥15)"
+  when: {fact: gad7.total, op: ">=", value: 15}
+  output:
+    kind: routing
+    priority: planned
+    routing: desirable
+    message: "GAD-7 = {gad7.total} (тяжёлая выраженность тревоги). Консультация психиатра — желательно (черновой порог)."
+    patient_message: null
+    auto_actions: [create_review_task]
+  sources:
+    - "Spitzer R.L. et al. Arch Intern Med. 2006;166:1092–1097 — категории тяжести"
+    - "Порог направления — решение клинического лида"
+
+- id: ROUT-004
+  version: "0.1"
+  status: draft
+  title: "Клинически значимое ухудшение по PHQ-9"
+  when: {fact: phq9.change.direction, op: "==", value: worsened}
+  output:
+    kind: review_task
+    priority: urgent
+    routing: desirable
+    message: >
+      PHQ-9 вырос на {phq9.change.delta} балла(ов) от исходного (MCID = 5).
+      Пересмотреть план; изменение терапии — только решением врача.
+    patient_message: null
+    auto_actions: [notify_doctor, create_review_task]
+  sources:
+    - "Löwe B. et al. Med Care. 2004;42(12):1194–1201 — MCID 5 баллов"
+
+- id: ROUT-005
+  version: "0.1"
+  status: draft
+  title: "Клинически значимое ухудшение по GAD-7"
+  when: {fact: gad7.change.direction, op: "==", value: worsened}
+  output:
+    kind: review_task
+    priority: urgent
+    routing: desirable
+    message: "GAD-7 вырос на {gad7.change.delta} балла(ов) от исходного (MCID ≈ 4). Пересмотреть план."
+    patient_message: null
+    auto_actions: [notify_doctor, create_review_task]
+  sources:
+    - "Toussaint A. et al. J Affect Disord. 2020;265:395–401 — MCID ≈ 4 балла"
+
+- id: ROUT-006
+  version: "0.1"
+  status: draft
+  title: "Нет ответа на текущую терапию к контрольному сроку"
+  when:
+    all:
+      - {fact: therapy.weeks_on_current, op: ">=", value: 6}
+      - {fact: primary.change.response, op: "==", value: false}
+  output:
+    kind: review_task
+    priority: planned
+    routing: desirable
+    message: >
+      {therapy.weeks_on_current} нед. текущей терапии без снижения основной шкалы на ≥50%.
+      Пересмотр плана; консультация психиатра — желательно.
+    patient_message: null
+    auto_actions: [create_review_task]
+  sources:
+    - "Срок оценки эффекта — ЗАПОЛНИТЬ по действующим КР Минздрава (черновое значение 6 нед.)"

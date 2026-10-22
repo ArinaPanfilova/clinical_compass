@@ -1,0 +1,48 @@
+# Паспорт шкалы GAD-7.
+id: gad7
+version: "1.0.0"
+title: "Generalized Anxiety Disorder-7 (GAD-7)"
+construct: "Выраженность тревожных симптомов за последние 2 недели"
+recall_period_days: 14
+items: 7
+item_range: [0, 3]
+total_range: [0, 21]
+safety_item: null
+
+scoring:
+  method: sum
+  missing:
+    # Официального правила пропусков для GAD-7 мы не нашли. Решение проекта по аналогии
+    # с распространённым правилом «<20% пропусков»: восстанавливаем при 1 пропуске.
+    # ТРЕБУЕТ утверждения клиническим лидом.
+    max_missing_for_proration: 1
+    rounding: half_up
+    never_impute_items: []
+    source: "Проектное решение (аналогия с правилом <20% пропусков); официального правила не найдено"
+
+# Spitzer R.L. et al. Arch Intern Med. 2006;166:1092–1097
+categories:
+  - {min: 0,  max: 4,  code: minimal,  label: "Минимальная"}
+  - {min: 5,  max: 9,  code: mild,     label: "Лёгкая"}
+  - {min: 10, max: 14, code: moderate, label: "Умеренная"}
+  - {min: 15, max: 21, code: severe,   label: "Тяжёлая"}
+categories_source: "Spitzer R.L. et al. Arch Intern Med. 2006;166:1092–1097. DOI 10.1001/archinte.166.10.1092"
+
+change:
+  # Toussaint A. et al. J Affect Disord. 2020;265:395–401: MCID ≈ 4 балла
+  # (выборка — хроническая депрессия; авторы просят подтверждения в тревожных выборках).
+  mcid_points: 4
+  mcid_source: "Toussaint A. et al. J Affect Disord. 2020;265:395–401"
+  mdc95_points: null          # оценим RCI по данным (SD и надёжность) — см. dynamics.py
+  response_reduction_fraction: 0.5
+  remission_below: 5
+  response_source: "Проектное решение по аналогии с PHQ-9; требует утверждения"
+  caveat: >
+    MCID 4 балла получен не в выборке ГТР. Средний MCID по Bauer-Staeb et al. 2021 — 3.3 балла,
+    сильно зависит от исходной тяжести.
+
+validation_ru:
+  - "Золотарева А.А. Консультативная психология и психотерапия. 2023;31(4):31–46. DOI 10.17759/cpp.2023310402 (n=1130, α=0.93; общая популяция, набор по доступности)"
+license: "Свободное воспроизведение. Проверить соответствие русского текста валидированной версии."
+not_for:
+  - "самостоятельной постановки диагноза ГТР"

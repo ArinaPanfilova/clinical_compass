@@ -1,0 +1,64 @@
+- id: MON-001
+  version: "0.1"
+  status: draft
+  title: "Пропущены самоотчёты"
+  when: {fact: selfreport.missed_consecutive, op: ">=", value: 2}
+  output:
+    kind: data_quality
+    priority: planned
+    routing: null
+    message: >
+      Пропущено самоотчётов подряд: {selfreport.missed_consecutive}. Полнота наблюдения снижена —
+      отсутствие данных не означает стабильность.
+    patient_message: "Напоминаем: врач ждёт вашу анкету — это займёт около 3 минут."
+    auto_actions: [request_repeat_questionnaire, create_review_task]
+  sources:
+    - "Проектный документ «Компас», раздел 9: «нет ответа пациента ≠ стабильно»"
+
+- id: MON-002
+  version: "0.1"
+  status: draft
+  title: "Сумма PHQ-9 не рассчитана: слишком много пропусков"
+  when: {fact: phq9.too_many_missing, op: "==", value: true}
+  output:
+    kind: data_quality
+    priority: planned
+    routing: null
+    message: "В PHQ-9 пропущено ≥3 пунктов — сумма не рассчитывается (правило APA). Запрошена повторная анкета."
+    patient_message: null
+    auto_actions: [request_repeat_questionnaire]
+  sources:
+    - "APA. DSM-5-TR Severity Measure for Depression—Adult (adapted from PHQ-9)"
+
+- id: MON-003
+  version: "0.1"
+  status: draft
+  title: "Сумма PHQ-9 восстановлена пропорционально"
+  when: {fact: phq9.prorated, op: "==", value: true}
+  output:
+    kind: data_quality
+    priority: info
+    routing: null
+    message: "Сумма PHQ-9 = {phq9.total} пересчитана пропорционально (пропущено 1–2 пункта). Интерпретировать с осторожностью."
+    patient_message: null
+    auto_actions: []
+  sources:
+    - "APA. DSM-5-TR Severity Measure for Depression—Adult (adapted from PHQ-9)"
+
+- id: MON-004
+  version: "0.1"
+  status: draft
+  title: "Достигнута ремиссия по шкале PHQ-9"
+  when:
+    all:
+      - {fact: phq9.change.remission, op: "==", value: true}
+      - {fact: phq9.change.baseline, op: ">=", value: 10}
+  output:
+    kind: review_task
+    priority: planned
+    routing: null
+    message: "PHQ-9 < 5 при исходном ≥10. Ремиссия по шкале ≠ клиническая ремиссия: требуется оценка врачом."
+    patient_message: null
+    auto_actions: [create_review_task]
+  sources:
+    - "Kroenke K. et al. 2001; определение ремиссии PHQ-9 < 5 (проверить первоисточник)"

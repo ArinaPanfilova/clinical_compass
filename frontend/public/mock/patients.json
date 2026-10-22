@@ -1,0 +1,3345 @@
+[
+ {
+  "record": {
+   "patient_id": "P-001",
+   "name": "Анна К. (синт.)",
+   "age": 34,
+   "sex": "Ж",
+   "primary_scale": "gad7",
+   "diagnoses": [
+    {
+     "code": "F41.1",
+     "status": "confirmed",
+     "label": "Генерализованное тревожное расстройство"
+    }
+   ],
+   "assessments": [
+    {
+     "date": "2026-09-11",
+     "scale": "phq9",
+     "answers": [
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0
+     ]
+    },
+    {
+     "date": "2026-09-11",
+     "scale": "gad7",
+     "answers": [
+      3,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "date": "2026-09-25",
+     "scale": "phq9",
+     "answers": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0
+     ]
+    },
+    {
+     "date": "2026-09-25",
+     "scale": "gad7",
+     "answers": [
+      3,
+      3,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "date": "2026-10-09",
+     "scale": "phq9",
+     "answers": [
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0
+     ]
+    },
+    {
+     "date": "2026-10-09",
+     "scale": "gad7",
+     "answers": [
+      3,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
+    }
+   ],
+   "expected_interval_days": 14,
+   "selfreports_missed_consecutive": 0,
+   "diary": [
+    {
+     "date": "2026-10-21",
+     "text": "Тревожно перед работой, плохо засыпаю"
+    }
+   ],
+   "adverse_events": [],
+   "emergency_button": false,
+   "symptom_checklist": {
+    "mania_or_psychosis": false
+   },
+   "therapy": {
+    "current": [],
+    "weeks_on_current": null
+   },
+   "safety_profile": {
+    "hypersensitivity_aviandr": false,
+    "epilepsy_or_organic_brain_lesion": false,
+    "maoi_within_2_weeks": false,
+    "renal_gfr_below_60": false,
+    "hepatic_insufficiency": false,
+    "pregnancy": false,
+    "breastfeeding": false,
+    "cardiovascular_disease": false,
+    "endocrine_disorder": false,
+    "substance_dependence": false,
+    "lactose_intolerance": false,
+    "drives_vehicles": false
+   },
+   "adherence": null,
+   "scenario": "1. ГТР подтверждён, данные собраны: Авиандр можно рассмотреть"
+  },
+  "evaluation": {
+   "patient_id": "P-001",
+   "engine_version": "0.1.0",
+   "triage_level": "planned",
+   "findings": [
+    {
+     "rule_id": "ROUT-003",
+     "rule_version": "0.1",
+     "rule_status": "draft",
+     "kind": "routing",
+     "priority": "planned",
+     "routing": "desirable",
+     "title": "GAD-7 в диапазоне тяжёлой выраженности (≥15)",
+     "message": "GAD-7 = 15 (тяжёлая выраженность тревоги). Консультация психиатра — желательно (черновой порог).",
+     "patient_message": null,
+     "auto_actions": [
+      "create_review_task"
+     ],
+     "requires_doctor_confirmation": true,
+     "sources": [
+      "Spitzer R.L. et al. Arch Intern Med. 2006;166:1092–1097 — категории тяжести",
+      "Порог направления — решение клинического лида"
+     ],
+     "evidence": {
+      "gad7.total": 15
+     },
+     "fired_on": "true"
+    }
+   ],
+   "drug_checks": [
+    {
+     "drug_id": "aviandr",
+     "trade_name": "Авиандр",
+     "status": "can_be_considered",
+     "reasons": [
+      "В пределах зарегистрированных показаний; противопоказаний в профиле не выявлено"
+     ],
+     "unknown_facts": [],
+     "cautions": [],
+     "interactions": [],
+     "source": "Инструкция, РУ ЛП-№(002445)-(РГ-RU), ред. 2023-07-21 (по вторичному источнику; сверить)",
+     "verification_level": "secondary",
+     "warnings": [
+      "Сведения о препарате из вторичного источника, не сверены с ГРЛС"
+     ],
+     "requires_doctor_confirmation": true
+    }
+   ],
+   "facts": {
+    "patient.age": 34,
+    "patient.emergency_button": false,
+    "selfreport.missed_consecutive": 0,
+    "symptoms.mania_or_psychosis": false,
+    "therapy.weeks_on_current": null,
+    "phq9.total": 9,
+    "phq9.category": "mild",
+    "phq9.prorated": false,
+    "phq9.too_many_missing": false,
+    "phq9.item9": 0,
+    "phq9.safety_item_missing": false,
+    "phq9.change.direction": "no_meaningful_change",
+    "phq9.change.delta": 0,
+    "phq9.change.response": false,
+    "phq9.change.remission": false,
+    "phq9.change.baseline": 9,
+    "gad7.total": 15,
+    "gad7.category": "severe",
+    "gad7.prorated": false,
+    "gad7.too_many_missing": false,
+    "gad7.change.direction": "no_meaningful_change",
+    "gad7.change.delta": 0,
+    "gad7.change.response": false,
+    "gad7.change.remission": false,
+    "gad7.change.baseline": 15,
+    "primary.change.response": false,
+    "text.concern_flag": false,
+    "text.matched": null,
+    "ae.any_new": false,
+    "ae.serious_reported": false,
+    "ae.description": null
+   },
+   "details": {
+    "scales": {
+     "phq9": [
+      {
+       "date": "2026-09-11",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+       ],
+       "total": 9,
+       "raw_sum": 9,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-09-25",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+       ],
+       "total": 8,
+       "raw_sum": 8,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-10-09",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+       ],
+       "total": 9,
+       "raw_sum": 9,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      }
+     ],
+     "gad7": [
+      {
+       "date": "2026-09-11",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        3,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+       ],
+       "total": 15,
+       "raw_sum": 15,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "severe",
+       "category_label": "Тяжёлая",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-09-25",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        3,
+        3,
+        2,
+        2,
+        2,
+        2,
+        2
+       ],
+       "total": 16,
+       "raw_sum": 16,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "severe",
+       "category_label": "Тяжёлая",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-10-09",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        3,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+       ],
+       "total": 15,
+       "raw_sum": 15,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "severe",
+       "category_label": "Тяжёлая",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      }
+     ]
+    },
+    "changes": {
+     "phq9": {
+      "scale_id": "phq9",
+      "baseline": 9,
+      "current": 9,
+      "delta": 0,
+      "meaningful": false,
+      "reliable": false,
+      "direction": "no_meaningful_change",
+      "response": false,
+      "remission": false,
+      "thresholds": {
+       "mcid": 5,
+       "reliable_change": 5.72,
+       "mcid_source": "Löwe B. et al. Med Care. 2004;42(12):1194–1201. DOI 10.1097/00005650-200412000-00006"
+      },
+      "caveat": "MCID зависит от исходной тяжести (Bauer-Staeb C. et al. J Clin Epidemiol. 2021;137:200–208): в среднем 3.7 балла, от ~0 при очень лёгкой до 14 баллов при очень высокой тяжести. Порог 5 баллов — популяционный ориентир, а не индивидуальный критерий."
+     },
+     "gad7": {
+      "scale_id": "gad7",
+      "baseline": 15,
+      "current": 15,
+      "delta": 0,
+      "meaningful": false,
+      "reliable": null,
+      "direction": "no_meaningful_change",
+      "response": false,
+      "remission": false,
+      "thresholds": {
+       "mcid": 4,
+       "reliable_change": null,
+       "mcid_source": "Toussaint A. et al. J Affect Disord. 2020;265:395–401"
+      },
+      "caveat": "MCID 4 балла получен не в выборке ГТР. Средний MCID по Bauer-Staeb et al. 2021 — 3.3 балла, сильно зависит от исходной тяжести."
+     }
+    },
+    "trends": {
+     "phq9": {
+      "n_points": 3,
+      "slope_per_week": 0.0,
+      "coverage": 1.0,
+      "max_gap_days": 14,
+      "note": "Описательный тренд; не является оценкой эффекта лечения"
+     },
+     "gad7": {
+      "n_points": 3,
+      "slope_per_week": 0.0,
+      "coverage": 1.0,
+      "max_gap_days": 14,
+      "note": "Описательный тренд; не является оценкой эффекта лечения"
+     }
+    },
+    "text": [
+     {
+      "date": "2026-10-21",
+      "flagged": false,
+      "matched": [],
+      "negated": []
+     }
+    ]
+   },
+   "disclaimer": "Система поддержки решений. Клинические действия выполняет только врач. Отсутствие алерта не означает отсутствие опасности.",
+   "elapsed_ms": 39.177
+  }
+ },
+ {
+  "record": {
+   "patient_id": "P-002",
+   "name": "Сергей М. (синт.)",
+   "age": 47,
+   "sex": "М",
+   "primary_scale": "gad7",
+   "diagnoses": [
+    {
+     "code": "F41.1",
+     "status": "confirmed",
+     "label": "Генерализованное тревожное расстройство"
+    },
+    {
+     "code": "G40.9",
+     "status": "confirmed",
+     "label": "Эпилепсия"
+    }
+   ],
+   "assessments": [
+    {
+     "date": "2026-09-25",
+     "scale": "phq9",
+     "answers": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ]
+    },
+    {
+     "date": "2026-09-25",
+     "scale": "gad7",
+     "answers": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "date": "2026-10-09",
+     "scale": "phq9",
+     "answers": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0
+     ]
+    },
+    {
+     "date": "2026-10-09",
+     "scale": "gad7",
+     "answers": [
+      3,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
+    }
+   ],
+   "expected_interval_days": 14,
+   "selfreports_missed_consecutive": 0,
+   "diary": [],
+   "adverse_events": [],
+   "emergency_button": false,
+   "symptom_checklist": {
+    "mania_or_psychosis": false
+   },
+   "therapy": {
+    "current": [],
+    "weeks_on_current": null
+   },
+   "safety_profile": {
+    "hypersensitivity_aviandr": false,
+    "epilepsy_or_organic_brain_lesion": true,
+    "maoi_within_2_weeks": false,
+    "renal_gfr_below_60": false,
+    "hepatic_insufficiency": false,
+    "pregnancy": false,
+    "breastfeeding": false,
+    "cardiovascular_disease": false,
+    "endocrine_disorder": false,
+    "substance_dependence": false,
+    "lactose_intolerance": false,
+    "drives_vehicles": false
+   },
+   "adherence": null,
+   "scenario": "2. ГТР + противопоказание по инструкции: предложение заблокировано"
+  },
+  "evaluation": {
+   "patient_id": "P-002",
+   "engine_version": "0.1.0",
+   "triage_level": "planned",
+   "findings": [
+    {
+     "rule_id": "ROUT-003",
+     "rule_version": "0.1",
+     "rule_status": "draft",
+     "kind": "routing",
+     "priority": "planned",
+     "routing": "desirable",
+     "title": "GAD-7 в диапазоне тяжёлой выраженности (≥15)",
+     "message": "GAD-7 = 15 (тяжёлая выраженность тревоги). Консультация психиатра — желательно (черновой порог).",
+     "patient_message": null,
+     "auto_actions": [
+      "create_review_task"
+     ],
+     "requires_doctor_confirmation": true,
+     "sources": [
+      "Spitzer R.L. et al. Arch Intern Med. 2006;166:1092–1097 — категории тяжести",
+      "Порог направления — решение клинического лида"
+     ],
+     "evidence": {
+      "gad7.total": 15
+     },
+     "fired_on": "true"
+    }
+   ],
+   "drug_checks": [
+    {
+     "drug_id": "aviandr",
+     "trade_name": "Авиандр",
+     "status": "not_applicable",
+     "reasons": [
+      "Противопоказание: Эпилепсия или органическое поражение головного мозга"
+     ],
+     "unknown_facts": [],
+     "cautions": [],
+     "interactions": [],
+     "source": "Инструкция, РУ ЛП-№(002445)-(РГ-RU), ред. 2023-07-21 (по вторичному источнику; сверить)",
+     "verification_level": "secondary",
+     "warnings": [
+      "Сведения о препарате из вторичного источника, не сверены с ГРЛС"
+     ],
+     "requires_doctor_confirmation": true
+    }
+   ],
+   "facts": {
+    "patient.age": 47,
+    "patient.emergency_button": false,
+    "selfreport.missed_consecutive": 0,
+    "symptoms.mania_or_psychosis": false,
+    "therapy.weeks_on_current": null,
+    "phq9.total": 8,
+    "phq9.category": "mild",
+    "phq9.prorated": false,
+    "phq9.too_many_missing": false,
+    "phq9.item9": 0,
+    "phq9.safety_item_missing": false,
+    "phq9.change.direction": "no_meaningful_change",
+    "phq9.change.delta": 1,
+    "phq9.change.response": false,
+    "phq9.change.remission": false,
+    "phq9.change.baseline": 7,
+    "gad7.total": 15,
+    "gad7.category": "severe",
+    "gad7.prorated": false,
+    "gad7.too_many_missing": false,
+    "gad7.change.direction": "no_meaningful_change",
+    "gad7.change.delta": 1,
+    "gad7.change.response": false,
+    "gad7.change.remission": false,
+    "gad7.change.baseline": 14,
+    "primary.change.response": false,
+    "text.concern_flag": false,
+    "text.matched": null,
+    "ae.any_new": false,
+    "ae.serious_reported": false,
+    "ae.description": null
+   },
+   "details": {
+    "scales": {
+     "phq9": [
+      {
+       "date": "2026-09-25",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0
+       ],
+       "total": 7,
+       "raw_sum": 7,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-10-09",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+       ],
+       "total": 8,
+       "raw_sum": 8,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      }
+     ],
+     "gad7": [
+      {
+       "date": "2026-09-25",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+       ],
+       "total": 14,
+       "raw_sum": 14,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "moderate",
+       "category_label": "Умеренная",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-10-09",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        3,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+       ],
+       "total": 15,
+       "raw_sum": 15,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "severe",
+       "category_label": "Тяжёлая",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      }
+     ]
+    },
+    "changes": {
+     "phq9": {
+      "scale_id": "phq9",
+      "baseline": 7,
+      "current": 8,
+      "delta": 1,
+      "meaningful": false,
+      "reliable": false,
+      "direction": "no_meaningful_change",
+      "response": false,
+      "remission": false,
+      "thresholds": {
+       "mcid": 5,
+       "reliable_change": 5.72,
+       "mcid_source": "Löwe B. et al. Med Care. 2004;42(12):1194–1201. DOI 10.1097/00005650-200412000-00006"
+      },
+      "caveat": "MCID зависит от исходной тяжести (Bauer-Staeb C. et al. J Clin Epidemiol. 2021;137:200–208): в среднем 3.7 балла, от ~0 при очень лёгкой до 14 баллов при очень высокой тяжести. Порог 5 баллов — популяционный ориентир, а не индивидуальный критерий."
+     },
+     "gad7": {
+      "scale_id": "gad7",
+      "baseline": 14,
+      "current": 15,
+      "delta": 1,
+      "meaningful": false,
+      "reliable": null,
+      "direction": "no_meaningful_change",
+      "response": false,
+      "remission": false,
+      "thresholds": {
+       "mcid": 4,
+       "reliable_change": null,
+       "mcid_source": "Toussaint A. et al. J Affect Disord. 2020;265:395–401"
+      },
+      "caveat": "MCID 4 балла получен не в выборке ГТР. Средний MCID по Bauer-Staeb et al. 2021 — 3.3 балла, сильно зависит от исходной тяжести."
+     }
+    },
+    "trends": {
+     "phq9": {
+      "n_points": 2,
+      "slope_per_week": null,
+      "coverage": 1.0,
+      "max_gap_days": 14,
+      "note": "Менее 3 наблюдений: тренд не оценивается"
+     },
+     "gad7": {
+      "n_points": 2,
+      "slope_per_week": null,
+      "coverage": 1.0,
+      "max_gap_days": 14,
+      "note": "Менее 3 наблюдений: тренд не оценивается"
+     }
+    },
+    "text": []
+   },
+   "disclaimer": "Система поддержки решений. Клинические действия выполняет только врач. Отсутствие алерта не означает отсутствие опасности.",
+   "elapsed_ms": 7.977
+  }
+ },
+ {
+  "record": {
+   "patient_id": "P-003",
+   "name": "Ольга Д. (синт.)",
+   "age": 29,
+   "sex": "Ж",
+   "primary_scale": "phq9",
+   "diagnoses": [
+    {
+     "code": "F32.1",
+     "status": "suspected",
+     "label": "Депрессивный эпизод средней степени (предв.)"
+    }
+   ],
+   "assessments": [
+    {
+     "date": "2026-09-11",
+     "scale": "phq9",
+     "answers": [
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      0
+     ]
+    },
+    {
+     "date": "2026-09-11",
+     "scale": "gad7",
+     "answers": [
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "date": "2026-09-25",
+     "scale": "phq9",
+     "answers": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      1,
+      0
+     ]
+    },
+    {
+     "date": "2026-09-25",
+     "scale": "gad7",
+     "answers": [
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "date": "2026-10-09",
+     "scale": "phq9",
+     "answers": [
+      3,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      0
+     ]
+    },
+    {
+     "date": "2026-10-09",
+     "scale": "gad7",
+     "answers": [
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "expected_interval_days": 14,
+   "selfreports_missed_consecutive": 0,
+   "diary": [],
+   "adverse_events": [],
+   "emergency_button": false,
+   "symptom_checklist": {
+    "mania_or_psychosis": false
+   },
+   "therapy": {
+    "current": [],
+    "weeks_on_current": null
+   },
+   "safety_profile": {
+    "hypersensitivity_aviandr": false,
+    "epilepsy_or_organic_brain_lesion": false,
+    "maoi_within_2_weeks": false,
+    "renal_gfr_below_60": false,
+    "hepatic_insufficiency": false,
+    "pregnancy": false,
+    "breastfeeding": false,
+    "cardiovascular_disease": false,
+    "endocrine_disorder": false,
+    "substance_dependence": false,
+    "lactose_intolerance": false,
+    "drives_vehicles": false
+   },
+   "adherence": null,
+   "scenario": "3. Депрессивная симптоматика без подтверждённого показания: Авиандр не предлагается"
+  },
+  "evaluation": {
+   "patient_id": "P-003",
+   "engine_version": "0.1.0",
+   "triage_level": "urgent",
+   "findings": [
+    {
+     "rule_id": "ROUT-004",
+     "rule_version": "0.1",
+     "rule_status": "draft",
+     "kind": "review_task",
+     "priority": "urgent",
+     "routing": "desirable",
+     "title": "Клинически значимое ухудшение по PHQ-9",
+     "message": "PHQ-9 вырос на 5 балла(ов) от исходного (MCID = 5). Пересмотреть план; изменение терапии — только решением врача.",
+     "patient_message": null,
+     "auto_actions": [
+      "notify_doctor",
+      "create_review_task"
+     ],
+     "requires_doctor_confirmation": true,
+     "sources": [
+      "Löwe B. et al. Med Care. 2004;42(12):1194–1201 — MCID 5 баллов"
+     ],
+     "evidence": {
+      "phq9.change.direction": "worsened"
+     },
+     "fired_on": "true"
+    },
+    {
+     "rule_id": "ROUT-002",
+     "rule_version": "0.1",
+     "rule_status": "draft",
+     "kind": "routing",
+     "priority": "planned",
+     "routing": "desirable",
+     "title": "PHQ-9 в диапазоне умеренно тяжёлой выраженности (15–19)",
+     "message": "PHQ-9 = 17. Консультация психиатра — желательно (черновой порог).",
+     "patient_message": null,
+     "auto_actions": [
+      "create_review_task"
+     ],
+     "requires_doctor_confirmation": true,
+     "sources": [
+      "Kroenke K. et al. 2001 — категории тяжести",
+      "Порог направления — решение клинического лида"
+     ],
+     "evidence": {
+      "phq9.total": 17
+     },
+     "fired_on": "true"
+    }
+   ],
+   "drug_checks": [
+    {
+     "drug_id": "aviandr",
+     "trade_name": "Авиандр",
+     "status": "not_applicable",
+     "reasons": [
+      "Нет подтверждённого диагноза в пределах зарегистрированных показаний"
+     ],
+     "unknown_facts": [],
+     "cautions": [],
+     "interactions": [],
+     "source": "Инструкция, РУ ЛП-№(002445)-(РГ-RU), ред. 2023-07-21 (по вторичному источнику; сверить)",
+     "verification_level": "secondary",
+     "warnings": [
+      "Сведения о препарате из вторичного источника, не сверены с ГРЛС"
+     ],
+     "requires_doctor_confirmation": true
+    }
+   ],
+   "facts": {
+    "patient.age": 29,
+    "patient.emergency_button": false,
+    "selfreport.missed_consecutive": 0,
+    "symptoms.mania_or_psychosis": false,
+    "therapy.weeks_on_current": null,
+    "phq9.total": 17,
+    "phq9.category": "moderately_severe",
+    "phq9.prorated": false,
+    "phq9.too_many_missing": false,
+    "phq9.item9": 0,
+    "phq9.safety_item_missing": false,
+    "phq9.change.direction": "worsened",
+    "phq9.change.delta": 5,
+    "phq9.change.response": false,
+    "phq9.change.remission": false,
+    "phq9.change.baseline": 12,
+    "gad7.total": 9,
+    "gad7.category": "mild",
+    "gad7.prorated": false,
+    "gad7.too_many_missing": false,
+    "gad7.change.direction": "no_meaningful_change",
+    "gad7.change.delta": 1,
+    "gad7.change.response": false,
+    "gad7.change.remission": false,
+    "gad7.change.baseline": 8,
+    "primary.change.response": false,
+    "text.concern_flag": false,
+    "text.matched": null,
+    "ae.any_new": false,
+    "ae.serious_reported": false,
+    "ae.description": null
+   },
+   "details": {
+    "scales": {
+     "phq9": [
+      {
+       "date": "2026-09-11",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        0
+       ],
+       "total": 12,
+       "raw_sum": 12,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "moderate",
+       "category_label": "Умеренная",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-09-25",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        0
+       ],
+       "total": 15,
+       "raw_sum": 15,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "moderately_severe",
+       "category_label": "Умеренно тяжёлая",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-10-09",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        3,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        0
+       ],
+       "total": 17,
+       "raw_sum": 17,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "moderately_severe",
+       "category_label": "Умеренно тяжёлая",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      }
+     ],
+     "gad7": [
+      {
+       "date": "2026-09-11",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+       ],
+       "total": 8,
+       "raw_sum": 8,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-09-25",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+       ],
+       "total": 9,
+       "raw_sum": 9,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-10-09",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+       ],
+       "total": 9,
+       "raw_sum": 9,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      }
+     ]
+    },
+    "changes": {
+     "phq9": {
+      "scale_id": "phq9",
+      "baseline": 12,
+      "current": 17,
+      "delta": 5,
+      "meaningful": true,
+      "reliable": false,
+      "direction": "worsened",
+      "response": false,
+      "remission": false,
+      "thresholds": {
+       "mcid": 5,
+       "reliable_change": 5.72,
+       "mcid_source": "Löwe B. et al. Med Care. 2004;42(12):1194–1201. DOI 10.1097/00005650-200412000-00006"
+      },
+      "caveat": "MCID зависит от исходной тяжести (Bauer-Staeb C. et al. J Clin Epidemiol. 2021;137:200–208): в среднем 3.7 балла, от ~0 при очень лёгкой до 14 баллов при очень высокой тяжести. Порог 5 баллов — популяционный ориентир, а не индивидуальный критерий."
+     },
+     "gad7": {
+      "scale_id": "gad7",
+      "baseline": 8,
+      "current": 9,
+      "delta": 1,
+      "meaningful": false,
+      "reliable": null,
+      "direction": "no_meaningful_change",
+      "response": false,
+      "remission": false,
+      "thresholds": {
+       "mcid": 4,
+       "reliable_change": null,
+       "mcid_source": "Toussaint A. et al. J Affect Disord. 2020;265:395–401"
+      },
+      "caveat": "MCID 4 балла получен не в выборке ГТР. Средний MCID по Bauer-Staeb et al. 2021 — 3.3 балла, сильно зависит от исходной тяжести."
+     }
+    },
+    "trends": {
+     "phq9": {
+      "n_points": 3,
+      "slope_per_week": 1.25,
+      "coverage": 1.0,
+      "max_gap_days": 14,
+      "note": "Описательный тренд; не является оценкой эффекта лечения"
+     },
+     "gad7": {
+      "n_points": 3,
+      "slope_per_week": 0.25,
+      "coverage": 1.0,
+      "max_gap_days": 14,
+      "note": "Описательный тренд; не является оценкой эффекта лечения"
+     }
+    },
+    "text": []
+   },
+   "disclaimer": "Система поддержки решений. Клинические действия выполняет только врач. Отсутствие алерта не означает отсутствие опасности.",
+   "elapsed_ms": 8.472
+  }
+ },
+ {
+  "record": {
+   "patient_id": "P-004",
+   "name": "Игорь В. (синт.)",
+   "age": 52,
+   "sex": "М",
+   "primary_scale": "gad7",
+   "diagnoses": [
+    {
+     "code": "F41.1",
+     "status": "confirmed",
+     "label": "Генерализованное тревожное расстройство"
+    }
+   ],
+   "assessments": [
+    {
+     "date": "2026-10-09",
+     "scale": "phq9",
+     "answers": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "date": "2026-10-09",
+     "scale": "gad7",
+     "answers": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      1
+     ]
+    }
+   ],
+   "expected_interval_days": 14,
+   "selfreports_missed_consecutive": 0,
+   "diary": [],
+   "adverse_events": [],
+   "emergency_button": false,
+   "symptom_checklist": {
+    "mania_or_psychosis": false
+   },
+   "therapy": {
+    "current": [],
+    "weeks_on_current": null
+   },
+   "safety_profile": {
+    "hypersensitivity_aviandr": false,
+    "pregnancy": false,
+    "breastfeeding": false
+   },
+   "adherence": null,
+   "scenario": "4. Противопоказания неизвестны: «недостаточно данных», а не «разрешено»"
+  },
+  "evaluation": {
+   "patient_id": "P-004",
+   "engine_version": "0.1.0",
+   "triage_level": "none",
+   "findings": [],
+   "drug_checks": [
+    {
+     "drug_id": "aviandr",
+     "trade_name": "Авиандр",
+     "status": "insufficient_data",
+     "reasons": [
+      "Не хватает данных для проверки: safety.cardiovascular_disease, safety.drives_vehicles, safety.endocrine_disorder, safety.epilepsy_or_organic_brain_lesion, safety.hepatic_insufficiency, safety.lactose_intolerance, safety.maoi_within_2_weeks, safety.renal_gfr_below_60, safety.substance_dependence"
+     ],
+     "unknown_facts": [
+      "safety.cardiovascular_disease",
+      "safety.drives_vehicles",
+      "safety.endocrine_disorder",
+      "safety.epilepsy_or_organic_brain_lesion",
+      "safety.hepatic_insufficiency",
+      "safety.lactose_intolerance",
+      "safety.maoi_within_2_weeks",
+      "safety.renal_gfr_below_60",
+      "safety.substance_dependence"
+     ],
+     "cautions": [],
+     "interactions": [],
+     "source": "Инструкция, РУ ЛП-№(002445)-(РГ-RU), ред. 2023-07-21 (по вторичному источнику; сверить)",
+     "verification_level": "secondary",
+     "warnings": [
+      "Сведения о препарате из вторичного источника, не сверены с ГРЛС"
+     ],
+     "requires_doctor_confirmation": true
+    }
+   ],
+   "facts": {
+    "patient.age": 52,
+    "patient.emergency_button": false,
+    "selfreport.missed_consecutive": 0,
+    "symptoms.mania_or_psychosis": false,
+    "therapy.weeks_on_current": null,
+    "phq9.total": 6,
+    "phq9.category": "mild",
+    "phq9.prorated": false,
+    "phq9.too_many_missing": false,
+    "phq9.item9": 0,
+    "phq9.safety_item_missing": false,
+    "gad7.total": 13,
+    "gad7.category": "moderate",
+    "gad7.prorated": false,
+    "gad7.too_many_missing": false,
+    "primary.change.response": null,
+    "text.concern_flag": false,
+    "text.matched": null,
+    "ae.any_new": false,
+    "ae.serious_reported": false,
+    "ae.description": null
+   },
+   "details": {
+    "scales": {
+     "phq9": [
+      {
+       "date": "2026-10-09",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0
+       ],
+       "total": 6,
+       "raw_sum": 6,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      }
+     ],
+     "gad7": [
+      {
+       "date": "2026-10-09",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1
+       ],
+       "total": 13,
+       "raw_sum": 13,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "moderate",
+       "category_label": "Умеренная",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      }
+     ]
+    },
+    "changes": {},
+    "trends": {
+     "phq9": {
+      "n_points": 1,
+      "slope_per_week": null,
+      "coverage": 1.0,
+      "max_gap_days": null,
+      "note": "Менее 3 наблюдений: тренд не оценивается"
+     },
+     "gad7": {
+      "n_points": 1,
+      "slope_per_week": null,
+      "coverage": 1.0,
+      "max_gap_days": null,
+      "note": "Менее 3 наблюдений: тренд не оценивается"
+     }
+    },
+    "text": []
+   },
+   "disclaimer": "Система поддержки решений. Клинические действия выполняет только врач. Отсутствие алерта не означает отсутствие опасности.",
+   "elapsed_ms": 7.796
+  }
+ },
+ {
+  "record": {
+   "patient_id": "P-005",
+   "name": "Мария С. (синт.)",
+   "age": 23,
+   "sex": "Ж",
+   "primary_scale": "phq9",
+   "diagnoses": [
+    {
+     "code": "F32.1",
+     "status": "confirmed",
+     "label": "Депрессивный эпизод средней степени"
+    }
+   ],
+   "assessments": [
+    {
+     "date": "2026-09-11",
+     "scale": "phq9",
+     "answers": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      0
+     ]
+    },
+    {
+     "date": "2026-09-11",
+     "scale": "gad7",
+     "answers": [
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "date": "2026-09-25",
+     "scale": "phq9",
+     "answers": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      0
+     ]
+    },
+    {
+     "date": "2026-09-25",
+     "scale": "gad7",
+     "answers": [
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "date": "2026-10-09",
+     "scale": "phq9",
+     "answers": [
+      3,
+      3,
+      3,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3
+     ]
+    },
+    {
+     "date": "2026-10-09",
+     "scale": "gad7",
+     "answers": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
+    }
+   ],
+   "expected_interval_days": 14,
+   "selfreports_missed_consecutive": 0,
+   "diary": [
+    {
+     "date": "2026-10-23",
+     "text": "Не вижу выхода, всем было бы легче без меня"
+    }
+   ],
+   "adverse_events": [],
+   "emergency_button": true,
+   "symptom_checklist": {
+    "mania_or_psychosis": false
+   },
+   "therapy": {
+    "current": [
+     {
+      "mnn": "сертралин",
+      "start_date": "2026-09-11"
+     }
+    ],
+    "weeks_on_current": 6
+   },
+   "safety_profile": {
+    "hypersensitivity_aviandr": false,
+    "epilepsy_or_organic_brain_lesion": false,
+    "maoi_within_2_weeks": false,
+    "renal_gfr_below_60": false,
+    "hepatic_insufficiency": false,
+    "pregnancy": false,
+    "breastfeeding": false,
+    "cardiovascular_disease": false,
+    "endocrine_disorder": false,
+    "substance_dependence": false,
+    "lactose_intolerance": false,
+    "drives_vehicles": false
+   },
+   "adherence": null,
+   "scenario": "5. Сообщение о непосредственной опасности: экстренный алерт и эскалация"
+  },
+  "evaluation": {
+   "patient_id": "P-005",
+   "engine_version": "0.1.0",
+   "triage_level": "emergency",
+   "findings": [
+    {
+     "rule_id": "SAFE-001",
+     "rule_version": "0.1",
+     "rule_status": "draft",
+     "kind": "alert",
+     "priority": "emergency",
+     "routing": "mandatory",
+     "title": "Пациент сообщил о непосредственной опасности",
+     "message": "Пациент нажал «Мне сейчас очень плохо». Требуется немедленный контакт по утверждённому регламенту. Пациенту автоматически показана экстренная инструкция.",
+     "patient_message": "Если вы в опасности прямо сейчас — звоните 112. Ваш врач получил уведомление, но приложение не ведёт круглосуточное наблюдение.",
+     "auto_actions": [
+      "show_patient_emergency_instructions",
+      "notify_doctor",
+      "start_escalation_timer",
+      "notify_deputy_on_timeout"
+     ],
+     "requires_doctor_confirmation": true,
+     "sources": [
+      "ТЗ кейса: механизм алертинга, экстренное оповещение врача",
+      "NICE NG225 (2022) Self-harm: assessment, management and preventing recurrence"
+     ],
+     "evidence": {
+      "patient.emergency_button": true
+     },
+     "fired_on": "true"
+    },
+    {
+     "rule_id": "ROUT-001",
+     "rule_version": "0.1",
+     "rule_status": "draft",
+     "kind": "routing",
+     "priority": "urgent",
+     "routing": "mandatory",
+     "title": "PHQ-9 в диапазоне тяжёлой выраженности (≥20)",
+     "message": "PHQ-9 = 22 (тяжёлая выраженность симптомов). Консультация психиатра — обязательно (черновой порог).",
+     "patient_message": null,
+     "auto_actions": [
+      "notify_doctor",
+      "create_review_task"
+     ],
+     "requires_doctor_confirmation": true,
+     "sources": [
+      "Kroenke K. et al. J Gen Intern Med. 2001;16:606–613 — категории тяжести",
+      "Порог направления — решение клинического лида (не из источника)"
+     ],
+     "evidence": {
+      "phq9.total": 22
+     },
+     "fired_on": "true"
+    },
+    {
+     "rule_id": "SAFE-002",
+     "rule_version": "0.1",
+     "rule_status": "draft",
+     "kind": "alert",
+     "priority": "urgent",
+     "routing": "mandatory",
+     "title": "PHQ-9, п.9: мысли о смерти/самоповреждении больше половины дней или почти каждый день",
+     "message": "Пункт 9 PHQ-9 = 3. Требуется оценка безопасности врачом и консультация психиатра. Ответ на п.9 — повод для оценки, а не прогноз; сумма PHQ-9 не учитывается.",
+     "patient_message": "Спасибо, что ответили честно. Врач свяжется с вами. Если станет хуже — звоните 112.",
+     "auto_actions": [
+      "notify_doctor",
+      "start_escalation_timer",
+      "notify_deputy_on_timeout",
+      "show_patient_emergency_instructions"
+     ],
+     "requires_doctor_confirmation": true,
+     "sources": [
+      "Simon G.E. et al. Psychiatr Serv. 2013;64(12):1195–1202 — градиент риска по ответу на п.9",
+      "NICE NG225 (2022): не использовать шкалы для прогнозирования, проводить оценку"
+     ],
+     "evidence": {
+      "phq9.item9": 3
+     },
+     "fired_on": "true"
+    },
+    {
+     "rule_id": "ROUT-004",
+     "rule_version": "0.1",
+     "rule_status": "draft",
+     "kind": "review_task",
+     "priority": "urgent",
+     "routing": "desirable",
+     "title": "Клинически значимое ухудшение по PHQ-9",
+     "message": "PHQ-9 вырос на 8 балла(ов) от исходного (MCID = 5). Пересмотреть план; изменение терапии — только решением врача.",
+     "patient_message": null,
+     "auto_actions": [
+      "notify_doctor",
+      "create_review_task"
+     ],
+     "requires_doctor_confirmation": true,
+     "sources": [
+      "Löwe B. et al. Med Care. 2004;42(12):1194–1201 — MCID 5 баллов"
+     ],
+     "evidence": {
+      "phq9.change.direction": "worsened"
+     },
+     "fired_on": "true"
+    },
+    {
+     "rule_id": "ROUT-005",
+     "rule_version": "0.1",
+     "rule_status": "draft",
+     "kind": "review_task",
+     "priority": "urgent",
+     "routing": "desirable",
+     "title": "Клинически значимое ухудшение по GAD-7",
+     "message": "GAD-7 вырос на 4 балла(ов) от исходного (MCID ≈ 4). Пересмотреть план.",
+     "patient_message": null,
+     "auto_actions": [
+      "notify_doctor",
+      "create_review_task"
+     ],
+     "requires_doctor_confirmation": true,
+     "sources": [
+      "Toussaint A. et al. J Affect Disord. 2020;265:395–401 — MCID ≈ 4 балла"
+     ],
+     "evidence": {
+      "gad7.change.direction": "worsened"
+     },
+     "fired_on": "true"
+    },
+    {
+     "rule_id": "SAFE-005",
+     "rule_version": "0.1",
+     "rule_status": "draft",
+     "kind": "alert",
+     "priority": "urgent",
+     "routing": null,
+     "title": "Тревожные формулировки в свободном тексте дневника",
+     "message": "В записи дневника найдены формулировки, требующие прочтения врачом: «не вижу выхода». Это вспомогательный поиск по словарю, а не классификатор: пропуски возможны, поэтому все записи доступны врачу целиком.",
+     "patient_message": null,
+     "auto_actions": [
+      "notify_doctor",
+      "create_review_task"
+     ],
+     "requires_doctor_confirmation": true,
+     "sources": [
+      "Проектное правило; NICE NG225 (2022) — оценка, а не прогноз"
+     ],
+     "evidence": {
+      "text.concern_flag": true
+     },
+     "fired_on": "true"
+    },
+    {
+     "rule_id": "ROUT-006",
+     "rule_version": "0.1",
+     "rule_status": "draft",
+     "kind": "review_task",
+     "priority": "planned",
+     "routing": "desirable",
+     "title": "Нет ответа на текущую терапию к контрольному сроку",
+     "message": "6 нед. текущей терапии без снижения основной шкалы на ≥50%. Пересмотр плана; консультация психиатра — желательно.",
+     "patient_message": null,
+     "auto_actions": [
+      "create_review_task"
+     ],
+     "requires_doctor_confirmation": true,
+     "sources": [
+      "Срок оценки эффекта — ЗАПОЛНИТЬ по действующим КР Минздрава (черновое значение 6 нед.)"
+     ],
+     "evidence": {
+      "primary.change.response": false,
+      "therapy.weeks_on_current": 6
+     },
+     "fired_on": "true"
+    }
+   ],
+   "drug_checks": [
+    {
+     "drug_id": "aviandr",
+     "trade_name": "Авиандр",
+     "status": "not_applicable",
+     "reasons": [
+      "Нет подтверждённого диагноза в пределах зарегистрированных показаний"
+     ],
+     "unknown_facts": [],
+     "cautions": [],
+     "interactions": [
+      "сертралин: антидепрессант — взаимодействие указано в инструкции"
+     ],
+     "source": "Инструкция, РУ ЛП-№(002445)-(РГ-RU), ред. 2023-07-21 (по вторичному источнику; сверить)",
+     "verification_level": "secondary",
+     "warnings": [
+      "Сведения о препарате из вторичного источника, не сверены с ГРЛС"
+     ],
+     "requires_doctor_confirmation": true
+    }
+   ],
+   "facts": {
+    "patient.age": 23,
+    "patient.emergency_button": true,
+    "selfreport.missed_consecutive": 0,
+    "symptoms.mania_or_psychosis": false,
+    "therapy.weeks_on_current": 6,
+    "phq9.total": 22,
+    "phq9.category": "severe",
+    "phq9.prorated": false,
+    "phq9.too_many_missing": false,
+    "phq9.item9": 3,
+    "phq9.safety_item_missing": false,
+    "phq9.change.direction": "worsened",
+    "phq9.change.delta": 8,
+    "phq9.change.response": false,
+    "phq9.change.remission": false,
+    "phq9.change.baseline": 14,
+    "gad7.total": 14,
+    "gad7.category": "moderate",
+    "gad7.prorated": false,
+    "gad7.too_many_missing": false,
+    "gad7.change.direction": "worsened",
+    "gad7.change.delta": 4,
+    "gad7.change.response": false,
+    "gad7.change.remission": false,
+    "gad7.change.baseline": 10,
+    "primary.change.response": false,
+    "text.concern_flag": true,
+    "text.matched": "не вижу выхода",
+    "ae.any_new": false,
+    "ae.serious_reported": false,
+    "ae.description": null
+   },
+   "details": {
+    "scales": {
+     "phq9": [
+      {
+       "date": "2026-09-11",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        0
+       ],
+       "total": 14,
+       "raw_sum": 14,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "moderate",
+       "category_label": "Умеренная",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-09-25",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        0
+       ],
+       "total": 16,
+       "raw_sum": 16,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "moderately_severe",
+       "category_label": "Умеренно тяжёлая",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-10-09",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        3,
+        3,
+        3,
+        2,
+        2,
+        2,
+        2,
+        2,
+        3
+       ],
+       "total": 22,
+       "raw_sum": 22,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "severe",
+       "category_label": "Тяжёлая",
+       "safety_item_value": 3,
+       "safety_item_missing": false,
+       "flags": []
+      }
+     ],
+     "gad7": [
+      {
+       "date": "2026-09-11",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1
+       ],
+       "total": 10,
+       "raw_sum": 10,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "moderate",
+       "category_label": "Умеренная",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-09-25",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1
+       ],
+       "total": 11,
+       "raw_sum": 11,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "moderate",
+       "category_label": "Умеренная",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-10-09",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+       ],
+       "total": 14,
+       "raw_sum": 14,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "moderate",
+       "category_label": "Умеренная",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      }
+     ]
+    },
+    "changes": {
+     "phq9": {
+      "scale_id": "phq9",
+      "baseline": 14,
+      "current": 22,
+      "delta": 8,
+      "meaningful": true,
+      "reliable": true,
+      "direction": "worsened",
+      "response": false,
+      "remission": false,
+      "thresholds": {
+       "mcid": 5,
+       "reliable_change": 5.72,
+       "mcid_source": "Löwe B. et al. Med Care. 2004;42(12):1194–1201. DOI 10.1097/00005650-200412000-00006"
+      },
+      "caveat": "MCID зависит от исходной тяжести (Bauer-Staeb C. et al. J Clin Epidemiol. 2021;137:200–208): в среднем 3.7 балла, от ~0 при очень лёгкой до 14 баллов при очень высокой тяжести. Порог 5 баллов — популяционный ориентир, а не индивидуальный критерий."
+     },
+     "gad7": {
+      "scale_id": "gad7",
+      "baseline": 10,
+      "current": 14,
+      "delta": 4,
+      "meaningful": true,
+      "reliable": null,
+      "direction": "worsened",
+      "response": false,
+      "remission": false,
+      "thresholds": {
+       "mcid": 4,
+       "reliable_change": null,
+       "mcid_source": "Toussaint A. et al. J Affect Disord. 2020;265:395–401"
+      },
+      "caveat": "MCID 4 балла получен не в выборке ГТР. Средний MCID по Bauer-Staeb et al. 2021 — 3.3 балла, сильно зависит от исходной тяжести."
+     }
+    },
+    "trends": {
+     "phq9": {
+      "n_points": 3,
+      "slope_per_week": 2.0,
+      "coverage": 1.0,
+      "max_gap_days": 14,
+      "note": "Описательный тренд; не является оценкой эффекта лечения"
+     },
+     "gad7": {
+      "n_points": 3,
+      "slope_per_week": 1.0,
+      "coverage": 1.0,
+      "max_gap_days": 14,
+      "note": "Описательный тренд; не является оценкой эффекта лечения"
+     }
+    },
+    "text": [
+     {
+      "date": "2026-10-23",
+      "flagged": true,
+      "matched": [
+       "не вижу выхода"
+      ],
+      "negated": []
+     }
+    ]
+   },
+   "disclaimer": "Система поддержки решений. Клинические действия выполняет только врач. Отсутствие алерта не означает отсутствие опасности.",
+   "elapsed_ms": 8.342
+  }
+ },
+ {
+  "record": {
+   "patient_id": "P-006",
+   "name": "Дмитрий Л. (синт.)",
+   "age": 38,
+   "sex": "М",
+   "primary_scale": "gad7",
+   "diagnoses": [
+    {
+     "code": "F41.1",
+     "status": "confirmed",
+     "label": "Генерализованное тревожное расстройство"
+    }
+   ],
+   "assessments": [
+    {
+     "date": "2026-09-11",
+     "scale": "phq9",
+     "answers": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0
+     ]
+    },
+    {
+     "date": "2026-09-11",
+     "scale": "gad7",
+     "answers": [
+      3,
+      3,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "date": "2026-09-25",
+     "scale": "phq9",
+     "answers": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ]
+    },
+    {
+     "date": "2026-09-25",
+     "scale": "gad7",
+     "answers": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      1
+     ]
+    },
+    {
+     "date": "2026-10-09",
+     "scale": "phq9",
+     "answers": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "date": "2026-10-09",
+     "scale": "gad7",
+     "answers": [
+      2,
+      2,
+      2,
+      2,
+      1,
+      1,
+      1
+     ]
+    }
+   ],
+   "expected_interval_days": 14,
+   "selfreports_missed_consecutive": 0,
+   "diary": [],
+   "adverse_events": [
+    {
+     "date": "2026-10-20",
+     "description": "тошнота по утрам, умеренная",
+     "serious": false,
+     "new": true
+    }
+   ],
+   "emergency_button": false,
+   "symptom_checklist": {
+    "mania_or_psychosis": false
+   },
+   "therapy": {
+    "current": [
+     {
+      "mnn": "Авиандр (действующее вещество — см. карточку)",
+      "start_date": "2026-09-25"
+     }
+    ],
+    "weeks_on_current": 4
+   },
+   "safety_profile": {
+    "hypersensitivity_aviandr": false,
+    "epilepsy_or_organic_brain_lesion": false,
+    "maoi_within_2_weeks": false,
+    "renal_gfr_below_60": false,
+    "hepatic_insufficiency": false,
+    "pregnancy": false,
+    "breastfeeding": false,
+    "cardiovascular_disease": false,
+    "endocrine_disorder": false,
+    "substance_dependence": false,
+    "lactose_intolerance": false,
+    "drives_vehicles": false
+   },
+   "adherence": {
+    "confirmed": 50,
+    "missed": 4,
+    "unknown": 2
+   },
+   "scenario": "6. Новое нежелательное явление на фоне Авиандра: решение за врачом"
+  },
+  "evaluation": {
+   "patient_id": "P-006",
+   "engine_version": "0.1.0",
+   "triage_level": "planned",
+   "findings": [
+    {
+     "rule_id": "SAFE-008",
+     "rule_version": "0.1",
+     "rule_status": "draft",
+     "kind": "therapy_warning",
+     "priority": "planned",
+     "routing": null,
+     "title": "Новое несерьёзное нежелательное явление",
+     "message": "Новое нежелательное явление: тошнота по утрам, умеренная. Оценить при ближайшем контакте.",
+     "patient_message": null,
+     "auto_actions": [
+      "create_review_task"
+     ],
+     "requires_doctor_confirmation": true,
+     "sources": [
+      "ТЗ кейса: учёт нежелательных явлений"
+     ],
+     "evidence": {
+      "ae.any_new": true,
+      "ae.serious_reported": false
+     },
+     "fired_on": "true"
+    }
+   ],
+   "drug_checks": [
+    {
+     "drug_id": "aviandr",
+     "trade_name": "Авиандр",
+     "status": "can_be_considered",
+     "reasons": [
+      "В пределах зарегистрированных показаний; противопоказаний в профиле не выявлено"
+     ],
+     "unknown_facts": [],
+     "cautions": [],
+     "interactions": [],
+     "source": "Инструкция, РУ ЛП-№(002445)-(РГ-RU), ред. 2023-07-21 (по вторичному источнику; сверить)",
+     "verification_level": "secondary",
+     "warnings": [
+      "Сведения о препарате из вторичного источника, не сверены с ГРЛС"
+     ],
+     "requires_doctor_confirmation": true
+    }
+   ],
+   "facts": {
+    "patient.age": 38,
+    "patient.emergency_button": false,
+    "selfreport.missed_consecutive": 0,
+    "symptoms.mania_or_psychosis": false,
+    "therapy.weeks_on_current": 4,
+    "phq9.total": 6,
+    "phq9.category": "mild",
+    "phq9.prorated": false,
+    "phq9.too_many_missing": false,
+    "phq9.item9": 0,
+    "phq9.safety_item_missing": false,
+    "phq9.change.direction": "no_meaningful_change",
+    "phq9.change.delta": -2,
+    "phq9.change.response": false,
+    "phq9.change.remission": false,
+    "phq9.change.baseline": 8,
+    "gad7.total": 11,
+    "gad7.category": "moderate",
+    "gad7.prorated": false,
+    "gad7.too_many_missing": false,
+    "gad7.change.direction": "improved",
+    "gad7.change.delta": -5,
+    "gad7.change.response": false,
+    "gad7.change.remission": false,
+    "gad7.change.baseline": 16,
+    "primary.change.response": false,
+    "text.concern_flag": false,
+    "text.matched": null,
+    "ae.any_new": true,
+    "ae.serious_reported": false,
+    "ae.description": "тошнота по утрам, умеренная"
+   },
+   "details": {
+    "scales": {
+     "phq9": [
+      {
+       "date": "2026-09-11",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+       ],
+       "total": 8,
+       "raw_sum": 8,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-09-25",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0
+       ],
+       "total": 7,
+       "raw_sum": 7,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-10-09",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0
+       ],
+       "total": 6,
+       "raw_sum": 6,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      }
+     ],
+     "gad7": [
+      {
+       "date": "2026-09-11",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        3,
+        3,
+        2,
+        2,
+        2,
+        2,
+        2
+       ],
+       "total": 16,
+       "raw_sum": 16,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "severe",
+       "category_label": "Тяжёлая",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-09-25",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1
+       ],
+       "total": 13,
+       "raw_sum": 13,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "moderate",
+       "category_label": "Умеренная",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-10-09",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1
+       ],
+       "total": 11,
+       "raw_sum": 11,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "moderate",
+       "category_label": "Умеренная",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      }
+     ]
+    },
+    "changes": {
+     "phq9": {
+      "scale_id": "phq9",
+      "baseline": 8,
+      "current": 6,
+      "delta": -2,
+      "meaningful": false,
+      "reliable": false,
+      "direction": "no_meaningful_change",
+      "response": false,
+      "remission": false,
+      "thresholds": {
+       "mcid": 5,
+       "reliable_change": 5.72,
+       "mcid_source": "Löwe B. et al. Med Care. 2004;42(12):1194–1201. DOI 10.1097/00005650-200412000-00006"
+      },
+      "caveat": "MCID зависит от исходной тяжести (Bauer-Staeb C. et al. J Clin Epidemiol. 2021;137:200–208): в среднем 3.7 балла, от ~0 при очень лёгкой до 14 баллов при очень высокой тяжести. Порог 5 баллов — популяционный ориентир, а не индивидуальный критерий."
+     },
+     "gad7": {
+      "scale_id": "gad7",
+      "baseline": 16,
+      "current": 11,
+      "delta": -5,
+      "meaningful": true,
+      "reliable": null,
+      "direction": "improved",
+      "response": false,
+      "remission": false,
+      "thresholds": {
+       "mcid": 4,
+       "reliable_change": null,
+       "mcid_source": "Toussaint A. et al. J Affect Disord. 2020;265:395–401"
+      },
+      "caveat": "MCID 4 балла получен не в выборке ГТР. Средний MCID по Bauer-Staeb et al. 2021 — 3.3 балла, сильно зависит от исходной тяжести."
+     }
+    },
+    "trends": {
+     "phq9": {
+      "n_points": 3,
+      "slope_per_week": -0.5,
+      "coverage": 1.0,
+      "max_gap_days": 14,
+      "note": "Описательный тренд; не является оценкой эффекта лечения"
+     },
+     "gad7": {
+      "n_points": 3,
+      "slope_per_week": -1.25,
+      "coverage": 1.0,
+      "max_gap_days": 14,
+      "note": "Описательный тренд; не является оценкой эффекта лечения"
+     }
+    },
+    "text": []
+   },
+   "disclaimer": "Система поддержки решений. Клинические действия выполняет только врач. Отсутствие алерта не означает отсутствие опасности.",
+   "elapsed_ms": 8.457
+  }
+ },
+ {
+  "record": {
+   "patient_id": "P-007",
+   "name": "Елена Р. (синт.)",
+   "age": 61,
+   "sex": "Ж",
+   "primary_scale": "phq9",
+   "diagnoses": [
+    {
+     "code": "F32.0",
+     "status": "confirmed",
+     "label": "Депрессивный эпизод лёгкой степени"
+    }
+   ],
+   "assessments": [
+    {
+     "date": "2026-09-25",
+     "scale": "phq9",
+     "answers": [
+      2,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0
+     ]
+    },
+    {
+     "date": "2026-09-25",
+     "scale": "gad7",
+     "answers": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "date": "2026-10-09",
+     "scale": "phq9",
+     "answers": [
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0
+     ]
+    },
+    {
+     "date": "2026-10-09",
+     "scale": "gad7",
+     "answers": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0
+     ]
+    }
+   ],
+   "expected_interval_days": 14,
+   "selfreports_missed_consecutive": 3,
+   "diary": [],
+   "adverse_events": [],
+   "emergency_button": false,
+   "symptom_checklist": {
+    "mania_or_psychosis": false
+   },
+   "therapy": {
+    "current": [],
+    "weeks_on_current": null
+   },
+   "safety_profile": {
+    "hypersensitivity_aviandr": false,
+    "epilepsy_or_organic_brain_lesion": false,
+    "maoi_within_2_weeks": false,
+    "renal_gfr_below_60": false,
+    "hepatic_insufficiency": false,
+    "pregnancy": false,
+    "breastfeeding": false,
+    "cardiovascular_disease": false,
+    "endocrine_disorder": false,
+    "substance_dependence": false,
+    "lactose_intolerance": false,
+    "drives_vehicles": false
+   },
+   "adherence": null,
+   "scenario": "7. Пропуски самоотчётов: полнота наблюдения снижена"
+  },
+  "evaluation": {
+   "patient_id": "P-007",
+   "engine_version": "0.1.0",
+   "triage_level": "planned",
+   "findings": [
+    {
+     "rule_id": "MON-001",
+     "rule_version": "0.1",
+     "rule_status": "draft",
+     "kind": "data_quality",
+     "priority": "planned",
+     "routing": null,
+     "title": "Пропущены самоотчёты",
+     "message": "Пропущено самоотчётов подряд: 3. Полнота наблюдения снижена — отсутствие данных не означает стабильность.",
+     "patient_message": "Напоминаем: врач ждёт вашу анкету — это займёт около 3 минут.",
+     "auto_actions": [
+      "request_repeat_questionnaire",
+      "create_review_task"
+     ],
+     "requires_doctor_confirmation": true,
+     "sources": [
+      "Проектный документ «Компас», раздел 9: «нет ответа пациента ≠ стабильно»"
+     ],
+     "evidence": {
+      "selfreport.missed_consecutive": 3
+     },
+     "fired_on": "true"
+    }
+   ],
+   "drug_checks": [
+    {
+     "drug_id": "aviandr",
+     "trade_name": "Авиандр",
+     "status": "not_applicable",
+     "reasons": [
+      "Нет подтверждённого диагноза в пределах зарегистрированных показаний"
+     ],
+     "unknown_facts": [],
+     "cautions": [],
+     "interactions": [],
+     "source": "Инструкция, РУ ЛП-№(002445)-(РГ-RU), ред. 2023-07-21 (по вторичному источнику; сверить)",
+     "verification_level": "secondary",
+     "warnings": [
+      "Сведения о препарате из вторичного источника, не сверены с ГРЛС"
+     ],
+     "requires_doctor_confirmation": true
+    }
+   ],
+   "facts": {
+    "patient.age": 61,
+    "patient.emergency_button": false,
+    "selfreport.missed_consecutive": 3,
+    "symptoms.mania_or_psychosis": false,
+    "therapy.weeks_on_current": null,
+    "phq9.total": 9,
+    "phq9.category": "mild",
+    "phq9.prorated": false,
+    "phq9.too_many_missing": false,
+    "phq9.item9": 0,
+    "phq9.safety_item_missing": false,
+    "phq9.change.direction": "no_meaningful_change",
+    "phq9.change.delta": -2,
+    "phq9.change.response": false,
+    "phq9.change.remission": false,
+    "phq9.change.baseline": 11,
+    "gad7.total": 6,
+    "gad7.category": "mild",
+    "gad7.prorated": false,
+    "gad7.too_many_missing": false,
+    "gad7.change.direction": "no_meaningful_change",
+    "gad7.change.delta": -1,
+    "gad7.change.response": false,
+    "gad7.change.remission": false,
+    "gad7.change.baseline": 7,
+    "primary.change.response": false,
+    "text.concern_flag": false,
+    "text.matched": null,
+    "ae.any_new": false,
+    "ae.serious_reported": false,
+    "ae.description": null
+   },
+   "details": {
+    "scales": {
+     "phq9": [
+      {
+       "date": "2026-09-25",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+       ],
+       "total": 11,
+       "raw_sum": 11,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "moderate",
+       "category_label": "Умеренная",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-10-09",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+       ],
+       "total": 9,
+       "raw_sum": 9,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      }
+     ],
+     "gad7": [
+      {
+       "date": "2026-09-25",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+       ],
+       "total": 7,
+       "raw_sum": 7,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-10-09",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+       ],
+       "total": 6,
+       "raw_sum": 6,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      }
+     ]
+    },
+    "changes": {
+     "phq9": {
+      "scale_id": "phq9",
+      "baseline": 11,
+      "current": 9,
+      "delta": -2,
+      "meaningful": false,
+      "reliable": false,
+      "direction": "no_meaningful_change",
+      "response": false,
+      "remission": false,
+      "thresholds": {
+       "mcid": 5,
+       "reliable_change": 5.72,
+       "mcid_source": "Löwe B. et al. Med Care. 2004;42(12):1194–1201. DOI 10.1097/00005650-200412000-00006"
+      },
+      "caveat": "MCID зависит от исходной тяжести (Bauer-Staeb C. et al. J Clin Epidemiol. 2021;137:200–208): в среднем 3.7 балла, от ~0 при очень лёгкой до 14 баллов при очень высокой тяжести. Порог 5 баллов — популяционный ориентир, а не индивидуальный критерий."
+     },
+     "gad7": {
+      "scale_id": "gad7",
+      "baseline": 7,
+      "current": 6,
+      "delta": -1,
+      "meaningful": false,
+      "reliable": null,
+      "direction": "no_meaningful_change",
+      "response": false,
+      "remission": false,
+      "thresholds": {
+       "mcid": 4,
+       "reliable_change": null,
+       "mcid_source": "Toussaint A. et al. J Affect Disord. 2020;265:395–401"
+      },
+      "caveat": "MCID 4 балла получен не в выборке ГТР. Средний MCID по Bauer-Staeb et al. 2021 — 3.3 балла, сильно зависит от исходной тяжести."
+     }
+    },
+    "trends": {
+     "phq9": {
+      "n_points": 2,
+      "slope_per_week": null,
+      "coverage": 1.0,
+      "max_gap_days": 14,
+      "note": "Менее 3 наблюдений: тренд не оценивается"
+     },
+     "gad7": {
+      "n_points": 2,
+      "slope_per_week": null,
+      "coverage": 1.0,
+      "max_gap_days": 14,
+      "note": "Менее 3 наблюдений: тренд не оценивается"
+     }
+    },
+    "text": []
+   },
+   "disclaimer": "Система поддержки решений. Клинические действия выполняет только врач. Отсутствие алерта не означает отсутствие опасности.",
+   "elapsed_ms": 8.62
+  }
+ },
+ {
+  "record": {
+   "patient_id": "P-008",
+   "name": "Алексей Н. (синт.)",
+   "age": 45,
+   "sex": "М",
+   "primary_scale": "gad7",
+   "diagnoses": [
+    {
+     "code": "F41.1",
+     "status": "confirmed",
+     "label": "Генерализованное тревожное расстройство"
+    }
+   ],
+   "assessments": [
+    {
+     "date": "2026-08-28",
+     "scale": "phq9",
+     "answers": [
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0
+     ]
+    },
+    {
+     "date": "2026-08-28",
+     "scale": "gad7",
+     "answers": [
+      3,
+      3,
+      2,
+      2,
+      2,
+      2,
+      2
+     ]
+    },
+    {
+     "date": "2026-09-11",
+     "scale": "phq9",
+     "answers": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0
+     ]
+    },
+    {
+     "date": "2026-09-11",
+     "scale": "gad7",
+     "answers": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      1,
+      1
+     ]
+    },
+    {
+     "date": "2026-09-25",
+     "scale": "phq9",
+     "answers": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "date": "2026-09-25",
+     "scale": "gad7",
+     "answers": [
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "date": "2026-10-09",
+     "scale": "phq9",
+     "answers": [
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "date": "2026-10-09",
+     "scale": "gad7",
+     "answers": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0
+     ]
+    }
+   ],
+   "expected_interval_days": 14,
+   "selfreports_missed_consecutive": 0,
+   "diary": [
+    {
+     "date": "2026-10-22",
+     "text": "Мыслей о суициде нет, просто иногда устаю"
+    }
+   ],
+   "adverse_events": [],
+   "emergency_button": false,
+   "symptom_checklist": {
+    "mania_or_psychosis": false
+   },
+   "therapy": {
+    "current": [
+     {
+      "mnn": "Авиандр",
+      "start_date": "2026-08-29"
+     }
+    ],
+    "weeks_on_current": 8
+   },
+   "safety_profile": {
+    "hypersensitivity_aviandr": false,
+    "epilepsy_or_organic_brain_lesion": false,
+    "maoi_within_2_weeks": false,
+    "renal_gfr_below_60": false,
+    "hepatic_insufficiency": false,
+    "pregnancy": false,
+    "breastfeeding": false,
+    "cardiovascular_disease": false,
+    "endocrine_disorder": false,
+    "substance_dependence": false,
+    "lactose_intolerance": false,
+    "drives_vehicles": false
+   },
+   "adherence": {
+    "confirmed": 108,
+    "missed": 2,
+    "unknown": 2
+   },
+   "scenario": "Ответ на терапию: PHQ-9/GAD-7 снижаются"
+  },
+  "evaluation": {
+   "patient_id": "P-008",
+   "engine_version": "0.1.0",
+   "triage_level": "planned",
+   "findings": [
+    {
+     "rule_id": "MON-004",
+     "rule_version": "0.1",
+     "rule_status": "draft",
+     "kind": "review_task",
+     "priority": "planned",
+     "routing": null,
+     "title": "Достигнута ремиссия по шкале PHQ-9",
+     "message": "PHQ-9 < 5 при исходном ≥10. Ремиссия по шкале ≠ клиническая ремиссия: требуется оценка врачом.",
+     "patient_message": null,
+     "auto_actions": [
+      "create_review_task"
+     ],
+     "requires_doctor_confirmation": true,
+     "sources": [
+      "Kroenke K. et al. 2001; определение ремиссии PHQ-9 < 5 (проверить первоисточник)"
+     ],
+     "evidence": {
+      "phq9.change.baseline": 10,
+      "phq9.change.remission": true
+     },
+     "fired_on": "true"
+    }
+   ],
+   "drug_checks": [
+    {
+     "drug_id": "aviandr",
+     "trade_name": "Авиандр",
+     "status": "can_be_considered",
+     "reasons": [
+      "В пределах зарегистрированных показаний; противопоказаний в профиле не выявлено"
+     ],
+     "unknown_facts": [],
+     "cautions": [],
+     "interactions": [],
+     "source": "Инструкция, РУ ЛП-№(002445)-(РГ-RU), ред. 2023-07-21 (по вторичному источнику; сверить)",
+     "verification_level": "secondary",
+     "warnings": [
+      "Сведения о препарате из вторичного источника, не сверены с ГРЛС"
+     ],
+     "requires_doctor_confirmation": true
+    }
+   ],
+   "facts": {
+    "patient.age": 45,
+    "patient.emergency_button": false,
+    "selfreport.missed_consecutive": 0,
+    "symptoms.mania_or_psychosis": false,
+    "therapy.weeks_on_current": 8,
+    "phq9.total": 4,
+    "phq9.category": "minimal",
+    "phq9.prorated": false,
+    "phq9.too_many_missing": false,
+    "phq9.item9": 0,
+    "phq9.safety_item_missing": false,
+    "phq9.change.direction": "improved",
+    "phq9.change.delta": -6,
+    "phq9.change.response": true,
+    "phq9.change.remission": true,
+    "phq9.change.baseline": 10,
+    "gad7.total": 6,
+    "gad7.category": "mild",
+    "gad7.prorated": false,
+    "gad7.too_many_missing": false,
+    "gad7.change.direction": "improved",
+    "gad7.change.delta": -10,
+    "gad7.change.response": true,
+    "gad7.change.remission": false,
+    "gad7.change.baseline": 16,
+    "primary.change.response": true,
+    "text.concern_flag": false,
+    "text.matched": null,
+    "ae.any_new": false,
+    "ae.serious_reported": false,
+    "ae.description": null
+   },
+   "details": {
+    "scales": {
+     "phq9": [
+      {
+       "date": "2026-08-28",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+       ],
+       "total": 10,
+       "raw_sum": 10,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "moderate",
+       "category_label": "Умеренная",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-09-11",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+       ],
+       "total": 8,
+       "raw_sum": 8,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-09-25",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0
+       ],
+       "total": 6,
+       "raw_sum": 6,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-10-09",
+       "scale_id": "phq9",
+       "passport_version": "1.0.0",
+       "answers": [
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+       ],
+       "total": 4,
+       "raw_sum": 4,
+       "answered": 9,
+       "missing_items": [],
+       "prorated": false,
+       "category": "minimal",
+       "category_label": "Минимальная",
+       "safety_item_value": 0,
+       "safety_item_missing": false,
+       "flags": []
+      }
+     ],
+     "gad7": [
+      {
+       "date": "2026-08-28",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        3,
+        3,
+        2,
+        2,
+        2,
+        2,
+        2
+       ],
+       "total": 16,
+       "raw_sum": 16,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "severe",
+       "category_label": "Тяжёлая",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-09-11",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1
+       ],
+       "total": 12,
+       "raw_sum": 12,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "moderate",
+       "category_label": "Умеренная",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-09-25",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+       ],
+       "total": 8,
+       "raw_sum": 8,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      },
+      {
+       "date": "2026-10-09",
+       "scale_id": "gad7",
+       "passport_version": "1.0.0",
+       "answers": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0
+       ],
+       "total": 6,
+       "raw_sum": 6,
+       "answered": 7,
+       "missing_items": [],
+       "prorated": false,
+       "category": "mild",
+       "category_label": "Лёгкая",
+       "safety_item_value": null,
+       "safety_item_missing": false,
+       "flags": []
+      }
+     ]
+    },
+    "changes": {
+     "phq9": {
+      "scale_id": "phq9",
+      "baseline": 10,
+      "current": 4,
+      "delta": -6,
+      "meaningful": true,
+      "reliable": true,
+      "direction": "improved",
+      "response": true,
+      "remission": true,
+      "thresholds": {
+       "mcid": 5,
+       "reliable_change": 5.72,
+       "mcid_source": "Löwe B. et al. Med Care. 2004;42(12):1194–1201. DOI 10.1097/00005650-200412000-00006"
+      },
+      "caveat": "MCID зависит от исходной тяжести (Bauer-Staeb C. et al. J Clin Epidemiol. 2021;137:200–208): в среднем 3.7 балла, от ~0 при очень лёгкой до 14 баллов при очень высокой тяжести. Порог 5 баллов — популяционный ориентир, а не индивидуальный критерий."
+     },
+     "gad7": {
+      "scale_id": "gad7",
+      "baseline": 16,
+      "current": 6,
+      "delta": -10,
+      "meaningful": true,
+      "reliable": null,
+      "direction": "improved",
+      "response": true,
+      "remission": false,
+      "thresholds": {
+       "mcid": 4,
+       "reliable_change": null,
+       "mcid_source": "Toussaint A. et al. J Affect Disord. 2020;265:395–401"
+      },
+      "caveat": "MCID 4 балла получен не в выборке ГТР. Средний MCID по Bauer-Staeb et al. 2021 — 3.3 балла, сильно зависит от исходной тяжести."
+     }
+    },
+    "trends": {
+     "phq9": {
+      "n_points": 4,
+      "slope_per_week": -1.0,
+      "coverage": 1.0,
+      "max_gap_days": 14,
+      "note": "Описательный тренд; не является оценкой эффекта лечения"
+     },
+     "gad7": {
+      "n_points": 4,
+      "slope_per_week": -1.7,
+      "coverage": 1.0,
+      "max_gap_days": 14,
+      "note": "Описательный тренд; не является оценкой эффекта лечения"
+     }
+    },
+    "text": [
+     {
+      "date": "2026-10-22",
+      "flagged": false,
+      "matched": [],
+      "negated": [
+       "суициде"
+      ]
+     }
+    ]
+   },
+   "disclaimer": "Система поддержки решений. Клинические действия выполняет только врач. Отсутствие алерта не означает отсутствие опасности.",
+   "elapsed_ms": 8.001
+  }
+ }
+]

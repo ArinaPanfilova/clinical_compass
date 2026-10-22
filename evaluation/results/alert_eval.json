@@ -1,0 +1,118 @@
+{
+  "n_patients": 1000,
+  "seed": 42,
+  "safety_signal": {
+    "TP": 184,
+    "FP": 57,
+    "TN": 736,
+    "FN": 23,
+    "sensitivity": [
+      0.8888888888888888,
+      0.8387945619629619,
+      0.924811861057922
+    ],
+    "specificity": [
+      0.9281210592686002,
+      0.9080048560185102,
+      0.9441092906324678
+    ],
+    "ppv": [
+      0.7634854771784232,
+      0.7059627287376533,
+      0.8127399753779871
+    ]
+  },
+  "mandatory_referral": {
+    "TP": 162,
+    "FP": 30,
+    "TN": 801,
+    "FN": 7,
+    "sensitivity": [
+      0.9585798816568047,
+      0.9169810023215753,
+      0.9797938481773786
+    ],
+    "specificity": [
+      0.9638989169675091,
+      0.9489313925882237,
+      0.974597094732006
+    ],
+    "ppv": [
+      0.84375,
+      0.7857084959189619,
+      0.8883056052730217
+    ]
+  },
+  "adverse_events": {
+    "TP": 114,
+    "FP": 0,
+    "TN": 886,
+    "FN": 0,
+    "sensitivity": [
+      1.0,
+      0.9674003068525885,
+      1.0
+    ],
+    "specificity": [
+      1.0,
+      0.9956828271458652,
+      1.0
+    ],
+    "ppv": [
+      1.0,
+      0.9674003068525885,
+      1.0
+    ],
+    "rule_of_three_upper_miss_rate": 0.02631578947368421
+  },
+  "latency_ms": {
+    "p50": 8.2585,
+    "p95": 13.375349999999997,
+    "p99": 14.921
+  },
+  "safety_FN_by_mechanism": {
+    "ideation_text_only": 23
+  },
+  "safety_FN_texts": {
+    "Хочу заснуть и не проснуться": 7,
+    "Всем было бы легче без меня": 6,
+    "Хочется просто исчезнуть": 4,
+    "Устала жить так": 6
+  },
+  "safety_FP_by_archetype": {
+    "missing_reports": 4,
+    "mania": 4,
+    "stable_mild": 13,
+    "worsening": 5,
+    "improving": 14,
+    "severe_stable": 6,
+    "nonserious_ae": 5,
+    "serious_ae": 2,
+    "negated_text": 2,
+    "minor": 2
+  },
+  "safety_FP_by_rule": {
+    "SAFE-004": 32,
+    "SAFE-003": 25
+  },
+  "referral_FN_by_archetype": {
+    "worsening": 4,
+    "severe_stable": 2,
+    "ideation_item9": 1
+  },
+  "archetypes": {
+    "negated_text": 61,
+    "mania": 27,
+    "ideation_item9": 120,
+    "improving": 187,
+    "ideation_text_only": 64,
+    "stable_mild": 176,
+    "worsening": 83,
+    "missing_reports": 83,
+    "severe_stable": 44,
+    "serious_ae": 38,
+    "nonserious_ae": 76,
+    "emergency": 23,
+    "minor": 18
+  }
+}

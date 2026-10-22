@@ -1,0 +1,56 @@
+# Паспорт шкалы PHQ-9. Любое изменение = новая версия паспорта.
+id: phq9
+version: "1.0.0"
+title: "Patient Health Questionnaire-9 (PHQ-9)"
+construct: "Выраженность депрессивных симптомов за последние 2 недели"
+recall_period_days: 14          # нельзя менять без потери валидности
+items: 9
+item_range: [0, 3]
+total_range: [0, 27]
+safety_item: 9                  # «мысли, что лучше было бы умереть, или о причинении себе вреда»
+
+scoring:
+  method: sum
+  missing:
+    # APA, DSM-5-TR Severity Measure for Depression—Adult (адаптирован из PHQ-9):
+    # 1–2 пропуска → пропорциональный пересчёт (сумма × 9 / число отвеченных), округление;
+    # ≥3 пропусков → сумма не рассчитывается.
+    max_missing_for_proration: 2
+    rounding: half_up
+    # Решение проекта (строже источника): пункт безопасности не восстанавливается никогда.
+    # Его пропуск — отдельное событие качества данных, а не ноль.
+    never_impute_items: [9]
+    source: "APA. DSM-5-TR Severity Measure for Depression—Adult (adapted from PHQ-9)"
+
+# Kroenke, Spitzer, Williams 2001, J Gen Intern Med 16:606–613
+categories:
+  - {min: 0,  max: 4,  code: minimal,           label: "Минимальная"}
+  - {min: 5,  max: 9,  code: mild,              label: "Лёгкая"}
+  - {min: 10, max: 14, code: moderate,          label: "Умеренная"}
+  - {min: 15, max: 19, code: moderately_severe, label: "Умеренно тяжёлая"}
+  - {min: 20, max: 27, code: severe,            label: "Тяжёлая"}
+categories_source: "Kroenke K. et al. J Gen Intern Med. 2001;16:606–613. DOI 10.1046/j.1525-1497.2001.016009606.x"
+
+change:
+  # Löwe B. et al. Med Care. 2004;42(12):1194–1201: MCID для индивидуального изменения
+  # оценён как 2 SEM = 5 баллов.
+  mcid_points: 5
+  mcid_source: "Löwe B. et al. Med Care. 2004;42(12):1194–1201. DOI 10.1097/00005650-200412000-00006"
+  # IPD-метаанализ минимально обнаружимого изменения: MDC95 = 5.72 балла →
+  # для целых баллов надёжное изменение начинается с 6.
+  mdc95_points: 5.72
+  mdc95_source: "Minimal detectable change of the PHQ-9, PHQ-8 and PHQ-2: individual participant data meta-analysis (проверить выходные данные статьи перед цитированием)"
+  response_reduction_fraction: 0.5      # ответ: снижение ≥50% от исходного
+  remission_below: 5                    # ремиссия по шкале: < 5 баллов
+  response_source: "Kroenke K. et al. 2001; определения ответа/ремиссии используются NCQA (проверить первоисточник)"
+  caveat: >
+    MCID зависит от исходной тяжести (Bauer-Staeb C. et al. J Clin Epidemiol. 2021;137:200–208):
+    в среднем 3.7 балла, от ~0 при очень лёгкой до 14 баллов при очень высокой тяжести.
+    Порог 5 баллов — популяционный ориентир, а не индивидуальный критерий.
+
+validation_ru:
+  - "Золотарева А.А. Клиническая и специальная психология. 2023;12(4):107–121. DOI 10.17759/cpse.2023120406 (n=1800, α=0.89) — психометрика, не диагностическая точность"
+license: "Pfizer: воспроизведение без оплаты. Проверить, что используемый русский текст совпадает с валидированным."
+not_for:
+  - "самостоятельной постановки диагноза"
+  - "прогнозирования суицида"

@@ -1,0 +1,148 @@
+# ЧЕРНОВИК. Все правила status: draft до утверждения клиническим лидом и психиатром.
+# Алерт = ситуация, требующая действия по протоколу, а НЕ прогноз суицида (NICE NG225).
+
+- id: SAFE-001
+  version: "0.1"
+  status: draft
+  title: "Пациент сообщил о непосредственной опасности"
+  when: {fact: patient.emergency_button, op: "==", value: true}
+  output:
+    kind: alert
+    priority: emergency
+    routing: mandatory
+    message: >
+      Пациент нажал «Мне сейчас очень плохо». Требуется немедленный контакт по утверждённому
+      регламенту. Пациенту автоматически показана экстренная инструкция.
+    patient_message: >
+      Если вы в опасности прямо сейчас — звоните 112. Ваш врач получил уведомление,
+      но приложение не ведёт круглосуточное наблюдение.
+    auto_actions: [show_patient_emergency_instructions, notify_doctor, start_escalation_timer, notify_deputy_on_timeout]
+  sources:
+    - "ТЗ кейса: механизм алертинга, экстренное оповещение врача"
+    - "NICE NG225 (2022) Self-harm: assessment, management and preventing recurrence"
+
+- id: SAFE-002
+  version: "0.1"
+  status: draft
+  title: "PHQ-9, п.9: мысли о смерти/самоповреждении больше половины дней или почти каждый день"
+  when: {fact: phq9.item9, op: ">=", value: 2}
+  output:
+    kind: alert
+    priority: urgent
+    routing: mandatory
+    message: >
+      Пункт 9 PHQ-9 = {phq9.item9}. Требуется оценка безопасности врачом и консультация
+      психиатра. Ответ на п.9 — повод для оценки, а не прогноз; сумма PHQ-9 не учитывается.
+    patient_message: >
+      Спасибо, что ответили честно. Врач свяжется с вами. Если станет хуже — звоните 112.
+    auto_actions: [notify_doctor, start_escalation_timer, notify_deputy_on_timeout, show_patient_emergency_instructions]
+  sources:
+    - "Simon G.E. et al. Psychiatr Serv. 2013;64(12):1195–1202 — градиент риска по ответу на п.9"
+    - "NICE NG225 (2022): не использовать шкалы для прогнозирования, проводить оценку"
+
+- id: SAFE-003
+  version: "0.1"
+  status: draft
+  title: "PHQ-9, п.9: мысли о смерти/самоповреждении несколько дней"
+  when: {fact: phq9.item9, op: "==", value: 1}
+  output:
+    kind: alert
+    priority: urgent
+    routing: desirable
+    message: >
+      Пункт 9 PHQ-9 = 1. Требуется уточнение у пациента в ближайший контакт по протоколу.
+      Независимо от суммы баллов.
+    patient_message: null
+    auto_actions: [notify_doctor, create_review_task]
+  sources:
+    - "Simon G.E. et al. Psychiatr Serv. 2013;64(12):1195–1202"
+    - "NICE NG225 (2022)"
+
+- id: SAFE-004
+  version: "0.1"
+  status: draft
+  title: "Пропущен пункт безопасности PHQ-9"
+  when: {fact: phq9.safety_item_missing, op: "==", value: true}
+  output:
+    kind: data_quality
+    priority: urgent
+    routing: null
+    message: >
+      Пациент не ответил на п.9. Отсутствие ответа ≠ отсутствие мыслей о самоповреждении.
+      Сумма PHQ-9 не рассчитана; нужно уточнить при контакте.
+    patient_message: null
+    auto_actions: [notify_doctor, request_repeat_questionnaire]
+  sources:
+    - "Проектное правило: пункт безопасности не восстанавливается (паспорт phq9.yaml)"
+
+- id: SAFE-005
+  version: "0.1"
+  status: draft
+  title: "Тревожные формулировки в свободном тексте дневника"
+  when: {fact: text.concern_flag, op: "==", value: true}
+  output:
+    kind: alert
+    priority: urgent
+    routing: null
+    message: >
+      В записи дневника найдены формулировки, требующие прочтения врачом: «{text.matched}».
+      Это вспомогательный поиск по словарю, а не классификатор: пропуски возможны,
+      поэтому все записи доступны врачу целиком.
+    patient_message: null
+    auto_actions: [notify_doctor, create_review_task]
+  sources:
+    - "Проектное правило; NICE NG225 (2022) — оценка, а не прогноз"
+
+- id: SAFE-006
+  version: "0.1"
+  status: draft
+  title: "Сообщение о маниакальных/психотических проявлениях"
+  when: {fact: symptoms.mania_or_psychosis, op: "==", value: true}
+  output:
+    kind: alert
+    priority: urgent
+    routing: mandatory
+    message: >
+      Пациент отметил признаки из списка «приподнятое настроение/снижение потребности во сне/
+      необычные переживания». Требуется оценка; обычный сценарий ведения приостановлен до решения врача.
+    patient_message: null
+    auto_actions: [notify_doctor, create_review_task]
+  sources:
+    - "КР Минздрава «Депрессивный эпизод, рекуррентное депрессивное расстройство» — уточнение маниакальных/гипоманиакальных эпизодов (проверить действующую редакцию)"
+
+- id: SAFE-007
+  version: "0.1"
+  status: draft
+  title: "Серьёзное нежелательное явление"
+  when: {fact: ae.serious_reported, op: "==", value: true}
+  output:
+    kind: therapy_warning
+    priority: urgent
+    routing: null
+    message: >
+      Пациент сообщил о серьёзном нежелательном явлении ({ae.description}). Решение о терапии
+      принимает врач; система терапию не отменяет. «Возникло на фоне лечения» ≠ «вызвано лечением».
+    patient_message: >
+      Врач получил ваше сообщение. Если состояние угрожает жизни — звоните 112.
+    auto_actions: [notify_doctor, start_escalation_timer]
+  sources:
+    - "ТЗ кейса: учёт нежелательных явлений"
+    - "Инструкция по медицинскому применению препарата (ГРЛС) — раздел «Побочное действие»"
+
+- id: SAFE-008
+  version: "0.1"
+  status: draft
+  title: "Новое несерьёзное нежелательное явление"
+  when:
+    all:
+      - {fact: ae.any_new, op: "==", value: true}
+      - {fact: ae.serious_reported, op: "==", value: false}
+  output:
+    kind: therapy_warning
+    priority: planned
+    routing: null
+    message: "Новое нежелательное явление: {ae.description}. Оценить при ближайшем контакте."
+    patient_message: null
+    auto_actions: [create_review_task]
+  sources:
+    - "ТЗ кейса: учёт нежелательных явлений"

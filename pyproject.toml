@@ -1,0 +1,20 @@
+[project]
+name = "kompas-core"
+version = "0.1.0"
+description = "Компас: ядро клинической логики для системы поддержки врачебных решений (кейс-чемпионат)"
+requires-python = ">=3.10"
+dependencies = ["pyyaml>=6"]
+
+[project.optional-dependencies]
+analysis = ["pandas>=2", "numpy>=1.24", "scipy>=1.10", "matplotlib>=3.7"]
+dev = ["pytest>=7"]
+
+[tool.setuptools.packages.find]
+include = ["kompas_core*"]
+
+[tool.setuptools.package-data]
+kompas_core = ["scales/*.yaml", "rules/*.yaml", "drugs/*.yaml"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

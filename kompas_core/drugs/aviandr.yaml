@@ -1,0 +1,84 @@
+# Карточка препарата Авиандр.
+#
+# verification_level:
+#   none          — карточка пустая/не проверена → система ничего не предлагает
+#   secondary     — заполнено по вторичному источнику; проверки работают, но в каждом выводе
+#                   стоит предупреждение «не сверено с ГРЛС»
+#   grls_verified — сверено клиническим лидом с действующей инструкцией в ГРЛС
+#
+# ТЕКУЩИЙ СТАТУС: secondary. Источник — medi.ru (копия листка-вкладыша), а не ГРЛС.
+# ДО ЗАПИСИ ДЕМО: клинический лид открывает grls.rosminzdrav.ru, сверяет КАЖДОЕ поле,
+# заполняет checked_on/checked_by и ставит grls_verified.
+
+id: aviandr
+trade_name: "Авиандр"
+active_substance: "2,8-диметил-5-(2-фенилэтил)-2,3,4,5-тетрагидро-1H-пиридо[4,3-b]индола гидрохлорид"
+mnn: "TODO: сверить МНН/группировочное наименование в ГРЛС (во вторичном источнике МНН не указано)"
+dosage_form: "таблетки, покрытые плёночной оболочкой, 20 мг"
+atc_group: "Психолептики; анксиолитики; другие анксиолитики"
+registration:
+  number: "ЛП-№(002445)-(РГ-RU)"
+  date: "2023-05-31"
+  holder: "ООО «Авинейро»"
+  status: "TODO: проверить, что РУ действует"
+  grls_url: "TODO"
+instruction_version_date: "2023-07-21 (по вторичному источнику; сверить)"
+secondary_source: "https://medi.ru/instrukciya/aviandr_27908/"
+checked_on: null
+checked_by: null
+verification_level: secondary
+
+# Показания (только взрослые старше 18 лет).
+# Соответствие формулировок кодам МКБ-10 — интерпретация проекта, утверждает клинический лид.
+indications:
+  - id: IND-1
+    label: "Генерализованное тревожное расстройство"
+    icd10: ["F41.1"]
+    requires_true: []
+  - id: IND-2
+    label: "Тревожные состояния после COVID-19 у пациентов с реакцией на стресс и расстройством адаптации, лёгкой и средней степени"
+    icd10: ["F43.0", "F43.2"]
+    requires_true: ["context.post_covid", "context.mild_to_moderate"]
+
+age_range: {min: 18, max: null}
+
+contraindications:
+  - {id: CI-01, fact: safety.hypersensitivity_aviandr, label: "Гиперчувствительность к действующему или вспомогательным веществам"}
+  - {id: CI-02, fact: safety.epilepsy_or_organic_brain_lesion, label: "Эпилепсия или органическое поражение головного мозга"}
+  - {id: CI-03, fact: safety.maoi_within_2_weeks, label: "Приём ингибиторов МАО или менее 2 недель после их отмены"}
+  - {id: CI-04, fact: safety.renal_gfr_below_60, label: "Почечная недостаточность средней/тяжёлой степени (СКФ < 60 мл/мин)"}
+  - {id: CI-05, fact: safety.hepatic_insufficiency, label: "Печёночная недостаточность любой степени (Чайлд–Пью A, B, C)"}
+  - {id: CI-06, fact: safety.pregnancy, label: "Беременность"}
+  - {id: CI-07, fact: safety.breastfeeding, label: "Период грудного вскармливания"}
+
+cautions:
+  - {id: CA-01, fact: safety.cardiovascular_disease, label: "Сердечно-сосудистые заболевания"}
+  - {id: CA-02, fact: safety.endocrine_disorder, label: "Сахарный диабет или другие эндокринные заболевания"}
+  - {id: CA-03, fact: safety.substance_dependence, label: "Алкогольная или наркотическая зависимость"}
+  - {id: CA-04, fact: safety.lactose_intolerance, label: "Содержит лактозу (вспомогательное вещество)"}
+  - {id: CA-05, fact: safety.drives_vehicles, label: "Управление транспортом и механизмами в период лечения (во вторичном источнике — в разделе противопоказаний; уточнить по ГРЛС)"}
+
+interactions:
+  # level: contraindicated | caution
+  - {mnn: "моклобемид", level: contraindicated, effect: "ингибитор МАО"}
+  - {mnn: "пирлиндол", level: contraindicated, effect: "ингибитор МАО"}
+  - {mnn: "селегилин", level: contraindicated, effect: "ингибитор МАО (уточнить, относится ли запрет к МАО-B)"}
+  - {mnn: "сертралин", level: caution, effect: "антидепрессант — взаимодействие указано в инструкции"}
+  - {mnn: "пароксетин", level: caution, effect: "антидепрессант; ингибитор CYP2D6"}
+  - {mnn: "амитриптилин", level: caution, effect: "антидепрессант"}
+  - {mnn: "трамадол", level: caution, effect: "опиоидный анальгетик"}
+  - {mnn: "тримеперидин", level: caution, effect: "опиоидный анальгетик"}
+  - {mnn: "дифенгидрамин", level: caution, effect: "ингибитор CYP2D6; седативное"}
+  - {mnn: "кетоконазол", level: caution, effect: "ингибитор CYP2D6"}
+  - {mnn: "хинидин", level: caution, effect: "ингибитор CYP2D6"}
+  - {mnn: "гидроксихлорохин", level: caution, effect: "ингибитор CYP2D6"}
+  - {mnn: "суматриптан", level: caution, effect: "триптаны"}
+
+# Система дозу не рассчитывает и не предлагает изменить. Текст показывается врачу.
+dosing_text: >
+  По 20 мг (1 таблетка) 2 раза в сутки, утром и вечером, внутрь за 30 минут до еды.
+  ГТР — длительность определяет врач. Состояния после COVID-19 — курс 4 недели,
+  по решению врача до 6 недель. (Вторичный источник — сверить с ГРЛС.)
+
+evidence:
+  - "Двойное слепое плацебо-контролируемое исследование эффективности и переносимости препарата Авиандр при ГТР. Современная терапия психических расстройств. 2024 (n=160; 8 нед.) — не замена инструкции"
