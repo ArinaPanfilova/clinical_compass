@@ -133,8 +133,14 @@ def test_safety_by_term_and_serious():
           mk(3, stop="adverse_event", aes=[("головокружение", "severe", True)]), mk(4)]
     s = safety(cs)
     assert s["with_ae"]["n"] == 3 and s["serious"]["n"] == 1 and s["stopped_due_to_ae"]["n"] == 1
-    assert s["by_term"][0] == {"term": "сонливость", "mild": 1, "moderate": 1, "severe": 0, "total": 2}
+    assert s["by_term"][0] == {"term": "сонливость", "mild": 1, "moderate": 1, "severe": 0, "unknown": 0, "total": 2}
     assert [r["term"] for r in s["by_term"]] == ["сонливость", "головная боль", "головокружение"]
+
+
+def test_safety_unknown_severity_is_counted_not_guessed():
+    """Пациент сообщил о НЯ, тяжесть не оценена: считаем отдельно, а не как лёгкое."""
+    s = safety([mk(1, aes=[("тошнота", None, False)])])
+    assert s["by_term"] == [{"term": "тошнота", "mild": 0, "moderate": 0, "severe": 0, "unknown": 1, "total": 1}]
 
 
 # ---------- Индекс устойчивой пользы ----------

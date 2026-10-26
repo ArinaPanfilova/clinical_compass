@@ -228,8 +228,9 @@ def safety(courses: list[dict]) -> dict:
         with_ae += bool(aes)
         serious += any(e.get("serious") for e in aes)
         for e in aes:
-            row = by_term.setdefault(e["term"], {"term": e["term"], "mild": 0, "moderate": 0, "severe": 0, "total": 0})
-            row[e["severity"]] += 1
+            row = by_term.setdefault(e["term"], {"term": e["term"], "mild": 0, "moderate": 0, "severe": 0,
+                                                 "unknown": 0, "total": 0})
+            row[e.get("severity") or "unknown"] += 1   # тяжесть не оценена ≠ лёгкая
             row["total"] += 1
     n = len(courses)
     stopped = sum(c.get("stop_reason") == "adverse_event" for c in courses)
