@@ -5,12 +5,15 @@ from __future__ import annotations
 
 import random
 import sqlite3
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 
+from kompas_core import evaluate_patient
 from synthetic.demo_patients import PATIENTS, SAFE, _spread
 
+from . import alerts
 from .auth import hash_password
 from .db import dumps, tx
+from .records import build_record
 
 DEMO_PASSWORD = "demo"
 LEAD_DOCTOR, DEPUTY = "doc-ivanova", "doc-petrov"
@@ -132,3 +135,9 @@ def seed_demo(conn: sqlite3.Connection, courses: list[dict] | None = None, today
                           p["name"].replace(" (синт.)", ""), p["patient_id"]))
         for c in courses:
             insert_course(conn, c)
+        # Алерты сценариев созданы «4 минуты назад» и уже приняты лечащим врачом
+        created = (datetime.now(timezone.utc) - timedelta(minutes=4)).isoformat(timespec="milliseconds")
+        for p in PATIENTS:
+            ev = evaluate_patient(build_record(conn, p["patient_id"], today), drugs=["aviandr"])
+            for a in alerts.create_alerts(conn, p["patient_id"], ev, saved_at=created, created_at=created):
+                alerts.transition(conn, a, "accept", LEAD_DOCTOR)
