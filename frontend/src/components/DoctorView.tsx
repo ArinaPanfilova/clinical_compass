@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react'
 import type { Mode } from '../api'
 import { ALL_SAFETY_KEYS, DRUG_STATUS, FACT_LABELS, SAFETY_LABELS } from '../content'
 import type { Alert, Change, Decision, Finding, PatientBundle, ScalePoint, User } from '../types'
+import { api } from '../api'
+import { DocumentDialog } from './DocumentDialog'
 import { FindingItem } from './FindingItem'
 import { MessagesPanel } from './MessagesPanel'
 import { TrendChart } from './TrendChart'
@@ -16,13 +18,14 @@ interface Props {
   onSelect: (pid: string) => void
   onDecide: (pid: string, f: Finding, action: Decision['action'], comment?: string) => Promise<void>
   onAlertAction: (pid: string, alertId: string, action: 'accept') => Promise<void>
+  onReplace: (b: PatientBundle) => void
   msgTick: number
 }
 
 export const shortName = (n: string) => n.replace(/\s*\(синт\.\)/, '')
 const initials = (n: string) => shortName(n).split(' ').map(w => w[0]).join('').slice(0, 2)
 
-export function DoctorView({ patients, mode, user, selected, onSelect, onDecide, onAlertAction, msgTick }: Props) {
+export function DoctorView({ patients, mode, user, selected, onSelect, onDecide, onAlertAction, onReplace, msgTick }: Props) {
   const sorted = useMemo(() => [...patients].sort((a, b) => {
     const r = RANK[a.evaluation.triage_level] - RANK[b.evaluation.triage_level]
     if (r) return r
@@ -56,7 +59,7 @@ export function DoctorView({ patients, mode, user, selected, onSelect, onDecide,
         {groups.length === 0 && <p className="roster-empty">Никого не нашли. Проверьте написание имени.</p>}
       </nav>
       {p && <PatientCard key={p.record.patient_id} b={p} mode={mode} user={user} onDecide={onDecide}
-        onAlertAction={onAlertAction} msgTick={msgTick} />}
+        onAlertAction={onAlertAction} onReplace={onReplace} msgTick={msgTick} />}
     </div>
   )
 }
@@ -114,13 +117,15 @@ interface CardProps {
   user: User
   onDecide: Props['onDecide']
   onAlertAction: Props['onAlertAction']
+  onReplace: Props['onReplace']
   msgTick: number
 }
 
-function PatientCard({ b, mode, user, onDecide, onAlertAction, msgTick }: CardProps) {
+function PatientCard({ b, mode, user, onDecide, onAlertAction, onReplace, msgTick }: CardProps) {
   const { record: r, evaluation: e } = b
   const [scale, setScale] = useState<'phq9' | 'gad7'>(r.primary_scale)
   const [err, setErr] = useState<string | null>(null)
+  const [docOpen, setDocOpen] = useState(false)
   const decisions = b.decisions ?? []
   const alerts = b.alerts ?? []
 
@@ -129,6 +134,8 @@ function PatientCard({ b, mode, user, onDecide, onAlertAction, msgTick }: CardPr
     try { await fn() } catch (x) { setErr(String((x as Error).message)) }
   }
   const decide = (f: Finding, action: Decision['action'], comment?: string) => guard(() => onDecide(r.patient_id, f, action, comment))
+  // Врач уточнил у пациента: факт профиля безопасности из «неизвестно» в «да»/«нет»
+  const setFact = (k: string, v: boolean) => guard(async () => onReplace(await api.updateSafety(r.patient_id, { [k]: v }, 'manual')))
   const decisionFor = (f: Finding) => [...decisions].reverse().find(d => d.finding_rule_id === f.rule_id)
   const alertFor = (f: Finding): Alert | undefined => [...alerts].reverse().find(a => a.rule_id === f.rule_id)
 
@@ -278,18 +285,32 @@ function PatientCard({ b, mode, user, onDecide, onAlertAction, msgTick }: CardPr
           )}
 
           <section className="panel">
-            <div className="panel-head"><h2>Профиль безопасности</h2><span className="faint">{filled.length} из {ALL_SAFETY_KEYS.length}</span></div>
+            <div className="panel-head">
+              <h2>Профиль безопасности</h2>
+              <span className="faint">{filled.length} из {ALL_SAFETY_KEYS.length}</span>
+              {mode === 'live' && <button className="btn" onClick={() => setDocOpen(true)}>Загрузить документ</button>}
+            </div>
             <ul className="sp-list">
               {ALL_SAFETY_KEYS.map(k => {
                 const v = sp[k]
+                const unknown = v === undefined || v === null
                 return (
                   <li key={k}>
                     <span>{SAFETY_LABELS[k]}</span>
-                    <span className={v === true ? 'v-yes' : v === false ? 'v-no' : 'v-unk'}>{v === true ? 'да' : v === false ? 'нет' : 'нет данных'}</span>
+                    {unknown && mode === 'live' ? (
+                      <span className="sp-ask">
+                        <span className="v-unk">нет данных</span>
+                        <button className="mini" aria-label={`${SAFETY_LABELS[k]}: да`} onClick={() => setFact(k, true)}>да</button>
+                        <button className="mini" aria-label={`${SAFETY_LABELS[k]}: нет`} onClick={() => setFact(k, false)}>нет</button>
+                      </span>
+                    ) : (
+                      <span className={v === true ? 'v-yes' : v === false ? 'v-no' : 'v-unk'}>{v === true ? 'да' : v === false ? 'нет' : 'нет данных'}</span>
+                    )}
                   </li>
                 )
               })}
             </ul>
+            {filled.length < ALL_SAFETY_KEYS.length && mode === 'live' && <p className="faint source">«Нет данных» — уточните у пациента или загрузите документ. Неизвестное не считается отсутствием противопоказания.</p>}
           </section>
 
           <section className="panel">
@@ -332,6 +353,7 @@ function PatientCard({ b, mode, user, onDecide, onAlertAction, msgTick }: CardPr
         </div>
       </div>
 
+      {docOpen && <DocumentDialog pid={r.patient_id} onClose={() => setDocOpen(false)} onApplied={onReplace} />}
       <p className="disclaimer">{e.disclaimer} Ядро правил v{e.engine_version}, расчёт {e.elapsed_ms.toFixed(1)} мс.</p>
     </main>
   )

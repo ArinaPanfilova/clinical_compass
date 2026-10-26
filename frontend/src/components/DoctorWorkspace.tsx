@@ -83,7 +83,8 @@ export function DoctorWorkspace({ user, mode }: { user: User; mode: Mode }) {
   return (
     <>
       <DoctorView patients={patients} mode={mode} user={user} selected={selected} onSelect={setSelected}
-        onDecide={decide} onAlertAction={alertAction} msgTick={msgTick} />
+        onDecide={decide} onAlertAction={alertAction} msgTick={msgTick}
+        onReplace={b => setPatients(ps => ps && ps.map(p => p.record.patient_id === b.record.patient_id ? b : p))} />
       <div className="toasts" aria-live="assertive">
         {toasts.map(t => (
           <div key={t.id} role="alert" className={`toast ${t.alert ? `p-${t.alert.priority}` : 'p-message'}`}

@@ -144,3 +144,18 @@ export interface Message {
   delivered_at: string | null
   read_at: string | null
 }
+
+export interface Evidence { start: number; end: number; quote: string }
+
+export interface DocumentExtraction {
+  document_id: number
+  extraction: {
+    diagnoses: { code: string; status: 'confirmed' | 'suspected'; evidence: Evidence }[]
+    medications: { mnn: string; dose_mg: number | null; status: 'current' | 'cancelled'; evidence: Evidence }[]
+    allergies: { name: string; evidence: Evidence }[] | null
+    safety: Record<string, { value: boolean | null; evidence: Evidence | null }>
+    document_date: string | null
+    status: 'extracted_unverified'
+  }
+  diff: { key: string; current: boolean | null; extracted: boolean; evidence: Evidence; kind: 'new' | 'same' | 'conflict' }[]
+}

@@ -103,3 +103,36 @@ def test_logout_returns_to_login(open_as):
     page = open_as("ivanova")
     page.get_by_role("button", name="Выйти").click()
     expect(page.get_by_role("heading", name="Вход в Компас")).to_be_visible()
+
+
+DOC = ("Выписка. Дата: 20.10.2026. Ds: F41.1 Генерализованное тревожное расстройство. Сопут.: ГБ II ст. "
+       "Эпилепсию отрицает. Беременность исключена, не кормит грудью. СКФ 85 мл/мин. Печёночной "
+       "недостаточности нет. Аллергию отрицает. Ингибиторы МАО не принимал. Терапия: сертралин 50 мг утром.")
+
+
+def test_document_extraction_then_profile_completion_changes_drug_status(open_as):
+    doctor = open_as("ivanova")
+    doctor.get_by_role("button", name=re.compile("Игорь В.")).click()
+    drug = doctor.locator("section.panel").filter(has=doctor.get_by_role("heading", name="Авиандр", exact=True))
+    expect(drug).to_contain_text("Недостаточно данных")
+
+    doctor.get_by_role("button", name="Загрузить документ").click()
+    doctor.get_by_label("Текст документа").fill(DOC)
+    doctor.get_by_role("button", name="Извлечь сведения").click()
+    dialog = doctor.get_by_role("dialog")
+    expect(dialog).to_contain_text("Эпилепсию отрицает")
+    expect(dialog).to_contain_text("извлечено, не проверено")
+    dialog.get_by_role("button", name="Подтвердить выбранное").click()
+    expect(dialog).to_have_count(0)
+
+    profile = doctor.locator("section.panel").filter(has=doctor.get_by_role("heading", name="Профиль безопасности"))
+    expect(profile.locator("li", has_text="Эпилепсия")).to_contain_text("нет")
+    for _ in range(12):                                  # дозаполнить со слов пациента
+        no = profile.get_by_role("button", name=re.compile(": нет$"))
+        if no.count() == 0:
+            break
+        left = no.count()
+        no.first.click()
+        expect(no).to_have_count(left - 1)
+    expect(drug).to_contain_text("Можно рассмотреть")
+    expect(doctor.locator(".log")).to_contain_text("Профиль безопасности")

@@ -1,4 +1,4 @@
-import type { Alert, Decision, Message, PatientBundle, User } from './types'
+import type { Alert, Decision, DocumentExtraction, Message, PatientBundle, User } from './types'
 
 // Два режима:
 // live — работает сервер (python -m server) по адресу /api: вход, роли, алерты, сообщения;
@@ -82,6 +82,11 @@ export const api = {
     const params = new URLSearchParams(Object.entries(q).filter((e): e is [string, string] => !!e[1]))
     return req<T>(`/analytics/aviandr?${params}`)
   },
+  // Извлечение ничего не меняет в карточке; в профиль попадает только подтверждённое врачом
+  extractDocument: (pid: string, text: string) =>
+    req<DocumentExtraction>(`/patients/${pid}/documents/extract`, { method: 'POST', json: { text } }),
+  updateSafety: (pid: string, facts: Record<string, boolean | null>, source: 'document' | 'manual', document_id?: number) =>
+    req<PatientBundle>(`/patients/${pid}/safety-profile`, { method: 'POST', json: { facts, source, document_id } }),
   reset: () => req<{ ok: boolean }>('/demo/reset', { method: 'POST' }),
   // SSE: EventSource не умеет заголовки, поэтому токен — параметром
   stream: () => new EventSource(`${BASE}/events/stream?token=${encodeURIComponent(token ?? '')}`),

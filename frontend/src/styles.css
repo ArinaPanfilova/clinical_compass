@@ -426,3 +426,26 @@ ul, ol { margin: 0; }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .btn.primary { color: #0e161a; }
 }
+
+/* ---------- Документ пациента ---------- */
+.modal-back.page { position: fixed; z-index: 30; align-items: center; justify-content: center; padding: 24px 16px; }
+.sheet.wide { width: min(860px, 100%); max-height: calc(100vh - 48px); overflow-y: auto; display: grid; gap: 12px; border-radius: var(--r-l); box-shadow: 0 24px 48px rgba(10, 20, 25, .25); }
+.doc-label { display: grid; gap: 6px; font-size: 13px; color: var(--ink-2); }
+.doc-text { min-height: 220px; }
+.doc-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.doc-status { font-size: 13px; font-weight: 600; color: var(--want); }
+.doc-facts { list-style: none; padding: 0; display: grid; gap: 8px; }
+.doc-facts li { padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r-m); display: grid; gap: 4px; }
+.doc-facts li.kind-conflict { border-color: var(--must); background: var(--must-soft); }
+.doc-facts label { display: flex; gap: 10px; align-items: baseline; }
+.doc-fact { display: flex; gap: 10px; flex-wrap: wrap; align-items: baseline; }
+.doc-kind { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--line-2); color: var(--ink-2); }
+.doc-kind.new { background: var(--brand-soft); color: var(--brand-ink); }
+.doc-kind.conflict { background: var(--must); color: #fff; }
+.doc-quote { font-size: 13px; color: var(--ink-2); font-style: italic; }
+.doc-quote::before { content: '«'; } .doc-quote::after { content: '»'; }
+.doc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.sp-ask { display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; flex-shrink: 0; }
+.mini { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 0 9px; font-size: 12.5px; line-height: 22px; color: var(--ink-2); }
+.mini:hover { border-color: var(--brand); color: var(--brand-ink); }
+.panel-head .btn { margin-left: auto; padding: 4px 10px; font-size: 13px; white-space: nowrap; }
