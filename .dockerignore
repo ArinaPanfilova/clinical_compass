@@ -1,0 +1,9 @@
+**/node_modules
+frontend/dist
+**/__pycache__
+.pytest_cache
+.claude
+data
+*.db*
+evaluation/results
+docs/screenshots

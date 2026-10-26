@@ -1,0 +1,7 @@
+# Сервер и ядро правил
+pyyaml==6.0.3
+fastapi==0.162.0
+uvicorn==0.54.0
+httpx==0.28.1
+# Тесты: pytest; сквозные тесты интерфейса: playwright (+ `playwright install chromium`)
+pytest>=8
