@@ -17,6 +17,7 @@ from typing import Iterator, Literal
 
 from fastapi import APIRouter, Depends, FastAPI, Header, HTTPException
 from fastapi.responses import StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from kompas_core import ENGINE_VERSION, aviandr_report, evaluate_patient, load_card, score
@@ -413,6 +414,8 @@ def create_app(db_path: str | Path, secret: str = "dev-secret-change-me", escala
         return {"ok": True}
 
     app.include_router(api)
+    if FRONTEND_DIST.is_dir():
+        app.mount("/", StaticFiles(directory=FRONTEND_DIST, html=True), name="frontend")
     app.state.db_path = db_path
     app.state.broker = broker
     return app
