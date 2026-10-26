@@ -109,3 +109,30 @@ def test_referral_panel_is_separated_from_findings(browser, server):
     assert gap >= 8, f"зазор {gap:.0f} px"
     expect(panel).not_to_contain_text("—")
     c.close()
+
+
+def test_rail_panels_do_not_overflow(browser, server):
+    c, page = login(browser, server, "ivanova")
+    page.get_by_role("button", name=re.compile("Мария С.")).click()
+    expect(page.locator(".therapy-panel")).to_be_visible()
+    overflow = page.evaluate("""() => {
+      const bad = [];
+      document.querySelectorAll('.rail .panel').forEach(p => {
+        const pr = p.getBoundingClientRect();
+        p.querySelectorAll('*').forEach(e => { if (e.getBoundingClientRect().right > pr.right + 1) bad.push(e.className) });
+      });
+      return bad;
+    }""")
+    assert overflow == [], overflow[:5]
+    c.close()
+
+
+def test_phone_messages_tab_has_spacing(browser, server):
+    c, page = login(browser, server, "alexey", viewport={"width": 390, "height": 844}, is_mobile=True, has_touch=True)
+    page.get_by_role("button", name="Сообщения").click()
+    note = page.locator(".phone-body .note-box").first
+    empty = page.get_by_text("Сообщений пока нет.")
+    expect(empty).to_be_visible()
+    gap = empty.bounding_box()["y"] - (note.bounding_box()["y"] + note.bounding_box()["height"])
+    assert gap >= 8, f"зазор {gap:.0f} px"
+    c.close()

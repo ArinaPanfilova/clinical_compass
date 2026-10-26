@@ -877,3 +877,9 @@ details[open] > :not(summary) { animation: reveal-down .2s var(--ease-out) both;
 .send-result b { color: var(--ok); }
 .send-result.err { border-left-color: var(--must); background: var(--must-soft); }
 .send-result.err b { color: var(--must); }
+/* Содержимое панелей правой колонки сжимается по ширине колонки, а не по самому длинному слову */
+.rail .panel, .therapy, .therapy-guide, .therapy-list li { min-width: 0; }
+.therapy { grid-template-columns: minmax(0, 1fr); }
+.therapy-ref { white-space: normal; }
+.therapy-src, .therapy-list li { overflow-wrap: anywhere; }
+.phone-body .messages { margin-top: 14px; }
