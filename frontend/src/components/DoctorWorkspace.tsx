@@ -3,6 +3,7 @@ import { api, loadMockPatients, type Mode } from '../api'
 import { PRIORITY_LABEL } from '../content'
 import type { Alert, Decision, Finding, Message, PatientBundle, User } from '../types'
 import { DoctorView, shortName } from './DoctorView'
+import { DoctorSkeleton } from './Skeleton'
 
 // Рабочее место врача: список пациентов с сервера, живая доставка алертов и сообщений (SSE).
 // Полученный алерт сразу подтверждается серверу как «доставлен»; «принят» — только действием врача.
@@ -23,6 +24,7 @@ export function DoctorWorkspace({ user, mode }: { user: User; mode: Mode }) {
   const [patients, setPatients] = useState<PatientBundle[] | null>(null)
   const [selected, setSelected] = useState<string | null>(null)
   const [toasts, setToasts] = useState<Toast[]>([])
+  const [leaving, setLeaving] = useState<Set<string>>(new Set())
   const [msgTick, setMsgTick] = useState(0)
   const [error, setError] = useState<string | null>(null)
 
@@ -75,10 +77,17 @@ export function DoctorWorkspace({ user, mode }: { user: User; mode: Mode }) {
   }
 
   const nameOf = (pid: string) => shortName(patients?.find(p => p.record.patient_id === pid)?.record.name ?? pid)
-  const dismiss = (id: string) => setToasts(t => t.filter(x => x.id !== id))
+  // Скрытие с короткой анимацией ухода; без анимации (prefers-reduced-motion) CSS ничего не проигрывает
+  const dismiss = (id: string) => {
+    setLeaving(s => new Set(s).add(id))
+    window.setTimeout(() => {
+      setToasts(t => t.filter(x => x.id !== id))
+      setLeaving(s => { const n = new Set(s); n.delete(id); return n })
+    }, 160)
+  }
 
   if (error) return <p style={{ padding: 24 }} className="warn-line">{error}</p>
-  if (!patients) return <p style={{ padding: 24 }} className="muted">Загружаем пациентов…</p>
+  if (!patients) return <DoctorSkeleton />
 
   return (
     <>
@@ -87,7 +96,7 @@ export function DoctorWorkspace({ user, mode }: { user: User; mode: Mode }) {
         onReplace={b => setPatients(ps => ps && ps.map(p => p.record.patient_id === b.record.patient_id ? b : p))} />
       <div className="toasts" aria-live="assertive">
         {toasts.map(t => (
-          <div key={t.id} role="alert" className={`toast ${t.alert ? `p-${t.alert.priority}` : 'p-message'}`}
+          <div key={t.id} role="alert" className={`toast ${t.alert ? `p-${t.alert.priority}` : 'p-message'} ${leaving.has(t.id) ? 'leaving' : ''}`}
             onClick={() => { setSelected(t.pid); dismiss(t.id) }}>
             {t.alert ? (
               <>

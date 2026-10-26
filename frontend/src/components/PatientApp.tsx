@@ -13,6 +13,13 @@ interface Props {
 
 type Tab = 'today' | 'dynamics' | 'messages'
 
+const ICON = { width: 20, height: 20, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true } as const
+const TAB_ICON: Record<Tab, JSX.Element> = {
+  today: <svg {...ICON}><rect x="4" y="5" width="16" height="15" rx="2.5" /><path d="M8 3v4M16 3v4M4 10h16M9 15l2 2 4-4" /></svg>,
+  dynamics: <svg {...ICON}><path d="M4 19h16" /><path d="M5 15l4-5 4 3 6-7" /></svg>,
+  messages: <svg {...ICON}><path d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-8l-5 4v-4H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z" /></svg>,
+}
+
 export function PatientApp({ b, mode, onSubmitted }: Props) {
   const [tab, setTab] = useState<Tab>('today')
   const [sos, setSos] = useState(false)
@@ -87,6 +94,7 @@ export function PatientApp({ b, mode, onSubmitted }: Props) {
       </div>
 
       <div className="phone-body">
+        <div key={quiz ? 'quiz' : tab} className="view-in">
         {quiz ? (
           <Questionnaire onDone={a => { setAnswers(a); setQuiz(false) }} onCancel={() => setQuiz(false)} />
         ) : tab === 'today' ? (
@@ -145,11 +153,12 @@ export function PatientApp({ b, mode, onSubmitted }: Props) {
             <MessagesPanel pid={b.record.patient_id} mode={mode} role="patient" />
           </>
         )}
+        </div>
       </div>
 
       <nav className="phone-tabs" aria-label="Разделы">
         {([['today', 'Сегодня'], ['dynamics', 'Динамика'], ['messages', 'Сообщения']] as const).map(([v, l]) => (
-          <button key={v} aria-pressed={tab === v} onClick={() => { setTab(v); setQuiz(false) }}>{l}</button>
+          <button key={v} aria-pressed={tab === v} onClick={() => { setTab(v); setQuiz(false) }}>{TAB_ICON[v]}{l}</button>
         ))}
       </nav>
       <button className="sos" onClick={emergency}>Мне сейчас очень плохо</button>
@@ -182,7 +191,7 @@ function Questionnaire({ onDone, onCancel }: { onDone: (a: { phq9: (number | nul
     <div>
       <p className="q-step">Вопрос {i + 1} из {items.length} · за последние 2 недели, как часто вас беспокоило</p>
       <div className="progress"><div style={{ width: `${((i + 1) / items.length) * 100}%` }} /></div>
-      <p className="q-text">{items[i].t}</p>
+      <p key={i} className="q-text q-in">{items[i].t}</p>
       <div className="q-options" role="radiogroup">
         {OPTIONS.map((o, v) => (
           <button key={o} role="radio" aria-checked={vals[i] === v} aria-pressed={vals[i] === v} onClick={() => pick(v)}>{o}</button>

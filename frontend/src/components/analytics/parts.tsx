@@ -1,12 +1,19 @@
 // Мелкие общие части экрана аналитики: число со скрытием «<k», строка доли с ДИ, горизонтальные столбики.
 import type { CSSProperties, ReactNode } from 'react'
 import type { MaskedCount, Rate } from '../../analyticsTypes'
+import { useCountUp } from '../../hooks'
 import { barFraction, ci, count, hiddenHint, num, pct } from './model'
 
+/** Число плавно досчитывает до значения (KPI). format получает промежуточное значение. */
+export function CountUp({ value, format }: { value: number; format: (v: number) => string }) {
+  return <>{format(useCountUp(value))}</>
+}
+const whole = (v: number) => num(Math.round(v))
+
 /** Счётчик: скрытая ячейка показывается как «<k» с подсказкой. */
-export function Num({ v, k, className = '' }: { v: MaskedCount | undefined; k: number; className?: string }) {
+export function Num({ v, k, className = '', animate }: { v: MaskedCount | undefined; k: number; className?: string; animate?: boolean }) {
   const c = count(v, k)
-  if (!c.hidden) return <span className={className}>{c.text}</span>
+  if (!c.hidden) return <span className={className}>{animate && typeof v === 'number' ? <CountUp value={v} format={whole} /> : c.text}</span>
   return <span className={`an-hidden ${className}`} title={hiddenHint(k)} aria-label={`меньше ${k}: ${hiddenHint(k)}`}>{c.text}</span>
 }
 
