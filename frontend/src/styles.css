@@ -311,6 +311,8 @@ ul, ol { margin: 0; }
 /* ---------- Блок «Требует решения» ---------- */
 .attention { margin-bottom: 28px; }
 .findings { display: grid; gap: 10px; }
+/* Блоки после списка находок (направление, качество данных) — с тем же ритмом, что и между панелями */
+.attention > .findings ~ * { margin-top: 14px; }
 .finding {
   display: grid; grid-template-columns: minmax(0, 1fr) 176px; gap: 6px 24px; align-items: start;
   padding: 16px 18px 16px 20px; background: var(--surface); border: 1px solid var(--line);
@@ -871,7 +873,7 @@ details[open] > :not(summary) { animation: reveal-down .2s var(--ease-out) both;
 .dyn-scale { display: grid; gap: 6px; }
 .dyn-scale + .dyn-scale { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line-2); }
 .dyn-title { font-size: 14px; font-weight: 600; color: var(--ink-2); }
-.send-result { display: grid; gap: 2px; padding: 12px 14px; border-radius: var(--r-m); border-left: 4px solid var(--ok); background: var(--ok-soft); animation: pop-in .24s var(--ease-out) both; }
+.send-result { display: grid; gap: 2px; margin-top: 14px; padding: 12px 14px; border-radius: var(--r-m); border-left: 4px solid var(--ok); background: var(--ok-soft); animation: pop-in .24s var(--ease-out) both; }
 .send-result b { color: var(--ok); }
 .send-result.err { border-left-color: var(--must); background: var(--must-soft); }
 .send-result.err b { color: var(--must); }

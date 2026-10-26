@@ -84,3 +84,28 @@ def test_reduced_motion_keeps_gentle_fades(browser, server):
     c, page = login(browser, server, "ivanova")
     assert page.locator("main.card").first.evaluate("e => getComputedStyle(e).animationName") == "view-in"
     c.close()
+
+
+def test_confirmation_is_separated_from_send_button(browser, server):
+    c, page = login(browser, server, "alexey", viewport={"width": 390, "height": 844}, is_mobile=True, has_touch=True)
+    page.get_by_label(re.compile("своими словами")).fill("Сегодня спокойнее")
+    send = page.get_by_role("button", name="Отправить врачу")
+    send.click()
+    status = page.get_by_role("status")
+    expect(status).to_be_visible()
+    page.wait_for_timeout(500)                     # замер после анимации появления
+    gap = status.bounding_box()["y"] - (send.bounding_box()["y"] + send.bounding_box()["height"])
+    assert gap >= 8, f"зазор {gap:.0f} px"
+    c.close()
+
+
+def test_referral_panel_is_separated_from_findings(browser, server):
+    c, page = login(browser, server, "ivanova")
+    page.get_by_role("button", name=re.compile("Мария С.")).click()
+    last = page.locator(".findings > article").last
+    panel = page.locator("section.referral-panel")
+    expect(panel).to_be_visible()
+    gap = panel.bounding_box()["y"] - (last.bounding_box()["y"] + last.bounding_box()["height"])
+    assert gap >= 8, f"зазор {gap:.0f} px"
+    expect(panel).not_to_contain_text("—")
+    c.close()
