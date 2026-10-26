@@ -33,7 +33,7 @@ class Server:
         """Запускает процесс и ждёт /api/health. Возвращает время до готовности, с."""
         t0 = time.perf_counter()
         self.proc = subprocess.Popen([sys.executable, "-m", "server"], cwd=ROOT, env=self.env,
-                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
         while time.perf_counter() - t0 < timeout:
             try:
                 if httpx.get(f"{self.url}/api/health", timeout=0.5).status_code == 200:
@@ -44,18 +44,18 @@ class Server:
         raise RuntimeError("сервер не поднялся")
 
     def kill(self) -> None:
-        """Аварийная остановка: SIGKILL, без корректного завершения."""
+        """Аварийная остановка всей группы процессов (главный + воркеры): SIGKILL, без завершения."""
         if self.proc:
-            self.proc.send_signal(signal.SIGKILL)
+            os.killpg(self.proc.pid, signal.SIGKILL)
             self.proc.wait()
 
     def stop(self) -> None:
         if self.proc and self.proc.poll() is None:
-            self.proc.terminate()
+            os.killpg(self.proc.pid, signal.SIGTERM)
             try:
                 self.proc.wait(8)
             except subprocess.TimeoutExpired:      # открытые SSE-потоки не дают завершиться мягко
-                self.proc.kill()
+                os.killpg(self.proc.pid, signal.SIGKILL)
                 self.proc.wait()
 
 

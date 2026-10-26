@@ -1,0 +1,76 @@
+{
+ "rounds": [
+  {
+   "sent": 83,
+   "acked": 72,
+   "unacked_retried": 11,
+   "lost_acked": 0,
+   "lost_alerts": 0,
+   "duplicate_reports": 0,
+   "duplicate_open_alerts": 0,
+   "pending_alerts": 7,
+   "redelivered": 7,
+   "rto_s": 2.44
+  },
+  {
+   "sent": 35,
+   "acked": 29,
+   "unacked_retried": 6,
+   "lost_acked": 0,
+   "lost_alerts": 0,
+   "duplicate_reports": 0,
+   "duplicate_open_alerts": 0,
+   "pending_alerts": 7,
+   "redelivered": 7,
+   "rto_s": 2.51
+  },
+  {
+   "sent": 39,
+   "acked": 32,
+   "unacked_retried": 7,
+   "lost_acked": 0,
+   "lost_alerts": 0,
+   "duplicate_reports": 0,
+   "duplicate_open_alerts": 0,
+   "pending_alerts": 6,
+   "redelivered": 6,
+   "rto_s": 2.6
+  },
+  {
+   "sent": 150,
+   "acked": 140,
+   "unacked_retried": 10,
+   "lost_acked": 0,
+   "lost_alerts": 0,
+   "duplicate_reports": 0,
+   "duplicate_open_alerts": 0,
+   "pending_alerts": 7,
+   "redelivered": 7,
+   "rto_s": 2.21
+  },
+  {
+   "sent": 119,
+   "acked": 114,
+   "unacked_retried": 5,
+   "lost_acked": 0,
+   "lost_alerts": 0,
+   "duplicate_reports": 0,
+   "duplicate_open_alerts": 0,
+   "pending_alerts": 7,
+   "redelivered": 7,
+   "rto_s": 2.48
+  }
+ ],
+ "total": {
+  "sent": 426,
+  "acked": 387,
+  "unacked_retried": 39,
+  "lost_acked": 0,
+  "lost_alerts": 0,
+  "duplicate_reports": 0,
+  "duplicate_open_alerts": 0,
+  "pending_alerts": 34,
+  "redelivered": 34,
+  "rto_max_s": 2.6
+ }
+}

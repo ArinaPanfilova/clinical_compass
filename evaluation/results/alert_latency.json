@@ -1,0 +1,32 @@
+[
+ {
+  "n": 100,
+  "workers": 1,
+  "lost": 0,
+  "saved_to_created_ms": {
+   "p50": 3.0,
+   "p95": 5.0,
+   "max": 51.0
+  },
+  "patient_send_to_doctor_client_ms": {
+   "p50": 9.7,
+   "p95": 63.7,
+   "max": 132.8
+  }
+ },
+ {
+  "n": 100,
+  "workers": 4,
+  "lost": 0,
+  "saved_to_created_ms": {
+   "p50": 3.0,
+   "p95": 5.0,
+   "max": 107.0
+  },
+  "patient_send_to_doctor_client_ms": {
+   "p50": 13.8,
+   "p95": 60.4,
+   "max": 122.9
+  }
+ }
+]
