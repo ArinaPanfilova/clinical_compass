@@ -20,7 +20,7 @@ from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from kompas_core import ENGINE_VERSION, aviandr_report, evaluate_patient, load_card, score
+from kompas_core import ENGINE_VERSION, aviandr_report, evaluate_patient, extract, load_card, score
 from kompas_core.scales import ScaleInputError
 
 from . import access, alerts
@@ -80,6 +80,22 @@ class MessageIn(BaseModel):
 class Intake(BaseModel):
     status: Literal["taken", "missed"]
     reason: str | None = Field(default=None, max_length=500)
+
+
+class DocumentIn(BaseModel):
+    text: str = Field(max_length=60_000)
+
+
+class SafetyFacts(BaseModel):
+    facts: dict[str, bool | None]
+    source: Literal["document", "manual"]
+    document_id: int | None = None
+
+
+def _safety_keys() -> set[str]:
+    """Факты профиля безопасности — те, что проверяет карточка препарата."""
+    card = load_card("aviandr")
+    return {x["fact"].removeprefix("safety.") for x in card["contraindications"] + card["cautions"]}
 
 
 def _sse(event: str, data) -> str:
@@ -407,6 +423,56 @@ def create_app(db_path: str | Path, secret: str = "dev-secret-change-me", escala
             conn.execute("INSERT OR REPLACE INTO intake_marks (patient_id, date, status, reason) VALUES (?, ?, ?, ?)",
                          (pid, date.today().isoformat(), body.status, body.reason))
         return {"adherence": build_record(conn, pid)["adherence"]}
+
+    @api.post("/patients/{pid}/documents/extract")
+    def extract_document(pid: str, body: DocumentIn, user: dict = Depends(current_user),
+                         conn: sqlite3.Connection = Depends(get_conn)):
+        """Извлечение из текста документа. Ничего не меняет в карточке: факты — «извлечено, не проверено»,
+        в профиль попадает только то, что врач подтвердит (POST /safety-profile)."""
+        require_doctor(conn, user, "extract_document", pid)
+        require_patient_access(conn, user, pid, "extract_document")
+        if not body.text.strip():
+            raise HTTPException(422, "Пустой документ")
+        result = extract(body.text)
+        profile = build_record(conn, pid)["safety_profile"] or {}
+        diff = []
+        for key, fact in result["safety"].items():
+            if fact["value"] is None:
+                continue
+            cur = profile.get(key)
+            diff.append({"key": key, "current": cur, "extracted": fact["value"], "evidence": fact["evidence"],
+                         "kind": "new" if cur is None else "same" if cur == fact["value"] else "conflict"})
+        with tx(conn):
+            cur = conn.execute("INSERT INTO documents (patient_id, uploaded_by, text, extraction, created_at) "
+                               "VALUES (?, ?, ?, ?, ?)", (pid, user["id"], body.text, dumps(result), now()))
+        return {"document_id": cur.lastrowid, "extraction": result, "diff": diff}
+
+    @api.post("/patients/{pid}/safety-profile")
+    def update_safety_profile(pid: str, body: SafetyFacts, user: dict = Depends(current_user),
+                              conn: sqlite3.Connection = Depends(get_conn)):
+        """Врач подтверждает факты профиля безопасности (из документа или со слов пациента).
+        None — снова «неизвестно». Каждое изменение — запись в журнале решений."""
+        require_doctor(conn, user, "safety_profile", pid)
+        require_patient_access(conn, user, pid, "safety_profile")
+        bad = set(body.facts) - _safety_keys()
+        if not body.facts or bad:
+            raise HTTPException(422, f"Неизвестные факты профиля: {sorted(bad)}" if bad else "Нет фактов")
+        with tx(conn):
+            profile = loads(conn.execute("SELECT safety_profile FROM patients WHERE id = ?", (pid,)).fetchone()[0]) or {}
+            for k, v in body.facts.items():
+                if v is None:
+                    profile.pop(k, None)
+                else:
+                    profile[k] = v
+            conn.execute("UPDATE patients SET safety_profile = ? WHERE id = ?", (dumps(profile), pid))
+            src = f"документ №{body.document_id}" if body.source == "document" and body.document_id else (
+                "документ" if body.source == "document" else "со слов пациента")
+            comment = f"Профиль безопасности ({src}): " + ", ".join(
+                f"{k} = {'да' if v else 'нет' if v is False else 'неизвестно'}" for k, v in body.facts.items())
+            conn.execute("INSERT INTO decisions (patient_id, doctor_id, rule_id, rule_version, engine_version, action, "
+                         "comment, evidence, at) VALUES (?, ?, 'SAFETY-PROFILE', NULL, ?, 'modify', ?, ?, ?)",
+                         (pid, user["id"], ENGINE_VERSION, comment, dumps(body.facts), now()))
+        return bundle(conn, pid, access.link_kind(conn, user, pid))
 
     @api.get("/analytics/aviandr")
     def analytics(user: dict = Depends(current_user), conn: sqlite3.Connection = Depends(get_conn),

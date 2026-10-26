@@ -156,3 +156,13 @@ CREATE TABLE IF NOT EXISTS audit_log (
     allowed    INTEGER NOT NULL,
     at         TEXT NOT NULL
 );
+
+-- Загруженные врачом документы и результат извлечения (для аудита и воспроизводимости)
+CREATE TABLE IF NOT EXISTS documents (
+    id          INTEGER PRIMARY KEY,
+    patient_id  TEXT NOT NULL REFERENCES patients(id),
+    uploaded_by TEXT NOT NULL REFERENCES users(id),
+    text        TEXT NOT NULL,
+    extraction  TEXT NOT NULL,
+    created_at  TEXT NOT NULL
+);
