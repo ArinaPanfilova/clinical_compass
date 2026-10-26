@@ -112,3 +112,11 @@ def test_demo_users(conn):
     assert roles["ivanova"] == roles["petrov"] == "doctor"
     assert roles["researcher"] == "researcher"
     assert roles["anna"] == "patient" and roles["maria"] == "patient"
+
+
+def test_cohort_patients_have_readable_synthetic_names(conn):
+    names = dict(conn.execute("SELECT id, name FROM patients WHERE id IN ('AVP-T1', 'AVP-T2')").fetchall())
+    for name in names.values():
+        assert not name.startswith("Пациент") and name.endswith("(синт.)")
+        assert len(name.split()) == 3                                   # «Фамилия И. (синт.)»
+    assert names["AVP-T1"].split()[0].endswith(("а", "я"))              # пол «Ж» → женская фамилия

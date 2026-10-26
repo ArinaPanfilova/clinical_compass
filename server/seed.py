@@ -32,6 +32,19 @@ INDICATION_LABELS = {"F41.1": "Генерализованное тревожно
                      "F43.2": "Расстройство адаптации, тревожное состояние после COVID-19"}
 
 
+SURNAMES = ["Смирнов", "Кузнецов", "Попов", "Васильев", "Соколов", "Михайлов", "Новиков", "Фёдоров",
+            "Морозов", "Волков", "Алексеев", "Лебедев", "Семёнов", "Егоров", "Павлов", "Козлов", "Степанов",
+            "Николаев", "Орлов", "Андреев", "Макаров", "Никитин", "Захаров", "Зайцев", "Соловьёв", "Борисов"]
+INITIALS = "АБВГДЕЖЗИКЛМНОПРСТЮЯ"
+
+
+def synthetic_name(key: str, sex: str) -> str:
+    """Детерминированное вымышленное имя «Фамилия И. (синт.)» для пациентов когорты."""
+    rnd = random.Random(key)
+    surname = rnd.choice(SURNAMES) + ("а" if sex == "Ж" else "")
+    return f"{surname} {rnd.choice(INITIALS)}. (синт.)"
+
+
 def _insert_patient(conn: sqlite3.Connection, **f) -> None:
     for k in ("diagnoses", "safety_profile", "symptom_checklist", "context", "concomitant"):
         if k in f:
@@ -85,7 +98,7 @@ def insert_course(conn: sqlite3.Connection, c: dict) -> None:
     pid, start = c["patient_key"], date.fromisoformat(c["start_date"])
     safety = {**SAFE, "cardiovascular_disease": "cardiovascular" in c["comorbidities"],
               "endocrine_disorder": "endocrine" in c["comorbidities"]}
-    _insert_patient(conn, id=pid, name=f"Пациент {pid} (синт.)", age=c["age"], sex=c["sex"], primary_scale="gad7",
+    _insert_patient(conn, id=pid, name=synthetic_name(pid, c["sex"]), age=c["age"], sex=c["sex"], primary_scale="gad7",
                     diagnoses=[{"code": c["indication"], "status": "confirmed",
                                 "label": INDICATION_LABELS.get(c["indication"], c["indication"])}],
                     safety_profile=safety, symptom_checklist={"mania_or_psychosis": False},
