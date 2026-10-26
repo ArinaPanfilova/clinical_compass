@@ -14,6 +14,9 @@
 | **Проверка препарата и справка по КР** | |
 | ![Терапия](docs/screenshots/therapy.png) | |
 
+Материалы предзащиты команды «Мозгобойня»: [демо-видео, 2:11](docs/pitch/kompas-demo.mp4),
+[презентация](docs/pitch/kompas-deck.pdf), [постер A1](docs/pitch/kompas-poster-a1.pdf).
+
 ## Запуск за минуту
 
 ```bash
