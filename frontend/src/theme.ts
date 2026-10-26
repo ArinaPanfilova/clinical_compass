@@ -6,7 +6,7 @@ import { reducedMotion } from './hooks'
 export type ThemePref = 'system' | 'light' | 'dark'
 
 const KEY = 'kompas.theme'
-const BAR = { light: '#ffffff', dark: '#141f26' }      // строка состояния браузера = цвет верхней панели
+const BAR = { light: '#ffffff', dark: '#1d1724' }      // строка состояния браузера = цвет верхней панели
 
 export function readTheme(): ThemePref {
   try {

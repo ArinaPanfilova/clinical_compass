@@ -2,47 +2,56 @@
    Нейтральная основа тихая и холодная, как хорошо освещённый кабинет.
    Цвет зарезервирован под клинический смысл:
    красный — экстренно / «обязательно», янтарный — «желательно» и «нет данных»,
-   фиолетовый — безопасность терапии, серый пунктир — качество данных,
-   петроль — интерфейс и действия врача.
+   индиго — безопасность терапии, серый пунктир — качество данных,
+   фиолетовый (стиль ТЗ хакатона: Jost, фиолетовый, сиреневый, мятный) — интерфейс и действия врача.
    Тема: системная по умолчанию; data-theme="light" | "dark" на <html> её перекрывает (src/theme.ts).
    Контраст текста по WCAG AA (≥ 4,5:1) проверен для обеих тем. */
 :root {
-  --paper: #eef2f3;
+  --paper: #f6f3f8;
   --surface: #ffffff;
-  --surface-2: #f5f8f9;
-  --rail-bg: #e7edef;
-  --ink: #14232a;
-  --ink-2: #475961;
-  --ink-3: #5f6f77;
-  --line: #d8e1e4;
-  --line-2: #e7edef;
-  --brand: #0f6170;
-  --brand-ink: #0b4a56;
-  --brand-soft: #e1eff1;
+  --surface-2: #faf8fc;
+  --rail-bg: #f0eaf4;
+  --ink: #2b2233;
+  --ink-2: #574b62;
+  --ink-3: #6b5f76;
+  --line: #e4dbea;
+  --line-2: #efe9f3;
+  --brand: #4e3667;
+  --brand-ink: #3e2a53;
+  --brand-soft: #f1eaf6;
   --on-brand: #ffffff;
-  --action: #0f6170;
-  --action-hover: #0b4a56;
+  --action: #4e3667;
+  --action-hover: #3e2a53;
   --on-action: #ffffff;
   --must: #b42318;
   --must-soft: #fdeeec;
   --on-must: #ffffff;
   --want: #975404;
   --want-soft: #fdf3e4;
-  --rx: #6941c6;
-  --rx-soft: #f2eefc;
-  --ok: #16734a;
-  --ok-soft: #e5f4ec;
+  --rx: #4150b8;
+  --rx-soft: #eceefb;
+  --ok: #23704f;
+  --ok-soft: #e4f4ec;
+  --mint: #8bcfb2;
   --band-1: #d9efe2; --band-2: #e9f1cf; --band-3: #fae6bd; --band-4: #f9d5bb; --band-5: #f5c5bf;
   --viz-line: var(--brand-ink);
-  --skel: #e2e9ec;
+  --skel: #ebe4f0;
   --skel-hi: rgba(255, 255, 255, .7);
-  --shadow: 0 1px 2px rgba(20, 35, 42, .05), 0 1px 1px rgba(20, 35, 42, .03);
-  --shadow-lg: 0 12px 32px rgba(14, 30, 37, .16);
-  --scrim: rgba(10, 20, 25, .5);
+  --shadow: 0 1px 2px rgba(43, 34, 51, .05), 0 1px 1px rgba(43, 34, 51, .03);
+  --shadow-lg: 0 12px 32px rgba(38, 27, 48, .16);
+  --scrim: rgba(24, 16, 30, .5);
   --r-s: 6px;
   --r-m: 10px;
   --r-l: 14px;
-  --font: 'Golos Text', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font: 'Jost', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* экран входа: светлая лавандовая обложка, как в ТЗ */
+  --hero-bg: radial-gradient(110% 70% at 90% 8%, #e3d2ef 0%, transparent 60%), linear-gradient(165deg, #f6f0fa 0%, #efe5f5 100%);
+  --hero-ink: #3e2a53; --hero-ink-2: rgba(43, 34, 51, .84); --hero-ink-3: rgba(43, 34, 51, .62);
+  --hero-accent: #7b5596; --hero-grid: rgba(78, 54, 103, .07); --hero-grid-2: rgba(78, 54, 103, .03);
+  --hero-ring: rgba(78, 54, 103, .2); --hero-ring-2: rgba(78, 54, 103, .11); --hero-tick: rgba(78, 54, 103, .24);
+  --hero-tick-major: rgba(78, 54, 103, .5); --hero-letter: rgba(78, 54, 103, .55);
+  --hero-north: #4e3667; --hero-south: #8bcfb2; --hero-hub: #f6f0fa; --hero-hub-ring: #4e3667;
+  --phone-frame: #2a2131;
   --topbar-h: 56px;
   --ease-out: cubic-bezier(.2, .7, .2, 1);
   --ease-spring: cubic-bezier(.3, 1.3, .6, 1);
@@ -53,31 +62,45 @@
 /* Тёмная тема: одни и те же значения для системной настройки и для явного выбора */
 @media (prefers-color-scheme: dark) {
   :root:where(:not([data-theme="light"])) {
-    --paper: #0c1418; --surface: #141f26; --surface-2: #1a2830; --rail-bg: #101a20;
-    --ink: #e6eef1; --ink-2: #aebdc4; --ink-3: #8b9ca4; --line: #2a3b45; --line-2: #1f2e37;
-    --brand: #5ab4c2; --brand-ink: #8fd0da; --brand-soft: #143239; --on-brand: #0b1519;
-    --action: #237c89; --action-hover: #1e6f7b; --on-action: #ffffff;
+    --paper: #141019; --surface: #1d1724; --surface-2: #251e2d; --rail-bg: #18131e;
+    --ink: #efe9f3; --ink-2: #c7bccf; --ink-3: #a597ae; --line: #3a3043; --line-2: #2a2231;
+    --brand: #cdb4e4; --brand-ink: #e4d4f0; --brand-soft: #2e2339; --on-brand: #1a1220;
+    --action: #6d4d8f; --action-hover: #7d5ba0; --on-action: #ffffff;
     --must: #f28b80; --must-soft: #3a1e1c; --on-must: #1a0b0a; --want: #e7b35e; --want-soft: #33291a;
-    --rx: #b9a0f0; --rx-soft: #282042; --ok: #6fcf98; --ok-soft: #15301f;
-    --band-1: color-mix(in srgb, #6fcf98 22%, #141f26); --band-2: color-mix(in srgb, #b9d16a 22%, #141f26);
-    --band-3: color-mix(in srgb, #e7b35e 24%, #141f26); --band-4: color-mix(in srgb, #ee9a68 26%, #141f26);
-    --band-5: color-mix(in srgb, #f28b80 30%, #141f26);
-    --skel: #1d2b33; --skel-hi: rgba(255, 255, 255, .06);
+    --rx: #a3a8f6; --rx-soft: #23253f; --ok: #6fcf98; --ok-soft: #15301f;
+    --band-1: color-mix(in srgb, #6fcf98 22%, #1d1724); --band-2: color-mix(in srgb, #b9d16a 22%, #1d1724);
+    --band-3: color-mix(in srgb, #e7b35e 24%, #1d1724); --band-4: color-mix(in srgb, #ee9a68 26%, #1d1724);
+    --band-5: color-mix(in srgb, #f28b80 30%, #1d1724);
+    --skel: #2a2232; --skel-hi: rgba(255, 255, 255, .06);
+    --hero-bg: radial-gradient(110% 70% at 90% 8%, rgba(141, 99, 180, .45) 0%, transparent 60%), linear-gradient(165deg, #3a2950 0%, #271b36 55%, #1a1224 100%);
+    --hero-ink: #ffffff; --hero-ink-2: rgba(240, 232, 245, .84); --hero-ink-3: rgba(240, 232, 245, .62);
+    --hero-accent: #d8c1e6; --hero-grid: rgba(255, 255, 255, .06); --hero-grid-2: rgba(255, 255, 255, .025);
+    --hero-ring: rgba(255, 255, 255, .16); --hero-ring-2: rgba(255, 255, 255, .1); --hero-tick: rgba(255, 255, 255, .22);
+    --hero-tick-major: rgba(255, 255, 255, .5); --hero-letter: rgba(255, 255, 255, .55);
+    --hero-north: rgba(255, 255, 255, .92); --hero-south: rgba(139, 207, 178, .6); --hero-hub: #271b36; --hero-hub-ring: rgba(255, 255, 255, .9);
+    --phone-frame: #3a3043;
     --shadow: none; --shadow-lg: 0 14px 36px rgba(0, 0, 0, .5); --scrim: rgba(0, 0, 0, .62);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --paper: #0c1418; --surface: #141f26; --surface-2: #1a2830; --rail-bg: #101a20;
-  --ink: #e6eef1; --ink-2: #aebdc4; --ink-3: #8b9ca4; --line: #2a3b45; --line-2: #1f2e37;
-  --brand: #5ab4c2; --brand-ink: #8fd0da; --brand-soft: #143239; --on-brand: #0b1519;
-  --action: #237c89; --action-hover: #1e6f7b; --on-action: #ffffff;
+  --paper: #141019; --surface: #1d1724; --surface-2: #251e2d; --rail-bg: #18131e;
+  --ink: #efe9f3; --ink-2: #c7bccf; --ink-3: #a597ae; --line: #3a3043; --line-2: #2a2231;
+  --brand: #cdb4e4; --brand-ink: #e4d4f0; --brand-soft: #2e2339; --on-brand: #1a1220;
+  --action: #6d4d8f; --action-hover: #7d5ba0; --on-action: #ffffff;
   --must: #f28b80; --must-soft: #3a1e1c; --on-must: #1a0b0a; --want: #e7b35e; --want-soft: #33291a;
-  --rx: #b9a0f0; --rx-soft: #282042; --ok: #6fcf98; --ok-soft: #15301f;
-  --band-1: color-mix(in srgb, #6fcf98 22%, #141f26); --band-2: color-mix(in srgb, #b9d16a 22%, #141f26);
-  --band-3: color-mix(in srgb, #e7b35e 24%, #141f26); --band-4: color-mix(in srgb, #ee9a68 26%, #141f26);
-  --band-5: color-mix(in srgb, #f28b80 30%, #141f26);
-  --skel: #1d2b33; --skel-hi: rgba(255, 255, 255, .06);
+  --rx: #a3a8f6; --rx-soft: #23253f; --ok: #6fcf98; --ok-soft: #15301f;
+  --band-1: color-mix(in srgb, #6fcf98 22%, #1d1724); --band-2: color-mix(in srgb, #b9d16a 22%, #1d1724);
+  --band-3: color-mix(in srgb, #e7b35e 24%, #1d1724); --band-4: color-mix(in srgb, #ee9a68 26%, #1d1724);
+  --band-5: color-mix(in srgb, #f28b80 30%, #1d1724);
+  --skel: #2a2232; --skel-hi: rgba(255, 255, 255, .06);
+  --hero-bg: radial-gradient(110% 70% at 90% 8%, rgba(141, 99, 180, .45) 0%, transparent 60%), linear-gradient(165deg, #3a2950 0%, #271b36 55%, #1a1224 100%);
+  --hero-ink: #ffffff; --hero-ink-2: rgba(240, 232, 245, .84); --hero-ink-3: rgba(240, 232, 245, .62);
+  --hero-accent: #d8c1e6; --hero-grid: rgba(255, 255, 255, .06); --hero-grid-2: rgba(255, 255, 255, .025);
+  --hero-ring: rgba(255, 255, 255, .16); --hero-ring-2: rgba(255, 255, 255, .1); --hero-tick: rgba(255, 255, 255, .22);
+  --hero-tick-major: rgba(255, 255, 255, .5); --hero-letter: rgba(255, 255, 255, .55);
+  --hero-north: rgba(255, 255, 255, .92); --hero-south: rgba(139, 207, 178, .6); --hero-hub: #271b36; --hero-hub-ring: rgba(255, 255, 255, .9);
+  --phone-frame: #3a3043;
   --shadow: none; --shadow-lg: 0 14px 36px rgba(0, 0, 0, .5); --scrim: rgba(0, 0, 0, .62);
   color-scheme: dark;
 }
@@ -119,8 +142,11 @@ ul, ol { margin: 0; }
   display: flex; align-items: center; gap: 12px 18px; height: var(--topbar-h); padding: 0 16px 0 24px;
   background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10;
 }
-.logo { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; color: var(--ink); white-space: nowrap; }
-.logo svg { color: var(--brand); flex: none; }
+.logo { display: flex; align-items: center; gap: 9px; font-weight: 600; font-size: 19px; letter-spacing: 0; color: var(--brand-ink); white-space: nowrap; }
+.logo svg { flex: none; }
+.logo-tile { fill: var(--action); }
+.logo-south { fill: var(--mint); }
+.logo-hub { fill: var(--action); stroke: #fff; stroke-width: 5; }
 .tabs { display: flex; align-self: stretch; gap: 2px; margin-left: 10px; }
 .tabs button {
   position: relative; display: inline-flex; align-items: center; gap: 8px; border: 0; background: transparent;
@@ -534,7 +560,7 @@ ul, ol { margin: 0; }
 .patient-wrap { display: flex; justify-content: center; align-items: flex-start; padding: 32px 16px 56px; gap: 48px; flex-wrap: wrap; }
 .phone {
   width: 390px; max-width: 100%; height: 800px; background: var(--surface); border-radius: 36px;
-  box-shadow: 0 0 0 10px #1d2a30, 0 24px 60px rgba(14, 30, 37, .22);
+  box-shadow: 0 0 0 10px var(--phone-frame), 0 24px 60px rgba(38, 27, 48, .22);
   overflow: hidden; display: flex; flex-direction: column; position: relative;
 }
 .phone-status { display: flex; justify-content: space-between; padding: 12px 28px 0; font-size: 13px; font-weight: 600; }
@@ -685,40 +711,37 @@ ul, ol { margin: 0; }
 .login { position: relative; min-height: 100dvh; display: grid; grid-template-columns: minmax(400px, .92fr) minmax(0, 1.08fr); }
 .login-hero {
   position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 28px;
-  padding: 36px clamp(32px, 4vw, 64px) 32px; color: #e8f3f5;
-  background:
-    radial-gradient(110% 70% at 90% 8%, rgba(37, 147, 163, .55) 0%, transparent 60%),
-    linear-gradient(165deg, #0e5866 0%, #0a3f49 55%, #072c34 100%);
+  padding: 36px clamp(32px, 4vw, 64px) 32px; color: var(--hero-ink-2);
+  background: var(--hero-bg);
 }
 /* миллиметровка — как бумага медицинских записей и графиков */
 .login-hero::before {
   content: ''; position: absolute; inset: 0; pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, .06) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .06) 1px, transparent 1px),
-    linear-gradient(rgba(255, 255, 255, .025) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .025) 1px, transparent 1px);
+    linear-gradient(var(--hero-grid) 1px, transparent 1px), linear-gradient(90deg, var(--hero-grid) 1px, transparent 1px),
+    linear-gradient(var(--hero-grid-2) 1px, transparent 1px), linear-gradient(90deg, var(--hero-grid-2) 1px, transparent 1px);
   background-size: 96px 96px, 96px 96px, 24px 24px, 24px 24px;
   -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, .55) 55%, transparent 100%);
   mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, .55) 55%, transparent 100%);
 }
-.login-hero .logo { position: relative; z-index: 1; color: #fff; }
-.login-hero .logo svg { color: #fff; }
+.login-hero .logo { position: relative; z-index: 1; color: var(--hero-ink); }
 .hero-copy { position: relative; z-index: 1; max-width: 32em; margin-top: auto; }
-.hero-kicker { font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: #8fd0da; }
-.hero-title { font-size: clamp(26px, 2.3vw, 36px); line-height: 1.16; font-weight: 600; letter-spacing: -.022em; margin: 12px 0 24px; color: #fff; text-wrap: balance; }
-.hero-points { list-style: none; padding: 0; display: grid; gap: 12px; font-size: 14.5px; line-height: 1.45; color: rgba(232, 243, 245, .84); }
+.hero-kicker { font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--hero-accent); }
+.hero-title { font-size: clamp(26px, 2.3vw, 36px); line-height: 1.16; font-weight: 600; letter-spacing: -.01em; margin: 12px 0 24px; color: var(--hero-ink); text-wrap: balance; }
+.hero-points { list-style: none; padding: 0; display: grid; gap: 12px; font-size: 14.5px; line-height: 1.45; color: var(--hero-ink-2); }
 .hero-points li { padding-left: 24px; position: relative; }
-.hero-points li::before { content: ''; position: absolute; left: 0; top: .62em; width: 12px; height: 2px; border-radius: 2px; background: #8fd0da; }
-.hero-points b { color: #fff; font-weight: 600; }
-.hero-foot { position: relative; z-index: 1; font-size: 12.5px; color: rgba(232, 243, 245, .62); }
+.hero-points li::before { content: ''; position: absolute; left: 0; top: .62em; width: 12px; height: 2px; border-radius: 2px; background: var(--mint); }
+.hero-points b { color: var(--hero-ink); font-weight: 600; }
+.hero-foot { position: relative; z-index: 1; font-size: 12.5px; color: var(--hero-ink-3); }
 .compass-art { position: absolute; top: 5%; right: -12%; width: min(540px, 82%); height: auto; pointer-events: none; }
-.ca-ring { fill: none; stroke: rgba(255, 255, 255, .16); stroke-width: 1.5; }
-.ca-ring.thin { stroke-width: 1; stroke: rgba(255, 255, 255, .1); }
-.ca-tick { stroke: rgba(255, 255, 255, .22); stroke-width: 1; }
-.ca-tick.major { stroke: rgba(255, 255, 255, .5); stroke-width: 2; }
-.ca-letter { fill: rgba(255, 255, 255, .55); font-size: 15px; font-weight: 600; font-family: var(--font); }
-.ca-north { fill: rgba(255, 255, 255, .92); }
-.ca-south { fill: rgba(143, 208, 218, .55); }
-.ca-hub { fill: #0a3f49; stroke: rgba(255, 255, 255, .9); stroke-width: 2; }
+.ca-ring { fill: none; stroke: var(--hero-ring); stroke-width: 1.5; }
+.ca-ring.thin { stroke-width: 1; stroke: var(--hero-ring-2); }
+.ca-tick { stroke: var(--hero-tick); stroke-width: 1; }
+.ca-tick.major { stroke: var(--hero-tick-major); stroke-width: 2; }
+.ca-letter { fill: var(--hero-letter); font-size: 15px; font-weight: 600; font-family: var(--font); }
+.ca-north { fill: var(--hero-north); }
+.ca-south { fill: var(--hero-south); }
+.ca-hub { fill: var(--hero-hub); stroke: var(--hero-hub-ring); stroke-width: 2; }
 .ca-needle { animation: needle-settle 2.4s cubic-bezier(.25, .8, .3, 1) .25s both; }
 @keyframes needle-settle {
   0% { transform: rotate(-80deg); } 40% { transform: rotate(16deg); } 62% { transform: rotate(-6deg); }
@@ -728,7 +751,7 @@ ul, ol { margin: 0; }
 .login-tools { position: absolute; top: 16px; right: 16px; z-index: 2; }
 .login-card {
   width: min(620px, 100%); background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
-  padding: 32px; box-shadow: var(--shadow), 0 20px 50px -30px rgba(14, 30, 37, .35); display: grid; gap: 14px;
+  padding: 32px; box-shadow: var(--shadow), 0 20px 50px -30px rgba(38, 27, 48, .35); display: grid; gap: 14px;
   animation: view-in .4s var(--ease-out) both;
 }
 .login-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; margin-top: 4px; }

@@ -1,5 +1,5 @@
 /* Экран «Авиандр: наблюдение применения». Токены — из styles.css, цвета серий — здесь.
-   Цвета групп исхода: петроль — продолжают (интерфейс), фиолетовый — отмена из-за НЯ
+   Цвета групп исхода: бирюзово-мятный — продолжают, индиго — отмена из-за НЯ
    (безопасность терапии), янтарный — недостаточный эффект, серый пунктир — прочие отмены.
    Красный не используется: он закреплён за экстренным.
    Палитра проверена валидатором dataviz (validate_palette.js, все пары, обе темы):
@@ -9,9 +9,9 @@
    светлота (обычное зрение ΔE ≥ 16 ко всем) и контраст ≥ 3:1. */
 .an {
   --an-g-continued: #009397;
-  --an-g-stopped_ae: #6a41c6;
+  --an-g-stopped_ae: #4a58c8;
   --an-g-stopped_inefficacy: #bd7221;
-  --an-g-stopped_other: #48555c;
+  --an-g-stopped_other: #4a4552;
   --an-line-w: 2.25px;
   --an-iqr-op: .14;
   --an-iqr-edge-op: .55;
@@ -19,7 +19,7 @@
   --an-adh-1: var(--brand);
   --an-adh-2: color-mix(in srgb, var(--brand) 66%, var(--surface));
   --an-adh-3: color-mix(in srgb, var(--brand) 42%, var(--surface));
-  --an-tip-shadow: 0 8px 28px rgba(14, 30, 37, .14);
+  --an-tip-shadow: 0 8px 28px rgba(38, 27, 48, .14);
   max-width: 1600px; margin: 0 auto; padding: 24px 32px 56px;
   display: grid; gap: 16px;
 }
@@ -28,9 +28,9 @@
 @media (prefers-color-scheme: dark) {
   :root:where(:not([data-theme="light"])) .an {
     --an-g-continued: #17a7b4;
-    --an-g-stopped_ae: #906eda;
+    --an-g-stopped_ae: #6f6ee0;
     --an-g-stopped_inefficacy: #c68627;
-    --an-g-stopped_other: #636f76;
+    --an-g-stopped_other: #6b6674;
     --an-line-w: 2.75px;
     --an-iqr-op: .26;
     --an-iqr-edge-op: .8;
@@ -39,9 +39,9 @@
 }
 :root[data-theme="dark"] .an {
   --an-g-continued: #17a7b4;
-  --an-g-stopped_ae: #906eda;
+  --an-g-stopped_ae: #6f6ee0;
   --an-g-stopped_inefficacy: #c68627;
-  --an-g-stopped_other: #636f76;
+  --an-g-stopped_other: #6b6674;
   --an-line-w: 2.75px;
   --an-iqr-op: .26;
   --an-iqr-edge-op: .8;

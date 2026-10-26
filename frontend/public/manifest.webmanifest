@@ -8,8 +8,8 @@
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#eef2f3",
-  "theme_color": "#0f6170",
+  "background_color": "#f6f3f8",
+  "theme_color": "#4e3667",
   "categories": ["medical", "health"],
   "icons": [
     { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },

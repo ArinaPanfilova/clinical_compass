@@ -21,7 +21,7 @@
         try { t = localStorage.getItem('kompas.theme') } catch (e) { /* приватный режим */ }
         if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t)
         var dark = t === 'dark' || (t !== 'light' && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches)
-        document.querySelector('meta[name="theme-color"]').setAttribute('content', dark ? '#141f26' : '#ffffff')
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', dark ? '#1d1724' : '#ffffff')
       })()
     </script>
   </head>
