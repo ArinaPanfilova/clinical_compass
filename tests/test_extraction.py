@@ -318,7 +318,7 @@ def test_evidence_points_to_source_fragment():
     (par,) = out["medications"]
     assert par["evidence"]["quote"].startswith("пароксетин") and "отменён" in par["evidence"]["quote"]
     (d,) = out["diagnoses"]
-    assert "F41.1" in d["evidence"]["quote"]
+    assert d["evidence"]["quote"] == "Генерализованное тревожное расстройство (F41.1)"
     (al,) = out["allergies"]
     assert al["evidence"]["quote"] == "пенициллин"
 

@@ -109,4 +109,4 @@
 
 На `test` хуже, чем на `dev`: `diagnoses`, `medications`, `doses`, `allergies`, `epilepsy_or_organic_brain_lesion`, `pregnancy`, `breastfeeding`, `renal_gfr_below_60`, `hepatic_insufficiency`, `maoi_within_2_weeks`, `cardiovascular_disease`, `endocrine_disorder`, `substance_dependence`, `lactose_intolerance`, `hypersensitivity_aviandr`. Это цена перефразировок, которых не было при разработке; извлекатель под них не подгонялся.
 
-Время извлечения на документ: p50 = 1.96 мс, p95 = 3.06 мс.
+Время извлечения на документ: p50 = 1.99 мс, p95 = 3.11 мс.

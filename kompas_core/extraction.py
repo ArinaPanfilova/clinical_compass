@@ -170,6 +170,9 @@ class _Doc:
             start += 1
         while end > start and t[end - 1] in " \t\n,;:—–-(":
             end -= 1
+        for o, c in ("()", "[]"):           # «… (F41.1» → «… (F41.1)»
+            if t.count(o, start, end) > t.count(c, start, end) and t[end:end + 1] == c:
+                end += 1
         return {"start": start, "end": end, "quote": t[start:end]}
 
 
