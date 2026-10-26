@@ -423,3 +423,6 @@ ul, ol { margin: 0; }
 .bubble.mine { justify-self: end; background: var(--brand-soft); border-color: transparent; }
 .bubble-meta { display: block; margin-top: 2px; font-size: 12px; color: var(--ink-3); }
 .messages .field { min-height: 64px; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .btn.primary { color: #0e161a; }
+}

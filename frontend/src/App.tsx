@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { api, detectMode, hasToken, loadMockPatients, setToken, type Mode } from './api'
+import { AnalyticsView, type AnalyticsQuery, type AviandrReport } from './components/AnalyticsView'
 import { DoctorWorkspace } from './components/DoctorWorkspace'
 import { Login } from './components/Login'
 import { Logo } from './components/Logo'
@@ -93,12 +94,10 @@ function PatientHome({ pid, mode }: { pid: string; mode: Mode }) {
   )
 }
 
-// Временная заглушка до подключения экрана аналитики
-function AnalyticsSlot({ role }: { role: 'doctor' | 'researcher'; mode: Mode }) {
-  return (
-    <main style={{ padding: 24 }}>
-      <h1>Авиандр: наблюдение применения</h1>
-      <p className="muted">{role === 'doctor' ? 'Ваши пациенты' : 'Все курсы организации, обезличенно'}. Индекс устойчивой пользы — экран в разработке.</p>
-    </main>
-  )
+// Без сервера — заранее выгруженный отчёт (фильтры не пересчитываются)
+function AnalyticsSlot({ role, mode }: { role: 'doctor' | 'researcher'; mode: Mode }) {
+  const fetchReport = (q: AnalyticsQuery) => mode === 'live'
+    ? api.analytics<AviandrReport>({ ...q })
+    : fetch(`./mock/analytics-${role}.json`).then(r => r.json() as Promise<AviandrReport>)
+  return <AnalyticsView role={role} fetchReport={fetchReport} />
 }
