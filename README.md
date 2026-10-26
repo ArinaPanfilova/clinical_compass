@@ -11,6 +11,8 @@
 | ![Вход](docs/screenshots/login.png) | ![Кабинет врача](docs/screenshots/doctor.png) |
 | **Кабинет пациента** | **Авиандр: наблюдение применения** |
 | ![Кабинет пациента](docs/screenshots/patient.png) | ![Аналитика](docs/screenshots/analytics.png) |
+| **Проверка препарата и справка по КР** | |
+| ![Терапия](docs/screenshots/therapy.png) | |
 
 ## Запуск за минуту
 
