@@ -20,6 +20,8 @@ const STAGE: Record<Alert['status'], number> = { created: 1, delivered: 2, accep
 
 export function FindingItem({ f, decision, onDecide, alert, onAccept }: Props) {
   const [mode, setMode] = useState<null | 'reject' | 'modify'>(null)
+  // Решение можно пересмотреть: новое записывается поверх, прежнее остаётся в журнале
+  const [revising, setRevising] = useState(false)
   const [comment, setComment] = useState('')
   const [now, setNow] = useState(Date.now())
   const [accepted, setAccepted] = useState(false)
@@ -38,6 +40,10 @@ export function FindingItem({ f, decision, onDecide, alert, onAccept }: Props) {
   const stage = decision ? 5 : alert ? STAGE[alert.status] : accepted ? 3 : 2
   const canAccept = isAlert && (alert ? alert.status === 'created' || alert.status === 'delivered' : !accepted)
   const accept = () => alert && onAccept ? onAccept(alert.id) : setAccepted(true)
+  const decide = async (action: Decision['action'], text?: string) => {
+    await onDecide(action, text)
+    setRevising(false); setMode(null); setComment('')
+  }
 
   return (
     <article className={cls} aria-label={f.title}>
@@ -74,18 +80,21 @@ export function FindingItem({ f, decision, onDecide, alert, onAccept }: Props) {
       </details>
 
       <div className="actions">
-        {decision ? (
-          <p className="decided-note">
-            {ACTION_LABEL[decision.action]} {new Date(decision.at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
-            {decision.comment ? `: ${decision.comment}` : ''}
-          </p>
+        {decision && !revising ? (
+          <div className="decided">
+            <p className="decided-note">
+              {ACTION_LABEL[decision.action]} {new Date(decision.at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
+              {decision.comment ? `: ${decision.comment}` : ''}
+            </p>
+            <button className="btn quiet" onClick={() => { setRevising(true); setMode(null); setComment('') }}>Пересмотреть</button>
+          </div>
         ) : mode ? (
           <div className="reason">
             <label htmlFor={`r-${f.rule_id}`} className="faint">
               {mode === 'reject' ? 'Почему отклоняете' : 'Что меняете'}
             </label>
             <textarea id={`r-${f.rule_id}`} value={comment} onChange={e => setComment(e.target.value)} autoFocus />
-            <button className="btn primary" disabled={!comment.trim()} onClick={() => onDecide(mode, comment.trim())}>
+            <button className="btn primary" disabled={!comment.trim()} onClick={() => decide(mode, comment.trim())}>
               {mode === 'reject' ? 'Отклонить' : 'Сохранить'}
             </button>
             <button className="btn quiet" onClick={() => setMode(null)}>Отмена</button>
@@ -93,11 +102,13 @@ export function FindingItem({ f, decision, onDecide, alert, onAccept }: Props) {
         ) : (
           <>
             {canAccept && <button className="btn danger" onClick={accept}>Принять в работу</button>}
-            <button className="btn primary" onClick={() => onDecide('confirm')}>Подтвердить</button>
+            <button className="btn primary" onClick={() => decide('confirm')}>Подтвердить</button>
             <div className="secondary">
               <button className="btn quiet" onClick={() => setMode('modify')}>Изменить</button>
               <button className="btn quiet" onClick={() => setMode('reject')}>Отклонить</button>
+              {revising && <button className="btn quiet" onClick={() => setRevising(false)}>Оставить как было</button>}
             </div>
+            {revising && <p className="faint revise-note">Новое решение заменит прежнее, в журнале останутся оба.</p>}
           </>
         )}
       </div>

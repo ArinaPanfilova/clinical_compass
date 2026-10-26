@@ -262,7 +262,7 @@ function Kpis({ r }: { r: AviandrReportFull }) {
             </span>
           )}
           <span className="stat-delta an-reasons">
-            {ae && <span><i style={{ background: reasonColor('adverse_event') }} />НЯ <Num v={ae.value} k={k} /></span>}
+            {ae && <span><i style={{ background: reasonColor('adverse_event') }} />нежелательные явления <Num v={ae.value} k={k} /></span>}
             {ineff && <span><i style={{ background: reasonColor('inefficacy') }} />нет эффекта <Num v={ineff.value} k={k} /></span>}
             {others.length > 0 && (
               <span title={others.map(x => `${x.label}: ${x.value ?? `<${k}`}`).join('\n')}>
@@ -287,7 +287,7 @@ function Kpis({ r }: { r: AviandrReportFull }) {
           <summary>Как считается</summary>
           <div className="an-formula-body">
             <p>{b.formula}</p>
-            <p className="faint">Ответили: {num(b.components.responders)}. Серьёзные НЯ или отмена из-за НЯ: {num(b.components.with_harm)}. ДИ — метод Вильсона.</p>
+            <p className="faint">Ответили на терапию: {num(b.components.responders)}. С серьёзными нежелательными явлениями или отменой из-за них: {num(b.components.with_harm)}. Доверительный интервал по Вильсону.</p>
           </div>
         </details>
       </div>
@@ -371,12 +371,12 @@ function SafetyPanel({ r }: { r: AviandrReportFull }) {
         <span className="faint">нежелательные явления, {coursesWord(s.courses)}</span>
       </div>
       <div className="an-rates inline">
-        <RateRow label="Курсы с НЯ" rate={s.with_ae} denom={s.courses} k={k} tone="rx" />
-        <RateRow label="Серьёзные НЯ" rate={s.serious} denom={s.courses} k={k} tone="rx" />
-        <RateRow label="Отмена из-за НЯ" rate={s.stopped_due_to_ae} denom={s.courses} k={k} tone="rx" />
+        <RateRow label="Курсы с нежелательными явлениями" rate={s.with_ae} denom={s.courses} k={k} tone="rx" />
+        <RateRow label="Серьёзные нежелательные явления" rate={s.serious} denom={s.courses} k={k} tone="rx" />
+        <RateRow label="Отмена из-за нежелательных явлений" rate={s.stopped_due_to_ae} denom={s.courses} k={k} tone="rx" />
         <CiAxis />
       </div>
-      {s.by_term.length === 0 ? <p className="empty an-gap">НЯ не зарегистрированы.</p> : (
+      {s.by_term.length === 0 ? <p className="empty an-gap">Нежелательные явления не зарегистрированы.</p> : (
         <div className="an-table-wrap an-gap">
           <table className="an-table an-ae">
             <caption className="sr-only">Нежелательные явления по терминам и тяжести, число случаев</caption>

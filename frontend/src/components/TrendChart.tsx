@@ -83,6 +83,7 @@ export function TrendChart({ scale, points, therapyStarts = [], expectedInterval
               return (
                 <g key={b.label}>
                   <rect x={pad.l} width={iw} y={y(top)} height={y(b.min) - y(top)} fill={BAND_FILL[i]} />
+                  {i > 0 && <line className="band-edge" x1={pad.l} x2={pad.l + iw} y1={y(b.min)} y2={y(b.min)} />}
                   {!compact && !narrow && <text className="band-label" x={pad.l + iw + 8} y={(y(b.min) + y(top)) / 2 + 4}>{b.label}</text>}
                   <text className="axis" x={pad.l - 6} y={y(b.min) + 4} textAnchor="end">{b.min}</text>
                 </g>
@@ -115,7 +116,7 @@ export function TrendChart({ scale, points, therapyStarts = [], expectedInterval
               ))}
               {scored.map((p, i) => (
                 <g key={p.date + p.total}>
-                  <circle className={`pt ${p.prorated ? 'prorated' : ''} ${hi === i ? 'on' : ''}`} cx={x(p.date)} cy={y(p.total)} r={hi === i ? 6 : 4.5} />
+                  <circle className={`pt ${p.prorated ? 'prorated' : ''} ${hi === i ? 'on' : ''}`} cx={x(p.date)} cy={y(p.total)} r={hi === i ? 7 : 5.5} />
                   {!compact && labelled(i) && <text className="val" x={x(p.date)} y={y(p.total) - 11} textAnchor="middle">{p.total}</text>}
                 </g>
               ))}

@@ -155,7 +155,9 @@ const FACT_ORDER: Record<FactState, number> = { yes: 0, unk: 1, no: 2 }
 
 function PatientCard({ b, mode, user, onDecide, onAlertAction, onReplace, msgTick }: CardProps) {
   const { record: r, evaluation: e } = b
-  const [scale, setScale] = useState<'phq9' | 'gad7'>(r.primary_scale)
+  // Обе шкалы видны сразу: тревога и депрессия часто идут вместе; основная шкала пациента — первой
+  const scales: ('phq9' | 'gad7')[] = r.primary_scale === 'gad7' ? ['gad7', 'phq9'] : ['phq9', 'gad7']
+  const toChart = (s: string) => document.getElementById(`dyn-${r.patient_id}-${s}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   const [err, setErr] = useState<string | null>(null)
   const [docOpen, setDocOpen] = useState(false)
   const decisions = b.decisions ?? []
@@ -188,8 +190,6 @@ function PatientCard({ b, mode, user, onDecide, onAlertAction, onReplace, msgTic
     ? `Факторы риска: ${flagged.length}${unknown ? ` · нет данных: ${unknown}` : ''}`
     : unknown ? `Нет данных: ${unknown} из ${ALL_SAFETY_KEYS.length}` : `${ALL_SAFETY_KEYS.length} из ${ALL_SAFETY_KEYS.length} · ограничений нет`
 
-  const ch = e.details.changes[scale]
-  const trend = e.details.trends[scale]
   const therapyStarts = r.therapy.current.filter(t => t.start_date).map(t => ({ date: t.start_date!, label: t.mnn.split(' ')[0] }))
   const drug = e.drug_checks[0]
   // Место Авиандра в действующих КР: «можно рассмотреть» по инструкции ≠ «препарат выбора»
@@ -232,8 +232,8 @@ function PatientCard({ b, mode, user, onDecide, onAlertAction, onReplace, msgTic
         )}
 
         <div className="stats">
-          <ScaleStat name="PHQ-9 · депрессия" p={last(b, 'phq9')} ch={e.details.changes.phq9} active={scale === 'phq9'} onClick={() => setScale('phq9')} />
-          <ScaleStat name="GAD-7 · тревога" p={last(b, 'gad7')} ch={e.details.changes.gad7} active={scale === 'gad7'} onClick={() => setScale('gad7')} />
+          <ScaleStat name="PHQ-9 · депрессия" p={last(b, 'phq9')} ch={e.details.changes.phq9} active={false} onClick={() => toChart('phq9')} />
+          <ScaleStat name="GAD-7 · тревога" p={last(b, 'gad7')} ch={e.details.changes.gad7} active={false} onClick={() => toChart('gad7')} />
           <div className="stat">
             <span className="stat-label">Терапия</span>
             <span className="stat-text">{r.therapy.current.length ? r.therapy.current.map(t => t.mnn.split(' (')[0]).join(', ') : 'не назначена'}</span>
@@ -284,24 +284,26 @@ function PatientCard({ b, mode, user, onDecide, onAlertAction, onReplace, msgTic
 
         <div className="card-grid">
           <section className="panel chart-panel" aria-labelledby="dyn-h">
-            <div className="panel-head">
-              <h2 id="dyn-h">Динамика</h2>
-              <div className="seg" role="group" aria-label="Шкала">
-                {(['phq9', 'gad7'] as const).map(s => (
-                  <button key={s} aria-pressed={scale === s} onClick={() => setScale(s)}>{s === 'phq9' ? 'PHQ-9' : 'GAD-7'}</button>
-                ))}
-              </div>
-            </div>
-            <TrendChart scale={scale} points={e.details.scales[scale] ?? []} therapyStarts={therapyStarts} />
-            {ch ? (
-              <p className="change-line">
-                <strong className={ch.direction}>{ch.direction === 'worsened' ? 'Клинически значимое ухудшение' : ch.direction === 'improved' ? 'Клинически значимое улучшение' : 'Изменение меньше порога значимости'}</strong>
-                {' '}({ch.baseline} → {ch.current}, порог {ch.thresholds.mcid}).
-                {ch.response && ' Снижение на 50% и больше.'}{ch.remission && ' Ниже порога ремиссии по шкале.'}
-                <span className="faint">Порог — популяционный ориентир. Изменение описывает ряд наблюдений и само по себе не доказывает эффект лечения.</span>
-              </p>
-            ) : <p className="change-line faint">Для оценки изменения нужно минимум два рассчитанных наблюдения.</p>}
-            {trend && trend.coverage < 0.7 && <p className="warn-line">Полнота наблюдения {Math.round(trend.coverage * 100)}% — стабильность не предполагается.</p>}
+            <div className="panel-head"><h2 id="dyn-h">Динамика</h2><span className="faint">сумма баллов по анкетам</span></div>
+            {scales.map(sc => {
+              const ch = e.details.changes[sc]
+              const trend = e.details.trends[sc]
+              return (
+                <div key={sc} id={`dyn-${r.patient_id}-${sc}`} className="dyn-scale">
+                  <h3 className="dyn-title">{sc === 'phq9' ? 'PHQ-9 · депрессия' : 'GAD-7 · тревога'}</h3>
+                  <TrendChart scale={sc} points={e.details.scales[sc] ?? []} therapyStarts={therapyStarts} />
+                  {ch ? (
+                    <p className="change-line">
+                      <strong className={ch.direction}>{ch.direction === 'worsened' ? 'Значимое ухудшение' : ch.direction === 'improved' ? 'Значимое улучшение' : 'Изменение меньше порога значимости'}</strong>
+                      {' '}({ch.baseline} → {ch.current}, порог {ch.thresholds.mcid}).
+                      {ch.response && ' Снижение на 50% и больше.'}{ch.remission && ' Ниже порога ремиссии по шкале.'}
+                    </p>
+                  ) : <p className="change-line faint">Чтобы оценить изменение, нужно хотя бы два рассчитанных наблюдения.</p>}
+                  {trend && trend.coverage < 0.7 && <p className="warn-line">Полнота наблюдения {Math.round(trend.coverage * 100)}%, поэтому стабильность не предполагается.</p>}
+                </div>
+              )
+            })}
+            <p className="faint">Порог значимости — популяционный ориентир. Изменение описывает ряд наблюдений и само по себе не доказывает эффект лечения.</p>
           </section>
 
           <section className="panel diary-panel" aria-labelledby="diary-h">

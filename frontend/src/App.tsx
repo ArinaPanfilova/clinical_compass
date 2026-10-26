@@ -77,10 +77,12 @@ function Shell({ mode, user, onLogout }: { mode: Mode; user: User; onLogout: () 
           </nav>
         )}
         <div className="topbar-end">
-          <span className={`conn ${mode}`} title={mode === 'live' ? 'Сервер подключён' : 'Демо без сервера: правила не пересчитываются'}>
-            <span className={`dot ${mode === 'live' ? 'live' : ''}`} aria-hidden />
-            <span className="conn-text">{mode === 'live' ? 'Сервер подключён' : 'Демо без сервера'}</span>
-          </span>
+          {/* Состояние связи показываем только когда есть что сказать: без сервера правила не пересчитываются */}
+          {mode === 'demo' && (
+            <span className="conn demo" title="Сервер недоступен: показаны сохранённые демо-данные, правила не пересчитываются">
+              <span className="conn-text">Демо без сервера</span>
+            </span>
+          )}
           {mode === 'live' && (
             <button className="btn quiet icon-btn" onClick={reset} aria-label="Сбросить демо" title="Сбросить демо-данные">
               <svg {...ICON}><path d="M4 12a8 8 0 1 0 2.4-5.7" /><path d="M4 4v4.5h4.5" /></svg>

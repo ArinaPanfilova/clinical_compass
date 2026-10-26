@@ -1,10 +1,11 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { api, newKey, type Mode, type SelfReportBody } from '../api'
 import { GAD7, GAD7_OPTIONS, INSTRUCTION, PHQ9, PHQ9_OPTIONS, SCALE_SOURCES } from '../content'
 import type { PatientBundle } from '../types'
 import { MessagesPanel } from './MessagesPanel'
 import { PatientReferrals } from './ReferralPanel'
 import { TrendChart } from './TrendChart'
+import { reducedMotion } from '../hooks'
 
 interface Props {
   b: PatientBundle
@@ -33,6 +34,10 @@ export function PatientApp({ b, mode, onSubmitted }: Props) {
   const [diary, setDiary] = useState('')
   const [ae, setAe] = useState('')
   const [result, setResult] = useState<{ ok: boolean; text: string } | null>(null)
+  const resultRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (result) resultRef.current?.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'center' })
+  }, [result])
   const [busy, setBusy] = useState(false)
   const firstName = b.record.name.split(' ')[0]
   const onTherapy = b.record.therapy.current.length > 0
@@ -57,13 +62,13 @@ export function PatientApp({ b, mode, onSubmitted }: Props) {
         const r = await api.selfReport(b.record.patient_id, body, keyRef.current)
         keyRef.current = null
         onSubmitted()
-        setResult({ ok: true, text: r.patient_messages[0] ?? 'Отправлено. Врач увидит ответы в вашей карточке.' })
+        setResult({ ok: true, text: r.patient_messages[0] ?? 'Врач увидит ответы в вашей карточке.' })
       } else {
-        setResult({ ok: true, text: 'Сохранено в демо без сервера: правила пересчитываются только когда сервер подключён.' })
+        setResult({ ok: true, text: 'Это демо без сервера: ответы никуда не уходят.' })
       }
       setAnswers(null); setDiary(''); setAe('')
     } catch (e) {
-      setResult({ ok: false, text: `Не отправилось: ${(e as Error).message}. Ответы сохранены на экране — попробуйте ещё раз.` })
+      setResult({ ok: false, text: `${(e as Error).message}. Ответы остались на экране, попробуйте ещё раз.` })
     } finally { setBusy(false) }
   }
 
@@ -100,7 +105,6 @@ export function PatientApp({ b, mode, onSubmitted }: Props) {
           <Questionnaire onDone={a => { setAnswers(a); setQuiz(false) }} onCancel={() => setQuiz(false)} />
         ) : tab === 'today' ? (
           <>
-            {result && <p className={`note-box ${result.ok ? 'msg-ok' : 'msg-alert'}`} role="status">{result.text}</p>}
             <PatientReferrals referrals={b.referrals ?? []} />
             <div className={`task ${due && !answers ? 'due' : ''}`}>
               <h3>Анкета за последние 2 недели</h3>
@@ -139,6 +143,13 @@ export function PatientApp({ b, mode, onSubmitted }: Props) {
             <button className="big-btn" disabled={busy || (!answers && !diary.trim() && !ae.trim())} onClick={() => send()}>
               {busy ? 'Отправляем…' : 'Отправить врачу'}
             </button>
+            {/* Ответ — прямо под кнопкой и в поле зрения: на телефоне верх экрана уже не виден */}
+            {result && (
+              <div ref={resultRef} className={`send-result ${result.ok ? 'ok' : 'err'}`} role="status">
+                <b>{result.ok ? 'Отправлено врачу' : 'Не отправилось'}</b>
+                <span>{result.text}</span>
+              </div>
+            )}
             <p className="note-box">Врач читает сообщения по будням с 9 до 18. Приложение не следит за вашим состоянием круглосуточно.</p>
           </>
         ) : tab === 'dynamics' ? (

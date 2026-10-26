@@ -32,8 +32,8 @@
   --rx-soft: #f2eefc;
   --ok: #16734a;
   --ok-soft: #e5f4ec;
-  --band-1: #edf6f1; --band-2: #f2f6ee; --band-3: #fbf4e5; --band-4: #fcede3; --band-5: #fbe5e2;
-  --viz-line: var(--ink);
+  --band-1: #d9efe2; --band-2: #e9f1cf; --band-3: #fae6bd; --band-4: #f9d5bb; --band-5: #f5c5bf;
+  --viz-line: var(--brand-ink);
   --skel: #e2e9ec;
   --skel-hi: rgba(255, 255, 255, .7);
   --shadow: 0 1px 2px rgba(20, 35, 42, .05), 0 1px 1px rgba(20, 35, 42, .03);
@@ -59,9 +59,9 @@
     --action: #237c89; --action-hover: #1e6f7b; --on-action: #ffffff;
     --must: #f28b80; --must-soft: #3a1e1c; --on-must: #1a0b0a; --want: #e7b35e; --want-soft: #33291a;
     --rx: #b9a0f0; --rx-soft: #282042; --ok: #6fcf98; --ok-soft: #15301f;
-    --band-1: color-mix(in srgb, #6fcf98 12%, #141f26); --band-2: color-mix(in srgb, #b9d16a 11%, #141f26);
-    --band-3: color-mix(in srgb, #e7b35e 13%, #141f26); --band-4: color-mix(in srgb, #ee9a68 15%, #141f26);
-    --band-5: color-mix(in srgb, #f28b80 19%, #141f26);
+    --band-1: color-mix(in srgb, #6fcf98 22%, #141f26); --band-2: color-mix(in srgb, #b9d16a 22%, #141f26);
+    --band-3: color-mix(in srgb, #e7b35e 24%, #141f26); --band-4: color-mix(in srgb, #ee9a68 26%, #141f26);
+    --band-5: color-mix(in srgb, #f28b80 30%, #141f26);
     --skel: #1d2b33; --skel-hi: rgba(255, 255, 255, .06);
     --shadow: none; --shadow-lg: 0 14px 36px rgba(0, 0, 0, .5); --scrim: rgba(0, 0, 0, .62);
     color-scheme: dark;
@@ -74,9 +74,9 @@
   --action: #237c89; --action-hover: #1e6f7b; --on-action: #ffffff;
   --must: #f28b80; --must-soft: #3a1e1c; --on-must: #1a0b0a; --want: #e7b35e; --want-soft: #33291a;
   --rx: #b9a0f0; --rx-soft: #282042; --ok: #6fcf98; --ok-soft: #15301f;
-  --band-1: color-mix(in srgb, #6fcf98 12%, #141f26); --band-2: color-mix(in srgb, #b9d16a 11%, #141f26);
-  --band-3: color-mix(in srgb, #e7b35e 13%, #141f26); --band-4: color-mix(in srgb, #ee9a68 15%, #141f26);
-  --band-5: color-mix(in srgb, #f28b80 19%, #141f26);
+  --band-1: color-mix(in srgb, #6fcf98 22%, #141f26); --band-2: color-mix(in srgb, #b9d16a 22%, #141f26);
+  --band-3: color-mix(in srgb, #e7b35e 24%, #141f26); --band-4: color-mix(in srgb, #ee9a68 26%, #141f26);
+  --band-5: color-mix(in srgb, #f28b80 30%, #141f26);
   --skel: #1d2b33; --skel-hi: rgba(255, 255, 255, .06);
   --shadow: none; --shadow-lg: 0 14px 36px rgba(0, 0, 0, .5); --scrim: rgba(0, 0, 0, .62);
   color-scheme: dark;
@@ -405,10 +405,12 @@ ul, ol { margin: 0; }
 .chart-box { position: relative; border-radius: var(--r-s); }
 .chart-box:focus-visible { outline-offset: 6px; }
 .chart svg { display: block; overflow: visible; }
-.chart .band-label, .chart .axis { font-size: 11.5px; fill: var(--ink-3); }
+.chart .band-label, .chart .axis { font-size: 12px; fill: var(--ink-2); }
+.chart .band-label { font-weight: 500; }
+.chart .band-edge { stroke: var(--surface); stroke-width: 1.5; }
 .chart .rx-mark line { stroke: var(--rx); stroke-width: 1.5; }
 .chart .rx-label { fill: var(--rx); font-weight: 600; }
-.chart .seg-line { stroke: var(--viz-line); stroke-width: 2.25; stroke-linecap: round; }
+.chart .seg-line { stroke: var(--viz-line); stroke-width: 3; stroke-linecap: round; }
 .chart .seg-line.gap { stroke: var(--ink-3); stroke-dasharray: 5 6; }
 .chart .pt { fill: var(--viz-line); stroke: var(--surface); stroke-width: 2; transition: r var(--t-fast); }
 .chart .pt.prorated { fill: var(--surface); stroke: var(--viz-line); }
@@ -851,10 +853,25 @@ details[open] > :not(summary) { animation: reveal-down .2s var(--ease-out) both;
 @media (max-width: 420px) {
   .user-chip { display: none; }
 }
+/* «Уменьшить движение» (системная настройка): убираем сдвиги, масштаб и пульсацию,
+   но не все переходы — плавное появление по прозрачности не вызывает укачивания и остаётся. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: .001ms !important; animation-iteration-count: 1 !important; animation-delay: 0s !important;
-    transition-duration: .001ms !important; scroll-behavior: auto !important;
+  .view-in, .card, .rail, .q-in, .bubble, .modal-back, .sheet, .sheet.wide, .send-result, .toast, .toast.p-emergency,
+  details[open] > :not(summary), .draw-in, .an-iqr-g { animation: fade-in .2s ease-out both !important; }
+  .toast.leaving { animation: fade-out .12s ease-in forwards !important; }
+  .finding.p-emergency:not(.decided) .badge.emerg::after, .ca-needle, .boot-bar::after, .skel::after, .skel-panel::after {
+    animation: none !important;
   }
+  *, *::before, *::after { scroll-behavior: auto !important; transition-property: opacity, color, background-color, border-color !important; }
 }
+@keyframes fade-out { to { opacity: 0; } }
 .kr-line { font-size: 13px; padding: 8px 10px; border-radius: var(--r-s); background: var(--rx-soft); color: var(--ink); border-left: 3px solid var(--rx); }
+.decided { display: grid; gap: 4px; justify-items: end; }
+.revise-note { grid-column: 1 / -1; font-size: 12.5px; }
+.dyn-scale { display: grid; gap: 6px; }
+.dyn-scale + .dyn-scale { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line-2); }
+.dyn-title { font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.send-result { display: grid; gap: 2px; padding: 12px 14px; border-radius: var(--r-m); border-left: 4px solid var(--ok); background: var(--ok-soft); animation: pop-in .24s var(--ease-out) both; }
+.send-result b { color: var(--ok); }
+.send-result.err { border-left-color: var(--must); background: var(--must-soft); }
+.send-result.err b { color: var(--must); }
