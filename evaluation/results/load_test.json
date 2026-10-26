@@ -1,0 +1,62 @@
+{
+ "users": 100,
+ "doctors": 20,
+ "patients": 80,
+ "duration_s": 60.0,
+ "requests": 2784,
+ "rps": 46.4,
+ "errors": 0,
+ "error_rate_pct": 0.0,
+ "endpoints": {
+  "GET /patients (список с правилами)": {
+   "n": 156,
+   "p50_ms": 178.0,
+   "p95_ms": 741.0,
+   "p99_ms": 2240.1,
+   "errors": 0
+  },
+  "GET /patients/{id}": {
+   "n": 1101,
+   "p50_ms": 67.2,
+   "p95_ms": 920.5,
+   "p99_ms": 1805.2,
+   "errors": 0
+  },
+  "GET alerts": {
+   "n": 116,
+   "p50_ms": 68.7,
+   "p95_ms": 637.2,
+   "p99_ms": 1819.1,
+   "errors": 0
+  },
+  "GET analytics": {
+   "n": 54,
+   "p50_ms": 290.7,
+   "p95_ms": 1793.1,
+   "p99_ms": 2388.0,
+   "errors": 0
+  },
+  "GET messages": {
+   "n": 440,
+   "p50_ms": 56.9,
+   "p95_ms": 892.9,
+   "p99_ms": 2424.9,
+   "errors": 0
+  },
+  "POST intake": {
+   "n": 471,
+   "p50_ms": 67.7,
+   "p95_ms": 1165.9,
+   "p99_ms": 2644.9,
+   "errors": 0
+  },
+  "POST self-report": {
+   "n": 446,
+   "p50_ms": 69.2,
+   "p95_ms": 237.6,
+   "p99_ms": 1468.3,
+   "errors": 0
+  }
+ },
+ "machine": "128 потоков CPU, 8 процессов uvicorn, общая SQLite (WAL), клиент и сервер на одной машине"
+}

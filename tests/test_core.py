@@ -311,3 +311,19 @@ def test_every_rule_fact_is_produced_by_pipeline():
         _collect_facts(r["when"], used)
     missing = {f for f in used if f not in facts}
     assert not missing, f"Правила ссылаются на несуществующие факты: {missing}"
+
+
+# ---------- Производительность: карточка препарата читается один раз ----------
+
+def test_drug_card_parsed_once_and_copies_are_independent(monkeypatch):
+    import yaml
+    from kompas_core import drugs
+    drugs._load_card_file.cache_clear()
+    calls = []
+    real = yaml.safe_load
+    monkeypatch.setattr(yaml, "safe_load", lambda f: calls.append(1) or real(f))
+    a = load_card("aviandr")
+    a["verification_level"] = "испорчено"
+    b = load_card("aviandr")
+    assert len(calls) == 1
+    assert b["verification_level"] != "испорчено"

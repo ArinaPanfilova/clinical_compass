@@ -32,7 +32,8 @@ def built_frontend():
 def server(tmp_path, built_frontend):
     port = _free_port()
     env = {**os.environ, "KOMPAS_DB": str(tmp_path / "e2e.db"), "KOMPAS_PORT": str(port),
-           "KOMPAS_HOST": "127.0.0.1", "KOMPAS_ESCALATE_AFTER_S": str(ESCALATE_AFTER_S)}
+           "KOMPAS_HOST": "127.0.0.1", "KOMPAS_ESCALATE_AFTER_S": str(ESCALATE_AFTER_S),
+           "KOMPAS_WORKERS": "2"}
     proc = subprocess.Popen([sys.executable, "-m", "server"], cwd=ROOT, env=env,
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     url = f"http://127.0.0.1:{port}"

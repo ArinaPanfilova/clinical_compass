@@ -107,6 +107,11 @@ def close_for_decision(conn: sqlite3.Connection, pid: str, rule_id: str, user_id
         transition(conn, get_alert(conn, aid), "close", user_id, f"решение врача: {action}")
 
 
+def has_escalation_candidates(conn: sqlite3.Connection) -> bool:
+    return conn.execute(f"SELECT 1 FROM alerts WHERE status IN ('created', 'delivered') AND escalation_level = 0 "
+                        f"AND priority IN {ESCALATING} LIMIT 1").fetchone() is not None
+
+
 def escalate_due(conn: sqlite3.Connection, at: datetime, after_s: float) -> list[dict]:
     """Непринятые срочные и экстренные алерты старше after_s → заместителю (один уровень)."""
     rows = conn.execute(

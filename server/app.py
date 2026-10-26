@@ -31,7 +31,20 @@ from .records import build_record
 from .seed import seed_demo
 
 FRONTEND_DIST = Path(__file__).resolve().parents[1] / "frontend" / "dist"
+POLL_S = 0.5          # как часто поток событий проверяет БД: алерты из других процессов и после перезапуска
 log = logging.getLogger("kompas")
+
+
+def prepare_db(db_path: str | Path, seed_courses: list[dict] | None = None) -> None:
+    """Схема и демо-данные при первом запуске. При нескольких воркерах вызывается один раз в главном процессе."""
+    Path(db_path).parent.mkdir(parents=True, exist_ok=True)
+    conn = connect(db_path)
+    try:
+        init_schema(conn)
+        if conn.execute("SELECT COUNT(*) FROM users").fetchone()[0] == 0:
+            seed_demo(conn, courses=seed_courses)
+    finally:
+        conn.close()
 
 
 class Login(BaseModel):
@@ -87,21 +100,14 @@ def evaluate(record: dict) -> dict:
 def create_app(db_path: str | Path, secret: str = "dev-secret-change-me", escalate_after_s: float = 60,
                demo: bool = True, seed_courses: list[dict] | None = None, start_background: bool = True) -> FastAPI:
     db_path = Path(db_path)
-    db_path.parent.mkdir(parents=True, exist_ok=True)
-
-    def ensure_db() -> None:
-        conn = connect(db_path)
-        init_schema(conn)
-        if conn.execute("SELECT COUNT(*) FROM users").fetchone()[0] == 0:
-            seed_demo(conn, courses=seed_courses)
-        conn.close()
-
-    ensure_db()
+    prepare_db(db_path, seed_courses)
     broker = alerts.Broker()
 
     def run_escalation() -> list[dict]:
         conn = connect(db_path)
         try:
+            if not alerts.has_escalation_candidates(conn):     # без блокировки записи, если делать нечего
+                return []
             with tx(conn):
                 return alerts.escalate_due(conn, datetime.now(timezone.utc), escalate_after_s)
         finally:
@@ -220,7 +226,7 @@ def create_app(db_path: str | Path, secret: str = "dev-secret-change-me", escala
             except ScaleInputError as e:
                 raise HTTPException(422, str(e))
         created: list[dict] = []
-        with tx(conn):
+        with tx(conn, durable=True):
             if idempotency_key:
                 row = conn.execute("SELECT response FROM self_reports WHERE idempotency_key = ? AND patient_id = ?",
                                    (idempotency_key, pid)).fetchone()
@@ -307,22 +313,40 @@ def create_app(db_path: str | Path, secret: str = "dev-secret-change-me", escala
             user = user_from_token(conn, token)
             if user["role"] != "doctor":
                 raise HTTPException(403, "Поток событий доступен только врачу")
-            pending = alerts.pending_for(conn, user["id"])
         finally:
             conn.close()
         q = broker.subscribe(user["id"])
 
+        def pending() -> list[dict]:
+            c = connect(db_path)
+            try:
+                return alerts.pending_for(c, user["id"])
+            finally:
+                c.close()
+
         async def gen():
+            """Недоставленные алерты берутся из БД (другие процессы, перезапуск), новые события
+            своего процесса приходят сразу через брокер. Повторно один алерт не отправляется."""
+            sent: set[str] = set()
+            last_ping = time.monotonic()
             try:
                 yield "retry: 2000\n\n"
-                for a in pending:
-                    yield _sse("alert", a)
                 while True:
+                    for a in await asyncio.to_thread(pending):
+                        if a["id"] not in sent:
+                            sent.add(a["id"])
+                            yield _sse("alert", a)
                     try:
-                        ev = await asyncio.wait_for(q.get(), 15)
+                        ev = await asyncio.wait_for(q.get(), POLL_S)
                     except asyncio.TimeoutError:
-                        yield ": ping\n\n"
+                        if time.monotonic() - last_ping > 15:
+                            last_ping = time.monotonic()
+                            yield ": ping\n\n"
                         continue
+                    if ev["type"] == "alert":
+                        if ev["data"]["id"] in sent and ev["data"]["escalation_level"] == 0:
+                            continue
+                        sent.add(ev["data"]["id"])
                     yield _sse(ev["type"], ev["data"])
             finally:
                 broker.unsubscribe(user["id"], q)
@@ -334,9 +358,11 @@ def create_app(db_path: str | Path, secret: str = "dev-secret-change-me", escala
     def get_messages(pid: str, user: dict = Depends(current_user), conn: sqlite3.Connection = Depends(get_conn)):
         """Лента загружена получателем — сообщения считаются доставленными (не прочитанными)."""
         require_patient_access(conn, user, pid, "view_messages")
-        with tx(conn):
-            conn.execute("UPDATE messages SET delivered_at = ? WHERE patient_id = ? AND delivered_at IS NULL "
-                         "AND sender_role != ?", (now(), pid, user["role"]))
+        if conn.execute("SELECT 1 FROM messages WHERE patient_id = ? AND delivered_at IS NULL AND sender_role != ?",
+                        (pid, user["role"])).fetchone():
+            with tx(conn):
+                conn.execute("UPDATE messages SET delivered_at = ? WHERE patient_id = ? AND delivered_at IS NULL "
+                             "AND sender_role != ?", (now(), pid, user["role"]))
         return [dict(r) for r in conn.execute("SELECT * FROM messages WHERE patient_id = ? ORDER BY id", (pid,))]
 
     @api.post("/patients/{pid}/messages")
@@ -427,3 +453,12 @@ def create_app(db_path: str | Path, secret: str = "dev-secret-change-me", escala
     app.state.db_path = db_path
     app.state.broker = broker
     return app
+
+
+def app_from_env() -> FastAPI:
+    """Фабрика для uvicorn с несколькими воркерами: настройки из переменных окружения."""
+    import os
+    return create_app(os.environ.get("KOMPAS_DB", "data/kompas.db"),
+                      secret=os.environ.get("KOMPAS_SECRET", "dev-secret-change-me"),
+                      escalate_after_s=float(os.environ.get("KOMPAS_ESCALATE_AFTER_S", "60")),
+                      demo=os.environ.get("KOMPAS_DEMO", "1") == "1")

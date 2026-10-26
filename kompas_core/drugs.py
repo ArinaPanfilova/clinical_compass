@@ -11,7 +11,9 @@ Off-label: система не предлагает. Если врач реши�
 """
 from __future__ import annotations
 
+import copy
 from dataclasses import dataclass, field, asdict
+from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 
@@ -20,9 +22,15 @@ import yaml
 DRUGS_DIR = Path(__file__).parent / "drugs"
 
 
-def load_card(drug_id: str, drugs_dir: Path = DRUGS_DIR) -> dict:
-    with (Path(drugs_dir) / f"{drug_id}.yaml").open(encoding="utf-8") as f:
+@lru_cache(maxsize=None)
+def _load_card_file(path: Path) -> dict:
+    with path.open(encoding="utf-8") as f:
         return yaml.safe_load(f)
+
+
+def load_card(drug_id: str, drugs_dir: Path = DRUGS_DIR) -> dict:
+    """Карточка разбирается один раз; вызывающему отдаётся копия, чтобы изменения не попадали в кэш."""
+    return copy.deepcopy(_load_card_file(Path(drugs_dir) / f"{drug_id}.yaml"))
 
 
 @dataclass
