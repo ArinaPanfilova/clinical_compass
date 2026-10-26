@@ -1,44 +1,54 @@
-/* Экран «Авиандр: наблюдение применения». Только токены из styles.css.
+/* Экран «Авиандр: наблюдение применения». Токены — из styles.css, цвета серий — здесь.
    Цвета групп исхода: петроль — продолжают (интерфейс), фиолетовый — отмена из-за НЯ
-   (безопасность терапии), янтарный — недостаточный эффект, серый — прочие отмены.
-   Красный не используется: он закреплён за экстренным. Палитра проверена валидатором
-   dataviz (все пары, оба режима): различимость при протанопии/дейтанопии ΔE ≥ 9, обычное зрение ΔE ≥ 16. */
+   (безопасность терапии), янтарный — недостаточный эффект, серый пунктир — прочие отмены.
+   Красный не используется: он закреплён за экстренным.
+   Палитра проверена валидатором dataviz (validate_palette.js, все пары, обе темы):
+   три цветные серии проходят все шесть проверок — светлота, насыщенность ≥ 0,10, CVD ΔE ≥ 10,
+   обычное зрение ΔE ≥ 20, контраст ≥ 3:1 к поверхности. Серый «прочие» — нейтральная группа
+   «остальное»: насыщенности у него нет намеренно, его отличают пунктир (вторичное кодирование),
+   светлота (обычное зрение ΔE ≥ 16 ко всем) и контраст ≥ 3:1. */
 .an {
-  --an-g-continued: var(--brand);
-  --an-g-stopped_ae: var(--rx);
-  --an-g-stopped_inefficacy: var(--want);
-  --an-g-stopped_other: var(--ink-3);
-  --an-iqr-op: .13;
+  --an-g-continued: #009397;
+  --an-g-stopped_ae: #6a41c6;
+  --an-g-stopped_inefficacy: #bd7221;
+  --an-g-stopped_other: #48555c;
+  --an-line-w: 2.25px;
+  --an-iqr-op: .14;
+  --an-iqr-edge-op: .55;
   --an-bar: color-mix(in srgb, var(--brand) 60%, var(--surface));
   --an-adh-1: var(--brand);
   --an-adh-2: color-mix(in srgb, var(--brand) 66%, var(--surface));
   --an-adh-3: color-mix(in srgb, var(--brand) 42%, var(--surface));
   --an-tip-shadow: 0 8px 28px rgba(14, 30, 37, .14);
-  max-width: 1560px; margin: 0 auto; padding: 24px 32px 56px;
+  max-width: 1600px; margin: 0 auto; padding: 24px 32px 56px;
   display: grid; gap: 16px;
 }
-/* Тёмная тема: пастельные токены сближаются по светлоте, поэтому продолжающих рисуем brand-ink,
-   а фиолетовый и серый — на шаг темнее (смесь с поверхностью). */
+/* Тёмная тема — те же оттенки, шаги подобраны под тёмную поверхность (не инверсия):
+   линии насыщеннее и толще, полоса Q1–Q3 плотнее и с краями. */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .an {
-    --an-g-continued: var(--brand-ink);
-    --an-g-stopped_ae: color-mix(in srgb, var(--rx) 80%, var(--surface));
-    --an-g-stopped_other: color-mix(in srgb, var(--ink-3) 70%, var(--surface));
-    --an-iqr-op: .17;
+  :root:where(:not([data-theme="light"])) .an {
+    --an-g-continued: #17a7b4;
+    --an-g-stopped_ae: #906eda;
+    --an-g-stopped_inefficacy: #c68627;
+    --an-g-stopped_other: #636f76;
+    --an-line-w: 2.75px;
+    --an-iqr-op: .26;
+    --an-iqr-edge-op: .8;
     --an-tip-shadow: 0 8px 28px rgba(0, 0, 0, .45);
-    --an-on-brand: var(--paper);
   }
 }
 :root[data-theme="dark"] .an {
-  --an-g-continued: var(--brand-ink);
-  --an-g-stopped_ae: color-mix(in srgb, var(--rx) 80%, var(--surface));
-  --an-g-stopped_other: color-mix(in srgb, var(--ink-3) 70%, var(--surface));
-  --an-iqr-op: .17;
+  --an-g-continued: #17a7b4;
+  --an-g-stopped_ae: #906eda;
+  --an-g-stopped_inefficacy: #c68627;
+  --an-g-stopped_other: #636f76;
+  --an-line-w: 2.75px;
+  --an-iqr-op: .26;
+  --an-iqr-edge-op: .8;
   --an-tip-shadow: 0 8px 28px rgba(0, 0, 0, .45);
-  --an-on-brand: var(--paper);
 }
-/* в тёмной теме петроль светлый — белый текст на нём не читается */
-.an .btn.primary { color: var(--an-on-brand, #fff); }
+.an-dash, .an-skel { display: grid; gap: 16px; }
+.an-skel .skel-panel { margin: 0; }
 
 .an .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .an-hidden { color: var(--ink-3); text-decoration: underline dotted; text-underline-offset: 3px; cursor: help; }
@@ -148,11 +158,17 @@
 .an-base { stroke: var(--line); stroke-width: 1; }
 .an-axis, .an-band-label { font-size: 11.5px; fill: var(--ink-3); }
 .an-series { transition: opacity .15s; }
-.an-series.dim, .an-hidden-mark.dim { opacity: .2; }
+.an-series.dim, .an-hidden-mark.dim { opacity: .22; }
 .an-iqr { fill: currentColor; fill-opacity: var(--an-iqr-op); stroke: none; }
-.an-line { fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
-.an-series.on .an-line { stroke-width: 2.5; }
+.an-iqr-edge { fill: none; stroke: currentColor; stroke-opacity: var(--an-iqr-edge-op); stroke-width: 1; stroke-dasharray: 1 3; stroke-linecap: round; }
+.an-iqr-g { animation: fade-in .25s ease-out both; }
+.an-line { fill: none; stroke: currentColor; stroke-width: var(--an-line-w); stroke-linejoin: round; stroke-linecap: round; transition: stroke-width .15s; }
+.an-series.on .an-line { stroke-width: calc(var(--an-line-w) + .75px); }
+/* «прочие отмены» — пунктир: серый отличается от цветных серий не только цветом */
+.an-series.g-stopped_other .an-line { stroke-dasharray: 7 5; }
+.an-legend-item i.g-stopped_other, .an-tip-row i.g-stopped_other { border-top-style: dashed; }
 .an-dot { fill: currentColor; stroke: var(--surface); stroke-width: 2; }
+.an-cross .an-dot.on { stroke-width: 2.5; }
 .an-cross line { stroke: var(--ink-3); stroke-width: 1; }
 .an-hit { fill: transparent; cursor: crosshair; }
 

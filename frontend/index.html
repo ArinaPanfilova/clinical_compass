@@ -2,9 +2,28 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Компас</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22 fill=%22none%22 stroke=%22%2312606d%22 stroke-width=%222%22/%3E%3Cpath d=%22M12 5l3 7-3 7-3-7z%22 fill=%22%2312606d%22/%3E%3C/svg%3E" />
+    <meta name="description" content="Цифровой ассистент врача для ведения пациентов с тревогой и депрессией" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Компас" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <script>
+      // Тема до первой отрисовки, чтобы не мигала светлая. Та же логика — src/theme.ts.
+      (function () {
+        var t = null
+        try { t = localStorage.getItem('kompas.theme') } catch (e) { /* приватный режим */ }
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t)
+        var dark = t === 'dark' || (t !== 'light' && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches)
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', dark ? '#141f26' : '#ffffff')
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -38,7 +38,7 @@ def test_researcher_sees_only_anonymized_analytics(open_as):
 def test_doctor_has_patients_and_analytics_tabs(open_as):
     page = open_as("ivanova")
     expect(page.get_by_text("Мои пациенты")).to_be_visible()
-    page.get_by_role("button", name="Авиандр", exact=True).click()
+    page.get_by_role("button", name="Наблюдение препарата", exact=True).click()
     expect(page.get_by_role("heading", name="Авиандр: наблюдение применения")).to_be_visible()
     expect(page.get_by_text("Индекс устойчивой пользы").first).to_be_visible()
 

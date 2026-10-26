@@ -9,7 +9,8 @@ import {
   AGE_OPTIONS, SCALE_NAME, ageKey, cleanQuery, coursesWord, hiddenHint, isFiltered, num, pct, ci,
   reportKind, setAge, stopReasonRows,
 } from './analytics/model'
-import { BarList, CiAxis, Num, RateRow, type BarItem } from './analytics/parts'
+import { BarList, CiAxis, CountUp, Num, RateRow, type BarItem } from './analytics/parts'
+import { AnalyticsSkeleton } from './Skeleton'
 import { TrajectoryPanel } from './analytics/TrajectoryChart'
 
 export type { AnalyticsQuery, AviandrReport } from '../analyticsTypes'
@@ -82,7 +83,7 @@ export function AnalyticsView({ role, fetchReport }: { role: Role; fetchReport: 
       </div>
     )
   } else if (!report) {
-    body = <div className="an-state" aria-live="polite"><p className="muted">Загружаем отчёт…</p></div>
+    body = <AnalyticsSkeleton />
   } else if (reportKind(report) === 'suppressed') {
     body = (
       <div className="an-state">
@@ -100,7 +101,7 @@ export function AnalyticsView({ role, fetchReport }: { role: Role; fetchReport: 
       </div>
     )
   } else {
-    body = <Dashboard r={report as AviandrReportFull} />
+    body = <div className="an-dash view-in"><Dashboard r={report as AviandrReportFull} /></div>
   }
 
   return (
@@ -235,22 +236,22 @@ function Kpis({ r }: { r: AviandrReportFull }) {
       <div className="stats an-stats">
         <div className="stat">
           <span className="stat-label">Назначено</span>
-          <span className="stat-value"><Num v={kp.assigned} k={k} /></span>
+          <span className="stat-value"><Num v={kp.assigned} k={k} animate /></span>
           <span className="stat-delta">курсов под фильтр</span>
         </div>
         <div className="stat">
           <span className="stat-label">Продолжают</span>
-          <span className="stat-value"><Num v={kp.active} k={k} /></span>
+          <span className="stat-value"><Num v={kp.active} k={k} animate /></span>
           <span className="stat-delta">{share(kp.active, kp.assigned)}</span>
         </div>
         <div className="stat">
           <span className="stat-label">Завершили курс</span>
-          <span className="stat-value"><Num v={kp.completed} k={k} /></span>
+          <span className="stat-value"><Num v={kp.completed} k={k} animate /></span>
           <span className="stat-delta">{share(kp.completed, kp.assigned)}</span>
         </div>
         <div className="stat">
           <span className="stat-label">Отменили</span>
-          <span className="stat-value"><Num v={kp.discontinued} k={k} /></span>
+          <span className="stat-value"><Num v={kp.discontinued} k={k} animate /></span>
           {total > 0 && (
             <span className="an-stack" aria-hidden>
               {reasons.map(x => {
@@ -275,7 +276,8 @@ function Kpis({ r }: { r: AviandrReportFull }) {
       <div className="an-benefit">
         <span className="an-benefit-label">Индекс устойчивой пользы <span className="faint">· {SCALE_NAME[b.scale]}</span></span>
         <span className="an-benefit-value">
-          {bHidden ? <span className="an-hidden" title={hiddenHint(k)}>&lt;{k}</span> : pct(b.value_pct)}
+          {bHidden ? <span className="an-hidden" title={hiddenHint(k)}>&lt;{k}</span>
+            : b.value_pct === null ? pct(null) : <CountUp value={b.value_pct} format={v => pct(Math.round(v * 10) / 10)} />}
         </span>
         <span className="an-benefit-ci">{!bHidden && b.ci95 ? `95 % ДИ ${ci(b.ci95)}` : bHidden ? hiddenHint(k) : ''}</span>
         <span className="an-benefit-of">

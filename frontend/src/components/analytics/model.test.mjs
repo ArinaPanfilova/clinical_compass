@@ -5,7 +5,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import {
   AGE_OPTIONS, SCALE_MAX, SCALE_TICKS, ageKey, barFraction, bandPath, ci, cleanQuery, count, coursesWord,
-  hiddenWeeks, isFiltered, linePath, pct, reportKind, segments, setAge, stopReasonRows,
+  countUp, hiddenWeeks, isFiltered, linePath, pct, reportKind, segments, setAge, stopReasonRows,
 } from './model.ts'
 
 const sp = s => s.replace(/[  ]/g, ' ')   // неразрывные пробелы → обычные, для читаемости ожиданий
@@ -109,4 +109,16 @@ test('шкалы: полный диапазон оси и деления', () =>
   assert.equal(SCALE_MAX.phq9, 27)
   assert.deepEqual(SCALE_TICKS.gad7, [0, 5, 10, 15, 21])
   assert.deepEqual(SCALE_TICKS.phq9, [0, 5, 10, 15, 20, 27])
+})
+
+test('countUp: плавный счёт KPI от прежнего значения к новому, без выхода за границы', () => {
+  assert.equal(countUp(0, 40, 0, 700), 0)
+  assert.equal(countUp(0, 40, 700, 700), 40)
+  assert.equal(countUp(0, 40, 2000, 700), 40)
+  // метка кадра requestAnimationFrame бывает чуть раньше старта — число не уходит в минус
+  assert.equal(countUp(0, 40, -16, 700), 0)
+  assert.equal(countUp(0, 27.5, -5, 700), 0)
+  assert.ok(countUp(0, 40, 350, 700) > 20)        // ease-out: к середине времени пройдено больше половины
+  assert.equal(countUp(30, 10, 700, 700), 10)     // уменьшение после смены фильтра
+  assert.ok(countUp(30, 10, 200, 700) <= 30 && countUp(30, 10, 200, 700) >= 10)
 })

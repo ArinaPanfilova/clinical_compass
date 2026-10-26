@@ -6,16 +6,7 @@
     <title>Компас — стенд аналитики</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%2210%22 fill=%22none%22 stroke=%22%2312606d%22 stroke-width=%222%22/%3E%3Cpath d=%22M12 5l3 7-3 7-3-7z%22 fill=%22%2312606d%22/%3E%3C/svg%3E" />
     <style>
-      /* Только для стенда: кнопка «Тёмная» ставит data-theme="dark", а в styles.css тёмные токены
-         включаются лишь по системной настройке. Значения — копия блока prefers-color-scheme из styles.css. */
-      :root[data-theme="dark"] {
-        --paper: #0e161a; --surface: #152027; --surface-2: #1a2730; --ink: #e5edf0; --ink-2: #a9b9c0; --ink-3: #7c8e96;
-        --line: #283840; --line-2: #1f2e36; --brand: #5ab4c2; --brand-ink: #8fd0da; --brand-soft: #173238;
-        --must: #f28b80; --must-soft: #351c1a; --want: #e7b35e; --want-soft: #33291a;
-        --rx: #b9a0f0; --rx-soft: #262039; --ok: #6fcf98; --ok-soft: #173024;
-        --band-1: #13221d; --band-2: #17231c; --band-3: #29251a; --band-4: #2c211c; --band-5: #311d1b;
-        --shadow: none; color-scheme: dark;
-      }
+      /* Тёмная тема по кнопке стенда — data-theme="dark" из styles.css */
       .topbar.stand-bar { flex-wrap: wrap; height: auto; min-height: 56px; padding: 8px 24px; gap: 8px 16px; }
       .topbar.stand-bar .seg button { padding: 4px 12px; font-size: 13.5px; }
       .stand-q { margin-left: auto; font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink-3); max-width: 46ch; overflow-wrap: anywhere; }

@@ -40,6 +40,13 @@ export function plural(n: number, one: string, few: string, many: string) {
 }
 export const coursesWord = (n: number) => `${num(n)}${NBSP}${plural(n, 'курс', 'курса', 'курсов')}`
 
+/** Значение счётчика KPI через elapsed мс из ms: ease-out от a к b. Метка кадра бывает раньше старта —
+ *  прогресс зажат в 0…1, поэтому число не выходит за [a, b]. */
+export function countUp(a: number, b: number, elapsed: number, ms: number): number {
+  const k = Math.min(1, Math.max(0, elapsed / ms))
+  return a + (b - a) * (1 - (1 - k) ** 3)
+}
+
 // ---------- Фильтры ----------
 
 export const AGE_OPTIONS: { key: string; label: string; min?: string; max?: string }[] = [

@@ -1,8 +1,9 @@
 // Главный график: медиана шкалы по неделям 0–12 по группам исхода, полоса Q1–Q3.
 // Ручной SVG в реальную ширину контейнера, чтобы подписи оставались 11–12 px на любом экране.
-import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react'
+import { useState, type KeyboardEvent, type PointerEvent } from 'react'
 import { BANDS } from '../../content'
 import type { AviandrReportFull, OutcomeGroup, TrajectoryPoint } from '../../analyticsTypes'
+import { useWidth } from '../../hooks'
 import { SCALE_MAX, SCALE_NAME, SCALE_TICKS, WEEK_STEP, bandPath, hiddenHint, linePath, num, segments } from './model'
 import { Num } from './parts'
 
@@ -10,20 +11,6 @@ export const GROUPS: OutcomeGroup[] = ['continued', 'stopped_ae', 'stopped_ineff
 export const groupColor = (g: OutcomeGroup) => `var(--an-g-${g})`
 const WEEKS = [0, 2, 4, 6, 8, 10, 12]
 const LAST = WEEKS[WEEKS.length - 1]
-
-function useWidth<T extends HTMLElement>() {
-  const ref = useRef<T>(null)
-  const [w, setW] = useState(0)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    setW(el.clientWidth)
-    const ro = new ResizeObserver(([e]) => setW(Math.round(e.contentRect.width)))
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [])
-  return [ref, w] as const
-}
 
 const at = (pts: TrajectoryPoint[] | undefined, week: number) => pts?.find(p => p.week === week)
 const iqr = (p: TrajectoryPoint) => `${num(p.q1 ?? 0)}–${num(p.q3 ?? 0)}`
@@ -58,7 +45,7 @@ export function TrajectoryPanel({ report }: { report: AviandrReportFull }) {
               onFocus={() => setHover(g)} onBlur={() => setHover(null)}
               onClick={() => setPinned(p => (p === g ? null : g))}
               title="Выделить группу и показать её полосу Q1–Q3">
-              <i style={{ borderColor: groupColor(g) }} />
+              <i className={`g-${g}`} style={{ borderColor: groupColor(g) }} />
               <span>{report.labels.groups[g]}</span>
               <span className="faint" title="Курсов с измерением на неделе 0">n&nbsp;=&nbsp;<Num v={first?.week === 0 ? first.n : null} k={k} /></span>
             </button>
@@ -124,7 +111,7 @@ function TrajectoryChart({ report, groups, active }: { report: AviandrReportFull
     <div ref={ref} className="an-chart" tabIndex={0} onKeyDown={onKey} onFocus={() => setWeek(w => w ?? 0)} onBlur={() => setWeek(null)}
       aria-label={`График ${SCALE_NAME[scale]} по неделям. Стрелки влево и вправо — переход по неделям.`}>
       {width > 0 && (
-        <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={summary}>
+        <svg key={scale} width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={summary}>
           {/* градации тяжести: тонкие линии и подписи справа */}
           {bands.map((b, i) => {
             const top = i < bands.length - 1 ? bands[i + 1].min : max
@@ -145,12 +132,21 @@ function TrajectoryChart({ report, groups, active }: { report: AviandrReportFull
             const runs = segments(report.trajectories[g])
             const dim = active !== null && active !== g
             return (
-              <g key={g} className={`an-series ${dim ? 'dim' : ''} ${active === g ? 'on' : ''}`} style={{ color: groupColor(g) }}>
-                {g === band && runs.map((r, i) => <path key={'b' + i} className="an-iqr" d={bandPath(r, x, y)} />)}
-                {runs.map((r, i) => r.length > 1 && <path key={'l' + i} className="an-line" d={linePath(r, x, y)} />)}
-                {runs.flatMap((r, i) => (r.length > 1 ? [r[0], r[r.length - 1]] : [r[0]]).map((p, j) => (
-                  <circle key={`d${i}-${j}`} className="an-dot" cx={x(p.week)} cy={y(p.median)} r={4} />
-                )))}
+              <g key={g} className={`an-series g-${g} ${dim ? 'dim' : ''} ${active === g ? 'on' : ''}`} style={{ color: groupColor(g) }}>
+                <g className="draw-in" style={{ animationDelay: `${groups.indexOf(g) * 120}ms` }}>
+                  {/* полоса Q1–Q3: заливка + тонкие края, чтобы граница читалась и на тёмном фоне */}
+                  {g === band && runs.map((r, i) => (
+                    <g key={'b' + i} className="an-iqr-g">
+                      <path className="an-iqr" d={bandPath(r, x, y)} />
+                      {r.length > 1 && <path className="an-iqr-edge" d={linePath(r.map(p => ({ ...p, median: p.q1 })), x, y)} />}
+                      {r.length > 1 && <path className="an-iqr-edge" d={linePath(r.map(p => ({ ...p, median: p.q3 })), x, y)} />}
+                    </g>
+                  ))}
+                  {runs.map((r, i) => r.length > 1 && <path key={'l' + i} className="an-line" d={linePath(r, x, y)} />)}
+                  {runs.flatMap((r, i) => (r.length > 1 ? [r[0], r[r.length - 1]] : [r[0]]).map((p, j) => (
+                    <circle key={`d${i}-${j}`} className="an-dot" cx={x(p.week)} cy={y(p.median)} r={4} />
+                  )))}
+                </g>
               </g>
             )
           })}
@@ -189,7 +185,7 @@ function TrajectoryChart({ report, groups, active }: { report: AviandrReportFull
             if (!p) return null
             return (
               <div key={g} className="an-tip-row">
-                <i style={{ borderColor: groupColor(g) }} />
+                <i className={`g-${g}`} style={{ borderColor: groupColor(g) }} />
                 {p.hidden
                   ? <><b className="an-hidden">&lt;{k}</b><span className="faint">{hiddenHint(k)}</span></>
                   : <><b>{num(p.median ?? 0)}</b><span className="faint">Q1–Q3 {iqr(p)} · n {p.n}</span></>}
