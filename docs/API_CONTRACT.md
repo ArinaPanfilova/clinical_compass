@@ -74,3 +74,25 @@ result = evaluate_patient(record, drugs=["aviandr"])
 | POST | `/patients/{id}/decisions` | решение врача по находке |
 | GET | `/alerts` | журнал алертов |
 | POST | `/demo/reset` | сброс демо |
+
+## Курсы для аналитики (`kompas_core.analytics.aviandr_report`)
+
+```python
+from kompas_core import aviandr_report
+report = aviandr_report(courses, filters={"sex": "Ж", "indication": "F41.1"}, scale="gad7", k_min=5)
+```
+
+Курс — словарь: `course_id`, `patient_key`, `doctor_id`, `drug_id`, `age`, `sex` (`Ж|М`),
+`indication` (`F41.1|F43.2`), `comorbidities` (`[]` = нет), `concomitant` (`[]` = нет),
+`start_date`, `end_date` (`null` = идёт), `planned_weeks`, `stop_reason`
+(`null|completed|adverse_event|inefficacy|improvement|switch|lost_to_followup`),
+`visits` (`[{week, gad7, phq9}]`, `null` = анкета не пришла), `intake` (`{taken, missed, unknown}`),
+`adverse_events` (`[{term, severity: mild|moderate|severe, serious, week}]`).
+
+Фильтры: `start_from`, `start_to`, `age_min`, `age_max`, `sex`, `indication`, `comorbidity`,
+`concomitant` (`none` = нет), `doctor_id`. `k_min > 1` — режим исследователя: выборка меньше k
+скрывается целиком, ячейки 1…k−1 заменяются на `null`.
+
+Индекс устойчивой пользы = курсы с ответом (снижение ≥ 50 % на последнем наблюдении) без серьёзных
+НЯ и без отмены из-за НЯ / все начатые курсы с исходным измерением (ITT), 95 % ДИ Вильсона.
+Это описание наблюдения, не оценка эффективности: контрольной группы нет.
