@@ -208,9 +208,23 @@ def test_unverified_card_never_suggests():
 
 
 def test_secondary_source_card_warns():
-    r = check_drug(load_card("aviandr"), _pt(safety_profile={}))
+    r = check_drug({**load_card("aviandr"), "verification_level": "secondary"}, _pt(safety_profile={}))
     assert r.verification_level == "secondary" and r.warnings
     assert r.status == "insufficient_data"          # профиль безопасности пуст → не «можно»
+
+
+def test_aviandr_card_reconciled_with_grls_but_awaits_clinical_signoff():
+    """Карточка сверена командой с листком-вкладышем ГРЛС; подпись клинического лида — отдельно."""
+    card = load_card("aviandr")
+    assert card["mnn"] == "маритупирдин"
+    assert card["verification_level"] == "grls_team_checked"
+    assert "grls.rosminzdrav.ru" in card["registration"]["grls_url"]
+    contraindicated = {i["mnn"] for i in card["interactions"] if i["level"] == "contraindicated"}
+    assert {"моклобемид", "фенелзин", "транилципромин", "разагилин"} <= contraindicated
+    assert "кетоконазол" not in {i["mnn"] for i in card["interactions"]}      # в инструкции ГРЛС нет
+    r = check_drug(card, _pt(safety_profile={}))
+    assert any("ГРЛС" in w and "клинического лида" in w for w in r.warnings)
+    assert "ГРЛС" in r.source
 
 
 AVIANDR_SAFE = dict(hypersensitivity_aviandr=False, epilepsy_or_organic_brain_lesion=False,

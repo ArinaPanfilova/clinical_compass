@@ -30,7 +30,7 @@ export interface DrugCheck {
   cautions: string[]
   interactions: string[]
   source: string
-  verification_level: 'none' | 'secondary' | 'grls_verified'
+  verification_level: 'none' | 'secondary' | 'grls_team_checked' | 'grls_verified'
   warnings: string[]
 }
 

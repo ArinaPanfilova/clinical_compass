@@ -2,6 +2,7 @@
 
 Возможные статусы (рекомендации «назначить» система не выдаёт никогда):
 * card_not_verified   — карточка не заполнена (verification_level: none) → ничего не предлагаем;
+  (уровни карточки: none → secondary → grls_team_checked → grls_verified, см. drugs/aviandr.yaml)
 * not_applicable      — нет зарегистрированного показания ИЛИ есть противопоказание;
 * insufficient_data   — показание/противопоказание нельзя проверить: нет данных;
 * can_be_considered   — в пределах зарегистрированных условий; решение за врачом.
@@ -59,7 +60,8 @@ def _icd_match(code: str, allowed: list[str]) -> bool:
 def check_drug(card: dict, patient: dict) -> DrugCheck:
     reg = card.get("registration", {})
     level = card.get("verification_level", "grls_verified" if card.get("verified") else "none")
-    src = f"Инструкция, РУ {reg.get('number')}, ред. {card.get('instruction_version_date')}"
+    origin = "ГРЛС" if level in ("grls_team_checked", "grls_verified") else "вторичный источник"
+    src = f"Инструкция ({origin}), РУ {reg.get('number')}, ред. {card.get('instruction_version_date')}"
     res = DrugCheck(card["id"], card["trade_name"], "can_be_considered", source=src,
                     verification_level=level)
 
@@ -69,6 +71,9 @@ def check_drug(card: dict, patient: dict) -> DrugCheck:
         return res
     if level == "secondary":
         res.warnings.append("Сведения о препарате из вторичного источника, не сверены с ГРЛС")
+    elif level == "grls_team_checked":
+        res.warnings.append(f"Карточка сверена командой с инструкцией из ГРЛС ({card.get('checked_on')}); "
+                            "подпись клинического лида ожидается")
 
     blocking, unknown = [], []
     ctx = {**patient.get("context", {}), **{f"safety.{k}": v for k, v in patient.get("safety_profile", {}).items()}}
