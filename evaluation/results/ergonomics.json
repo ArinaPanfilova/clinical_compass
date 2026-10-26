@@ -1,0 +1,43 @@
+[
+ {
+  "scenario": "Пациент: заполнить PHQ-9 + GAD-7 и отправить",
+  "runs": 3,
+  "actions": 19,
+  "total_s_median": 4.55,
+  "latency_p50_ms": 246,
+  "latency_max_ms": 476
+ },
+ {
+  "scenario": "Врач: экстренный сигнал → принять → подтвердить",
+  "runs": 3,
+  "actions": 3,
+  "total_s_median": 0.73,
+  "latency_p50_ms": 171,
+  "latency_max_ms": 447,
+  "alert_on_screen_ms_median": 71
+ },
+ {
+  "scenario": "Врач: направить к психиатру",
+  "runs": 3,
+  "actions": 3,
+  "total_s_median": 0.51,
+  "latency_p50_ms": 130,
+  "latency_max_ms": 283
+ },
+ {
+  "scenario": "Врач: выписка → профиль → статус Авиандра",
+  "runs": 3,
+  "actions": 9,
+  "total_s_median": 1.08,
+  "latency_p50_ms": 57,
+  "latency_max_ms": 481
+ },
+ {
+  "scenario": "Пациент: отметить приём и написать врачу",
+  "runs": 3,
+  "actions": 4,
+  "total_s_median": 0.73,
+  "latency_p50_ms": 174,
+  "latency_max_ms": 789
+ }
+]
