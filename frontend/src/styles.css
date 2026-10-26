@@ -466,3 +466,19 @@ ul, ol { margin: 0; }
 .consent-check { display: flex; gap: 10px; align-items: flex-start; font-weight: 500; }
 .consent-check input { margin-top: 4px; }
 .sos-inline { border: 0; border-radius: var(--r-m); padding: 12px; background: var(--must); color: #fff; font-weight: 600; }
+
+/* ---------- Варианты терапии по КР ---------- */
+.therapy { display: grid; gap: 10px; }
+.therapy-src { font-size: 13px; color: var(--ink-2); }
+.therapy-src a { color: var(--brand-ink); }
+.therapy-list { list-style: none; padding: 0; display: grid; gap: 8px; }
+.therapy-list li { display: grid; gap: 4px; padding: 8px 10px; border-radius: var(--r-s); background: var(--surface-2); }
+.therapy-head { display: flex; gap: 8px; flex-wrap: wrap; align-items: baseline; }
+.line-tag { font-size: 11.5px; font-weight: 600; padding: 1px 7px; border-radius: 999px; background: var(--brand-soft); color: var(--brand-ink); }
+.line-third .line-tag, .line-fourth .line-tag { background: var(--line-2); color: var(--ink-2); }
+.drug-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.drug-chip { font-size: 12.5px; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); }
+.drug-chip.off { border-style: dashed; color: var(--ink-3); }
+.drug-chip.cur { border-color: var(--brand); color: var(--brand-ink); font-weight: 600; }
+.therapy-ref { white-space: nowrap; }
+.therapy-mon summary { cursor: pointer; font-size: 13px; color: var(--ink-2); }

@@ -97,6 +97,7 @@ export interface PatientBundle {
   alerts?: Alert[]
   decisions?: Decision[]
   referrals?: Referral[]
+  therapy_options?: TherapyGuide[]
 }
 
 export interface Decision {
@@ -177,4 +178,22 @@ export interface DocumentExtraction {
     status: 'extracted_unverified'
   }
   diff: { key: string; current: boolean | null; extracted: boolean; evidence: Evidence; kind: 'new' | 'same' | 'conflict' }[]
+}
+
+export interface TherapyGuide {
+  guideline: { id: string; title: string; year: number; status: string; developer: string; url: string }
+  matched_codes: string[]
+  diagnosis_confirmed: boolean
+  monitoring: string
+  note: string
+  options: {
+    label: string
+    kind: 'drug_class' | 'psychotherapy' | 'approach'
+    line: 'first' | 'second' | 'third' | 'fourth' | 'adjunct'
+    line_label: string
+    drugs: { mnn: string; indication: string; off_label: boolean; current: boolean; trade_names?: string[] }[]
+    evidence: string
+    note: string
+    source: string
+  }[]
 }
