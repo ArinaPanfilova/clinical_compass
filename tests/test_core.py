@@ -341,3 +341,12 @@ def test_drug_card_parsed_once_and_copies_are_independent(monkeypatch):
     b = load_card("aviandr")
     assert len(calls) == 1
     assert b["verification_level"] != "испорчено"
+
+
+def test_insufficient_data_reason_is_human_readable():
+    """В тексте для врача — названия из инструкции, а не служебные ключи; ключи остаются в unknown_facts."""
+    r = check_drug(load_card("aviandr"), _pt(safety_profile={"pregnancy": False}))
+    reason = next(x for x in r.reasons if x.startswith("Не хватает данных"))
+    assert "safety." not in reason
+    assert "Эпилепсия или органическое поражение головного мозга" in reason
+    assert "safety.epilepsy_or_organic_brain_lesion" in r.unknown_facts

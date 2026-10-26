@@ -142,7 +142,9 @@ def check_drug(card: dict, patient: dict) -> DrugCheck:
         res.reasons = blocking + res.reasons
     elif unknown:
         res.status = "insufficient_data"
-        res.reasons.append("Не хватает данных для проверки: " + ", ".join(res.unknown_facts))
+        labels = {x["fact"]: x["label"] for x in card.get("contraindications", []) + card.get("cautions", [])}
+        labels.update({"patient.age": "возраст", "diagnosis.confirmed": "подтверждение диагноза"})
+        res.reasons.append("Не хватает данных для проверки: " + "; ".join(labels.get(f, f) for f in res.unknown_facts))
     else:
         res.reasons.append("В пределах зарегистрированных показаний; противопоказаний в профиле не выявлено")
     return res
