@@ -13,7 +13,7 @@ dev = ["pytest>=7"]
 include = ["kompas_core*"]
 
 [tool.setuptools.package-data]
-kompas_core = ["scales/*.yaml", "rules/*.yaml", "drugs/*.yaml"]
+kompas_core = ["*.yaml", "scales/*.yaml", "rules/*.yaml", "drugs/*.yaml"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
