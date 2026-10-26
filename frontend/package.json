@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "test": "node --test src/components/analytics/model.test.mjs"
+    "test": "node --test src/components/analytics/model.test.mjs src/person.test.mjs"
   },
   "dependencies": {
     "@fontsource/jost": "^5.3.0",

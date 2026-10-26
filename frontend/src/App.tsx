@@ -8,18 +8,8 @@ import { Logo } from './components/Logo'
 import { PatientApp } from './components/PatientApp'
 import { PhoneSkeleton } from './components/Skeleton'
 import { ThemeToggle } from './components/ThemeToggle'
+import { person, ROLE_LABEL } from './person'
 import type { PatientBundle, User } from './types'
-
-const ROLE_LABEL: Record<User['role'], string> = { doctor: 'врач', patient: 'пациент', researcher: 'исследователь' }
-
-/** «Иванова Елена Андреевна, терапевт» → «Иванова Е. А.», подпись «терапевт», инициалы «ИЕ». */
-function person(u: User) {
-  const [name, spec] = u.display_name.split(',').map(s => s.trim())
-  const w = name.split(/\s+/).filter(Boolean)
-  const short = w.length === 3 ? `${w[0]} ${w[1][0]}. ${w[2][0]}.` : name
-  const initials = (w.length > 1 ? w[0][0] + w[1][0] : name.slice(0, 2)).toUpperCase()
-  return { short, sub: spec || ROLE_LABEL[u.role], initials }
-}
 
 const ICON = { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true } as const
 
