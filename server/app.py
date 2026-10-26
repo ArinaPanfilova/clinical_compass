@@ -24,6 +24,7 @@ from kompas_core import ENGINE_VERSION, aviandr_report, evaluate_patient, extrac
 from kompas_core.scales import ScaleInputError
 
 from . import access, alerts
+from .consent import CONSENT, VERSION as CONSENT_VERSION
 from .auth import make_token, read_token, verify_password
 from .courses import build_courses
 from .db import connect, dumps, init_schema, loads, now, tx
@@ -80,6 +81,22 @@ class MessageIn(BaseModel):
 class Intake(BaseModel):
     status: Literal["taken", "missed"]
     reason: str | None = Field(default=None, max_length=500)
+
+
+class ReferralIn(BaseModel):
+    necessity: Literal["mandatory", "desirable"]
+    urgency: Literal["emergency", "urgent", "planned"]
+    reason: str = Field(max_length=2000)
+    rule_id: str | None = None
+
+
+class ReferralStatus(BaseModel):
+    status: Literal["issued", "scheduled", "completed", "cancelled"]
+    note: str | None = Field(default=None, max_length=1000)
+
+
+class ConsentIn(BaseModel):
+    version: str
 
 
 class DocumentIn(BaseModel):
@@ -188,8 +205,9 @@ def create_app(db_path: str | Path, secret: str = "dev-secret-change-me", escala
         doctor = link in ("lead", "deputy")
         pa = [alerts.get_alert(conn, r[0]) for r in conn.execute(
             "SELECT id FROM alerts WHERE patient_id = ? ORDER BY created_at", (pid,))] if doctor else []
+        refs = [dict(r) for r in conn.execute("SELECT * FROM referrals WHERE patient_id = ? ORDER BY id", (pid,))]
         return {"record": record, "evaluation": evaluate(record), "link": link, "alerts": pa,
-                "decisions": decisions_for(conn, pid) if doctor else []}
+                "decisions": decisions_for(conn, pid) if doctor else [], "referrals": refs}
 
     @api.get("/health")
     def health(conn: sqlite3.Connection = Depends(get_conn)):
@@ -205,9 +223,31 @@ def create_app(db_path: str | Path, secret: str = "dev-secret-change-me", escala
         access.audit(conn, dict(u), "login", None, True)
         return {"token": make_token(u["id"], secret), "user": _public_user(u)}
 
+    def has_consent(conn: sqlite3.Connection, pid: str) -> bool:
+        return conn.execute("SELECT 1 FROM consents WHERE patient_id = ? AND version = ?",
+                            (pid, CONSENT_VERSION)).fetchone() is not None
+
+    def require_consent(conn: sqlite3.Connection, user: dict, pid: str, action: str) -> None:
+        if user["role"] == "patient" and not has_consent(conn, pid):
+            access.audit(conn, user, f"{action}:no_consent", pid, False)
+            raise HTTPException(403, "Нужно согласие на обработку данных")
+
     @api.get("/me")
-    def me(user: dict = Depends(current_user)):
-        return _public_user(user)
+    def me(user: dict = Depends(current_user), conn: sqlite3.Connection = Depends(get_conn)):
+        required = user["role"] == "patient" and not has_consent(conn, user["patient_id"])
+        return {**_public_user(user), "consent_required": required, "consent": CONSENT if required else None}
+
+    @api.post("/consent")
+    def accept_consent(body: ConsentIn, user: dict = Depends(current_user), conn: sqlite3.Connection = Depends(get_conn)):
+        if user["role"] != "patient":
+            raise HTTPException(403, "Согласие даёт пациент")
+        if body.version != CONSENT_VERSION:
+            raise HTTPException(422, "Устаревшая версия текста согласия")
+        with tx(conn):
+            conn.execute("INSERT OR IGNORE INTO consents (patient_id, version, accepted_at, user_id) VALUES (?, ?, ?, ?)",
+                         (user["patient_id"], CONSENT_VERSION, now(), user["id"]))
+            access.audit(conn, user, "consent_accepted", user["patient_id"], True)
+        return {"ok": True, "version": CONSENT_VERSION}
 
     @api.get("/patients")
     def list_patients(user: dict = Depends(current_user), conn: sqlite3.Connection = Depends(get_conn)):
@@ -236,6 +276,10 @@ def create_app(db_path: str | Path, secret: str = "dev-secret-change-me", escala
             access.audit(conn, user, "self_report", pid, False)
             raise HTTPException(403, "Самоотчёт отправляет только пациент")
         require_patient_access(conn, user, pid, "self_report")
+        emergency_only = body.emergency and not (body.questionnaires or body.diary_text or body.adverse_event
+                                                 or body.medication_taken)
+        if not emergency_only:              # экстренное обращение — без согласия (защита жизни и здоровья)
+            require_consent(conn, user, pid, "self_report")
         for q in body.questionnaires:
             try:
                 score(q.scale, q.answers)          # проверка до записи
@@ -385,6 +429,7 @@ def create_app(db_path: str | Path, secret: str = "dev-secret-change-me", escala
     def send_message(pid: str, body: MessageIn, user: dict = Depends(current_user),
                      conn: sqlite3.Connection = Depends(get_conn)):
         require_patient_access(conn, user, pid, "send_message")
+        require_consent(conn, user, pid, "send_message")
         if not body.text.strip():
             raise HTTPException(422, "Пустое сообщение")
         with tx(conn):
@@ -419,10 +464,47 @@ def create_app(db_path: str | Path, secret: str = "dev-secret-change-me", escala
             access.audit(conn, user, "intake", pid, False)
             raise HTTPException(403, "Отметку о приёме ставит пациент")
         require_patient_access(conn, user, pid, "intake")
+        require_consent(conn, user, pid, "intake")
         with tx(conn):
             conn.execute("INSERT OR REPLACE INTO intake_marks (patient_id, date, status, reason) VALUES (?, ?, ?, ?)",
                          (pid, date.today().isoformat(), body.status, body.reason))
         return {"adherence": build_record(conn, pid)["adherence"]}
+
+    @api.post("/patients/{pid}/referrals")
+    def issue_referral(pid: str, body: ReferralIn, user: dict = Depends(current_user),
+                       conn: sqlite3.Connection = Depends(get_conn)):
+        """Направление к психиатру оформляет врач; система лишь подсказывает необходимость и срочность."""
+        require_doctor(conn, user, "referral", pid)
+        require_patient_access(conn, user, pid, "referral")
+        if not body.reason.strip():
+            raise HTTPException(422, "Укажите основание направления")
+        at = now()
+        with tx(conn):
+            cur = conn.execute("INSERT INTO referrals (patient_id, doctor_id, necessity, urgency, reason, rule_id, "
+                               "created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                               (pid, user["id"], body.necessity, body.urgency, body.reason.strip(), body.rule_id, at, at))
+            label = {"mandatory": "обязательно", "desirable": "желательно"}[body.necessity]
+            urg = {"emergency": "экстренно", "urgent": "срочно", "planned": "планово"}[body.urgency]
+            conn.execute("INSERT INTO decisions (patient_id, doctor_id, rule_id, rule_version, engine_version, action, "
+                         "comment, evidence, at) VALUES (?, ?, ?, NULL, ?, 'confirm', ?, ?, ?)",
+                         (pid, user["id"], body.rule_id or "REFERRAL", ENGINE_VERSION,
+                          f"Направление к психиатру: {label}, {urg}. {body.reason.strip()}", dumps(body.model_dump()), at))
+            if body.rule_id:
+                alerts.close_for_decision(conn, pid, body.rule_id, user["id"], "направление")
+            return dict(conn.execute("SELECT * FROM referrals WHERE id = ?", (cur.lastrowid,)).fetchone())
+
+    @api.post("/referrals/{rid}/status")
+    def referral_status(rid: int, body: ReferralStatus, user: dict = Depends(current_user),
+                        conn: sqlite3.Connection = Depends(get_conn)):
+        ref = conn.execute("SELECT * FROM referrals WHERE id = ?", (rid,)).fetchone()
+        if ref is None:
+            raise HTTPException(403, "Нет доступа")
+        require_doctor(conn, user, "referral_status", ref["patient_id"])
+        require_patient_access(conn, user, ref["patient_id"], "referral_status")
+        with tx(conn):
+            conn.execute("UPDATE referrals SET status = ?, note = COALESCE(?, note), updated_at = ? WHERE id = ?",
+                         (body.status, body.note, now(), rid))
+            return dict(conn.execute("SELECT * FROM referrals WHERE id = ?", (rid,)).fetchone())
 
     @api.post("/patients/{pid}/documents/extract")
     def extract_document(pid: str, body: DocumentIn, user: dict = Depends(current_user),

@@ -12,6 +12,7 @@ from synthetic.demo_patients import PATIENTS, SAFE, _spread
 
 from . import alerts
 from .auth import hash_password
+from .consent import VERSION as CONSENT_VERSION
 from .db import dumps, tx
 from .records import build_record
 
@@ -146,6 +147,9 @@ def seed_demo(conn: sqlite3.Connection, courses: list[dict] | None = None, today
                          "VALUES (?, ?, ?, 'patient', ?, ?)",
                          (f"pat-{p['patient_id']}", PATIENT_LOGINS[p["patient_id"]], pwd,
                           p["name"].replace(" (синт.)", ""), p["patient_id"]))
+            conn.execute("INSERT INTO consents (patient_id, version, accepted_at, user_id) VALUES (?, ?, ?, ?)",
+                         (p["patient_id"], CONSENT_VERSION, (today - timedelta(days=60)).isoformat(),
+                          f"pat-{p['patient_id']}"))
         for c in courses:
             insert_course(conn, c)
         # Алерты сценариев созданы «4 минуты назад» и уже приняты лечащим врачом

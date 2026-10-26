@@ -166,3 +166,27 @@ CREATE TABLE IF NOT EXISTS documents (
     extraction  TEXT NOT NULL,
     created_at  TEXT NOT NULL
 );
+
+-- Направление к психиатру — действие врача; необходимость и срочность — две независимые оси
+CREATE TABLE IF NOT EXISTS referrals (
+    id         INTEGER PRIMARY KEY,
+    patient_id TEXT NOT NULL REFERENCES patients(id),
+    doctor_id  TEXT NOT NULL REFERENCES users(id),
+    necessity  TEXT NOT NULL CHECK (necessity IN ('mandatory', 'desirable')),
+    urgency    TEXT NOT NULL CHECK (urgency IN ('emergency', 'urgent', 'planned')),
+    reason     TEXT NOT NULL,
+    rule_id    TEXT,
+    status     TEXT NOT NULL DEFAULT 'issued' CHECK (status IN ('issued', 'scheduled', 'completed', 'cancelled')),
+    note       TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+-- Согласие пациента на обработку данных (версия текста фиксируется)
+CREATE TABLE IF NOT EXISTS consents (
+    patient_id  TEXT NOT NULL REFERENCES patients(id),
+    version     TEXT NOT NULL,
+    accepted_at TEXT NOT NULL,
+    user_id     TEXT NOT NULL REFERENCES users(id),
+    PRIMARY KEY (patient_id, version)
+);

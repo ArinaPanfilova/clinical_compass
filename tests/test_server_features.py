@@ -155,6 +155,15 @@ MATRIX = [
     ("researcher", "GET", "/api/patients/P-001/messages", None, False),
     ("researcher", "POST", "/api/patients/P-001/decisions", DECISION, False),
     ("researcher", "GET", "/api/analytics/aviandr", None, True),
+    ("anna", "POST", "/api/patients/P-001/referrals", {"necessity": "desirable", "urgency": "planned", "reason": "x"}, False),
+    ("researcher", "POST", "/api/patients/P-001/referrals", {"necessity": "desirable", "urgency": "planned", "reason": "x"}, False),
+    ("ivanova", "POST", "/api/patients/P-001/referrals", {"necessity": "desirable", "urgency": "planned", "reason": "x"}, True),
+    ("ivanova", "POST", "/api/patients/AVP-P1/referrals", {"necessity": "desirable", "urgency": "planned", "reason": "x"}, False),
+    ("anna", "POST", "/api/patients/P-001/documents/extract", {"text": "x"}, False),
+    ("ivanova", "POST", "/api/patients/AVP-P1/documents/extract", {"text": "x"}, False),
+    ("anna", "POST", "/api/patients/P-001/safety-profile", {"facts": {"pregnancy": False}, "source": "manual"}, False),
+    ("researcher", "POST", "/api/patients/P-001/safety-profile", {"facts": {"pregnancy": False}, "source": "manual"}, False),
+    ("ivanova", "POST", "/api/consent", {"version": "x"}, False),
 ]
 
 
