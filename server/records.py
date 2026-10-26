@@ -8,13 +8,16 @@ from .db import loads
 
 
 def adherence_since(conn: sqlite3.Connection, pid: str, start: date, stop: date) -> dict:
-    """Подтверждённые приёмы, подтверждённые пропуски и дни без отметки за [start, stop)."""
+    """Отметки за [start, stop] и дни без отметки за [start, stop): день stop (сегодня) ещё не прошёл,
+    поэтому его отметка учитывается, а её отсутствие — нет."""
     rows = conn.execute(
-        "SELECT status, COUNT(*) AS n FROM intake_marks WHERE patient_id = ? AND date >= ? AND date < ? "
-        "GROUP BY status", (pid, start.isoformat(), stop.isoformat())).fetchall()
-    counts = {r["status"]: r["n"] for r in rows}
-    taken, missed = counts.get("taken", 0), counts.get("missed", 0)
-    return {"taken": taken, "missed": missed, "unknown": max(0, (stop - start).days - taken - missed)}
+        "SELECT status, date < ? AS past, COUNT(*) AS n FROM intake_marks WHERE patient_id = ? "
+        "AND date >= ? AND date <= ? GROUP BY status, past",
+        (stop.isoformat(), pid, start.isoformat(), stop.isoformat())).fetchall()
+    taken = sum(r["n"] for r in rows if r["status"] == "taken")
+    missed = sum(r["n"] for r in rows if r["status"] == "missed")
+    past_marks = sum(r["n"] for r in rows if r["past"])
+    return {"taken": taken, "missed": missed, "unknown": max(0, (stop - start).days - past_marks)}
 
 
 def build_record(conn: sqlite3.Connection, pid: str, today: date | None = None) -> dict:

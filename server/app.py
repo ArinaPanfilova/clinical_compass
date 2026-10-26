@@ -19,11 +19,12 @@ from fastapi import APIRouter, Depends, FastAPI, Header, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
-from kompas_core import ENGINE_VERSION, evaluate_patient, score
+from kompas_core import ENGINE_VERSION, aviandr_report, evaluate_patient, load_card, score
 from kompas_core.scales import ScaleInputError
 
 from . import access, alerts
 from .auth import make_token, read_token, verify_password
+from .courses import build_courses
 from .db import connect, dumps, init_schema, loads, now, tx
 from .records import build_record
 from .seed import seed_demo
@@ -56,6 +57,15 @@ class Decision(BaseModel):
     finding_rule_id: str
     action: Literal["confirm", "reject", "modify"]
     comment: str | None = Field(default=None, max_length=2000)
+
+
+class MessageIn(BaseModel):
+    text: str = Field(max_length=4000)
+
+
+class Intake(BaseModel):
+    status: Literal["taken", "missed"]
+    reason: str | None = Field(default=None, max_length=500)
 
 
 def _sse(event: str, data) -> str:
@@ -310,6 +320,97 @@ def create_app(db_path: str | Path, secret: str = "dev-secret-change-me", escala
 
         return StreamingResponse(gen(), media_type="text/event-stream",
                                  headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
+    @api.get("/patients/{pid}/messages")
+    def get_messages(pid: str, user: dict = Depends(current_user), conn: sqlite3.Connection = Depends(get_conn)):
+        """Лента загружена получателем — сообщения считаются доставленными (не прочитанными)."""
+        require_patient_access(conn, user, pid, "view_messages")
+        with tx(conn):
+            conn.execute("UPDATE messages SET delivered_at = ? WHERE patient_id = ? AND delivered_at IS NULL "
+                         "AND sender_role != ?", (now(), pid, user["role"]))
+        return [dict(r) for r in conn.execute("SELECT * FROM messages WHERE patient_id = ? ORDER BY id", (pid,))]
+
+    @api.post("/patients/{pid}/messages")
+    def send_message(pid: str, body: MessageIn, user: dict = Depends(current_user),
+                     conn: sqlite3.Connection = Depends(get_conn)):
+        require_patient_access(conn, user, pid, "send_message")
+        if not body.text.strip():
+            raise HTTPException(422, "Пустое сообщение")
+        with tx(conn):
+            cur = conn.execute("INSERT INTO messages (patient_id, sender_id, sender_role, text, created_at) "
+                               "VALUES (?, ?, ?, ?, ?)", (pid, user["id"], user["role"], body.text.strip(), now()))
+            msg = dict(conn.execute("SELECT * FROM messages WHERE id = ?", (cur.lastrowid,)).fetchone())
+        if user["role"] == "patient":
+            lead, _ = access.lead_doctor(conn, pid)
+            if lead:
+                broker.publish(lead, {"type": "message", "data": msg})
+        return msg
+
+    @api.post("/messages/{mid}/read")
+    def read_message(mid: int, user: dict = Depends(current_user), conn: sqlite3.Connection = Depends(get_conn)):
+        m = conn.execute("SELECT * FROM messages WHERE id = ?", (mid,)).fetchone()
+        if m is None:
+            raise HTTPException(403, "Нет доступа")
+        require_patient_access(conn, user, m["patient_id"], "read_message")
+        if m["sender_role"] == user["role"]:
+            raise HTTPException(403, "Отметку «прочитано» ставит получатель")
+        at = now()
+        with tx(conn):
+            conn.execute("UPDATE messages SET delivered_at = COALESCE(delivered_at, ?), read_at = COALESCE(read_at, ?) "
+                         "WHERE id = ?", (at, at, mid))
+        return dict(conn.execute("SELECT * FROM messages WHERE id = ?", (mid,)).fetchone())
+
+    @api.post("/patients/{pid}/intake")
+    def mark_intake(pid: str, body: Intake, user: dict = Depends(current_user),
+                    conn: sqlite3.Connection = Depends(get_conn)):
+        """Отметка о приёме за сегодня; повторная отметка за тот же день заменяет прежнюю."""
+        if user["role"] != "patient":
+            access.audit(conn, user, "intake", pid, False)
+            raise HTTPException(403, "Отметку о приёме ставит пациент")
+        require_patient_access(conn, user, pid, "intake")
+        with tx(conn):
+            conn.execute("INSERT OR REPLACE INTO intake_marks (patient_id, date, status, reason) VALUES (?, ?, ?, ?)",
+                         (pid, date.today().isoformat(), body.status, body.reason))
+        return {"adherence": build_record(conn, pid)["adherence"]}
+
+    @api.get("/analytics/aviandr")
+    def analytics(user: dict = Depends(current_user), conn: sqlite3.Connection = Depends(get_conn),
+                  scale: Literal["gad7", "phq9"] = "gad7", start_from: str | None = None, start_to: str | None = None,
+                  age_min: int | None = None, age_max: int | None = None, sex: str | None = None,
+                  indication: str | None = None, comorbidity: str | None = None, concomitant: str | None = None,
+                  doctor_id: str | None = None):
+        """Врач — свои курсы полностью; исследователь — все курсы обезличенно, ячейки n < 5 скрыты."""
+        courses = build_courses(conn, "aviandr")
+        if user["role"] == "doctor":
+            courses, k, view, doctor_id = [c for c in courses if c["doctor_id"] == user["id"]], 1, "own", None
+        elif user["role"] == "researcher":
+            k, view = 5, "pseudonymized"
+        else:
+            access.audit(conn, user, "analytics", None, False)
+            raise HTTPException(403, "Аналитика доступна врачу и исследователю")
+        access.audit(conn, user, "analytics", None, True)
+        filters = {"start_from": start_from, "start_to": start_to, "age_min": age_min, "age_max": age_max,
+                   "sex": sex, "indication": indication, "comorbidity": comorbidity, "concomitant": concomitant,
+                   "doctor_id": doctor_id}
+        rep = aviandr_report(courses, filters, scale, k_min=k)
+        return {**rep, "view": view, "synthetic": demo, "drug": load_card("aviandr")["trade_name"]}
+
+    @api.post("/demo/reset")
+    def demo_reset(user: dict = Depends(current_user)):
+        if not demo:
+            raise HTTPException(403, "Сброс доступен только в демо-режиме")
+        conn = connect(db_path)
+        try:
+            tables = [r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")]
+            conn.execute("PRAGMA foreign_keys=OFF")
+            with tx(conn):
+                for t in tables:
+                    conn.execute(f"DELETE FROM {t}")
+            conn.execute("PRAGMA foreign_keys=ON")
+            seed_demo(conn, courses=seed_courses)
+        finally:
+            conn.close()
+        return {"ok": True}
 
     app.include_router(api)
     app.state.db_path = db_path
