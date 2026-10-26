@@ -1,51 +1,91 @@
-import type { PatientBundle } from './types'
+import type { Alert, Decision, Message, PatientBundle, User } from './types'
 
 // Два режима:
-// live — работает сервер правил (api_stub или бэкенд команды) по адресу /api;
-// demo — сервера нет, данные из public/mock/patients.json, правила не пересчитываются.
+// live — работает сервер (python -m server) по адресу /api: вход, роли, алерты, сообщения;
+// demo — сервера нет, данные из public/mock/*.json, правила не пересчитываются.
 // Клиническая логика живёт только на сервере: фронтенд её не дублирует.
 
 const BASE = (import.meta.env.VITE_API_URL as string | undefined) ?? '/api'
 
 export type Mode = 'live' | 'demo'
 
-export async function loadPatients(): Promise<{ mode: Mode; patients: PatientBundle[] }> {
+// Токен — в sessionStorage: у каждой вкладки свой вход (врач и пациент рядом в демо)
+const KEY = 'kompas.token'
+let token: string | null = (() => { try { return sessionStorage.getItem(KEY) } catch { return null } })()
+
+export function setToken(t: string | null) {
+  token = t
+  try { if (t) sessionStorage.setItem(KEY, t); else sessionStorage.removeItem(KEY) } catch { /* приватный режим */ }
+}
+
+export const hasToken = () => token !== null
+
+export class ApiError extends Error {
+  constructor(public status: number, message: string) { super(message) }
+}
+
+async function req<T>(path: string, init: { method?: string; json?: unknown; headers?: Record<string, string> } = {}): Promise<T> {
+  const headers: Record<string, string> = { ...init.headers }
+  if (token) headers.Authorization = `Bearer ${token}`
+  if (init.json !== undefined) headers['Content-Type'] = 'application/json'
+  const r = await fetch(`${BASE}${path}`, {
+    method: init.method ?? 'GET', headers,
+    body: init.json !== undefined ? JSON.stringify(init.json) : undefined,
+  })
+  if (!r.ok) {
+    const detail = await r.json().then(j => j.detail, () => null)
+    throw new ApiError(r.status, typeof detail === 'string' ? detail : `Ошибка ${r.status}`)
+  }
+  return r.json() as Promise<T>
+}
+
+export async function detectMode(): Promise<Mode> {
   try {
-    const r = await fetch(`${BASE}/patients`, { signal: AbortSignal.timeout(1500) })
-    if (r.ok && r.headers.get('content-type')?.includes('json')) {
-      return { mode: 'live', patients: await r.json() }
-    }
-  } catch { /* сервер недоступен — демо-режим */ }
-  const r = await fetch('./mock/patients.json')
-  return { mode: 'demo', patients: await r.json() }
+    const r = await fetch(`${BASE}/health`, { signal: AbortSignal.timeout(1500) })
+    if (r.ok && r.headers.get('content-type')?.includes('json')) return 'live'
+  } catch { /* сервер недоступен */ }
+  return 'demo'
+}
+
+export async function loadMockPatients(): Promise<PatientBundle[]> {
+  return (await fetch('./mock/patients.json')).json()
 }
 
 export interface SelfReportBody {
   questionnaires: { scale: 'phq9' | 'gad7'; answers: (number | null)[] }[]
   diary_text?: string
-  medication_taken?: 'taken' | 'missed' | 'unknown'
   adverse_event?: string
   adverse_event_serious?: boolean
   emergency?: boolean
 }
 
-export async function submitSelfReport(pid: string, body: SelfReportBody) {
-  const r = await fetch(`${BASE}/patients/${pid}/self-report`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
-  })
-  if (!r.ok) throw new Error((await r.json()).detail ?? `Ошибка ${r.status}`)
-  return r.json() as Promise<{ saved_at: string; evaluation: PatientBundle['evaluation']; patient_messages: string[] }>
+export interface SelfReportResult { saved_at: string; evaluation: PatientBundle['evaluation']; patient_messages: string[] }
+
+export const api = {
+  login: (login: string, password: string) =>
+    req<{ token: string; user: User }>('/auth/login', { method: 'POST', json: { login, password } }),
+  me: () => req<User>('/me'),
+  patients: () => req<PatientBundle[]>('/patients'),
+  patient: (pid: string) => req<PatientBundle>(`/patients/${pid}`),
+  // Ключ идемпотентности: повтор после обрыва связи не создаст второй самоотчёт и второй алерт
+  selfReport: (pid: string, body: SelfReportBody, key: string) =>
+    req<SelfReportResult>(`/patients/${pid}/self-report`, { method: 'POST', json: body, headers: { 'Idempotency-Key': key } }),
+  decide: (pid: string, finding_rule_id: string, action: Decision['action'], comment?: string) =>
+    req<Decision>(`/patients/${pid}/decisions`, { method: 'POST', json: { finding_rule_id, action, comment } }),
+  alertAction: (id: string, action: 'ack' | 'accept' | 'close') => req<Alert>(`/alerts/${id}/${action}`, { method: 'POST' }),
+  messages: (pid: string) => req<Message[]>(`/patients/${pid}/messages`),
+  sendMessage: (pid: string, text: string) => req<Message>(`/patients/${pid}/messages`, { method: 'POST', json: { text } }),
+  readMessage: (id: number) => req<Message>(`/messages/${id}/read`, { method: 'POST' }),
+  intake: (pid: string, status: 'taken' | 'missed', reason?: string) =>
+    req<{ adherence: PatientBundle['record']['adherence'] }>(`/patients/${pid}/intake`, { method: 'POST', json: { status, reason } }),
+  analytics: <T,>(q: Record<string, string | undefined>) => {
+    const params = new URLSearchParams(Object.entries(q).filter((e): e is [string, string] => !!e[1]))
+    return req<T>(`/analytics/aviandr?${params}`)
+  },
+  reset: () => req<{ ok: boolean }>('/demo/reset', { method: 'POST' }),
+  // SSE: EventSource не умеет заголовки, поэтому токен — параметром
+  stream: () => new EventSource(`${BASE}/events/stream?token=${encodeURIComponent(token ?? '')}`),
 }
 
-export async function sendDecision(pid: string, finding_rule_id: string, action: string, comment?: string) {
-  const r = await fetch(`${BASE}/patients/${pid}/decisions`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ finding_rule_id, action, comment }),
-  })
-  if (!r.ok) throw new Error((await r.json()).detail ?? `Ошибка ${r.status}`)
-  return r.json()
-}
-
-export async function resetDemo() {
-  await fetch(`${BASE}/demo/reset`, { method: 'POST' })
-}
+export const newKey = () =>
+  (crypto.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`)

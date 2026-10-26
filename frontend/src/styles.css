@@ -369,3 +369,57 @@ ul, ol { margin: 0; }
   .patient-wrap { padding: 0; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* ---------- Вход ---------- */
+.login-wrap { min-height: 100vh; display: grid; place-items: center; padding: 32px 16px; }
+.login-card {
+  width: min(640px, 100%); background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-l);
+  padding: 32px; box-shadow: var(--shadow); display: grid; gap: 14px;
+}
+.login-card h1 { margin-top: 6px; }
+.login-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; }
+.login-form label { display: grid; gap: 4px; font-size: 13px; color: var(--ink-2); }
+.login-form .field { min-height: 0; height: 40px; }
+.demo-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+.demo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+.demo-acc {
+  display: grid; gap: 2px; text-align: left; padding: 12px 14px; border-radius: var(--r-m);
+  border: 1px solid var(--line); background: var(--surface-2); border-left: 3px solid var(--brand);
+}
+.demo-acc:hover { border-color: var(--brand); background: var(--brand-soft); }
+.demo-acc span { font-size: 13px; color: var(--ink-2); line-height: 1.35; }
+.demo-acc.role-patient { border-left-color: var(--ok); }
+.demo-acc.role-researcher { border-left-color: var(--rx); }
+@media (max-width: 640px) { .login-form { grid-template-columns: 1fr; } .login-card { padding: 20px; } }
+.whoami { color: var(--ink-2); font-size: 13.5px; padding-left: 8px; border-left: 1px solid var(--line); }
+
+/* ---------- Всплывающие сигналы ---------- */
+.toasts { position: fixed; top: 68px; right: 20px; z-index: 20; display: grid; gap: 10px; width: min(380px, calc(100vw - 32px)); }
+.toast {
+  position: relative; display: grid; gap: 3px; padding: 12px 36px 12px 14px; border-radius: var(--r-m); cursor: pointer;
+  background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--brand);
+  box-shadow: 0 8px 24px rgba(22, 37, 44, .16); animation: toast-in .25s ease-out;
+}
+.toast.p-emergency { border-left-color: var(--must); background: var(--must-soft); }
+.toast.p-urgent { border-left-color: var(--want); background: var(--want-soft); }
+.toast-head { font-size: 14px; }
+.toast.p-emergency .toast-head b { color: var(--must); }
+.toast.p-urgent .toast-head b { color: var(--want); }
+.toast-text { font-size: 13.5px; color: var(--ink-2); line-height: 1.35; }
+.toast-note { font-size: 12.5px; color: var(--must); font-weight: 500; }
+.toast-close { position: absolute; top: 6px; right: 8px; border: 0; background: transparent; font-size: 18px; color: var(--ink-3); }
+@keyframes toast-in { from { transform: translateY(-8px); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .toast { animation: none; } }
+.chip-deputy {
+  margin-left: 6px; padding: 1px 7px; border-radius: 999px; font-size: 11.5px; font-weight: 600;
+  background: var(--must-soft); color: var(--must); vertical-align: 1px;
+}
+
+/* ---------- Переписка ---------- */
+.messages { display: grid; gap: 10px; }
+.thread { list-style: none; padding: 0; display: grid; gap: 8px; max-height: 320px; overflow-y: auto; }
+.bubble { max-width: 85%; padding: 8px 12px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line-2); }
+.bubble p { font-size: 14px; white-space: pre-wrap; }
+.bubble.mine { justify-self: end; background: var(--brand-soft); border-color: transparent; }
+.bubble-meta { display: block; margin-top: 2px; font-size: 12px; color: var(--ink-3); }
+.messages .field { min-height: 64px; }

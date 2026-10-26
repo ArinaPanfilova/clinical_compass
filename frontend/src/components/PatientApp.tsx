@@ -1,13 +1,14 @@
-import { useState } from 'react'
-import { submitSelfReport, type Mode, type SelfReportBody } from '../api'
+import { useRef, useState } from 'react'
+import { api, newKey, type Mode, type SelfReportBody } from '../api'
 import { GAD7, OPTIONS, PHQ9 } from '../content'
 import type { PatientBundle } from '../types'
+import { MessagesPanel } from './MessagesPanel'
 import { TrendChart } from './TrendChart'
 
 interface Props {
   b: PatientBundle
   mode: Mode
-  onSubmitted: (pid: string, ev: PatientBundle['evaluation'], body: SelfReportBody) => void
+  onSubmitted: () => void
 }
 
 type Tab = 'today' | 'dynamics' | 'messages'
@@ -17,7 +18,10 @@ export function PatientApp({ b, mode, onSubmitted }: Props) {
   const [sos, setSos] = useState(false)
   const [quiz, setQuiz] = useState(false)
   const [answers, setAnswers] = useState<{ phq9: (number | null)[]; gad7: (number | null)[] } | null>(null)
-  const [med, setMed] = useState<SelfReportBody['medication_taken']>()
+  const [med, setMed] = useState<'taken' | 'missed' | null>(null)
+  const [medNote, setMedNote] = useState<string | null>(null)
+  // Один ключ на одну отправку: повтор после обрыва связи не задвоит самоотчёт и алерт
+  const keyRef = useRef<string | null>(null)
   const [diary, setDiary] = useState('')
   const [ae, setAe] = useState('')
   const [result, setResult] = useState<{ ok: boolean; text: string } | null>(null)
@@ -32,35 +36,44 @@ export function PatientApp({ b, mode, onSubmitted }: Props) {
   const daysSince = lastDate ? Math.round((todayUtc - +lastDate) / 86_400_000) : 99
   const due = daysSince >= 14
 
-  const send = async (extra: Partial<SelfReportBody> = {}) => {
+  const send = async () => {
     const body: SelfReportBody = {
       questionnaires: answers ? [{ scale: 'phq9', answers: answers.phq9 }, { scale: 'gad7', answers: answers.gad7 }] : [],
       diary_text: diary.trim() || undefined,
-      medication_taken: med,
       adverse_event: ae.trim() || undefined,
-      ...extra,
     }
     setBusy(true)
     try {
       if (mode === 'live') {
-        const r = await submitSelfReport(b.record.patient_id, body)
-        onSubmitted(b.record.patient_id, r.evaluation, body)
+        keyRef.current ??= newKey()
+        const r = await api.selfReport(b.record.patient_id, body, keyRef.current)
+        keyRef.current = null
+        onSubmitted()
         setResult({ ok: true, text: r.patient_messages[0] ?? 'Отправлено. Врач увидит ответы в вашей карточке.' })
       } else {
         setResult({ ok: true, text: 'Сохранено в демо без сервера: правила пересчитываются только когда сервер подключён.' })
       }
-      setAnswers(null); setDiary(''); setAe(''); setMed(undefined)
+      setAnswers(null); setDiary(''); setAe('')
     } catch (e) {
       setResult({ ok: false, text: `Не отправилось: ${(e as Error).message}. Ответы сохранены на экране — попробуйте ещё раз.` })
     } finally { setBusy(false) }
+  }
+
+  const markIntake = async (status: 'taken' | 'missed') => {
+    setMed(status)
+    if (mode !== 'live') { setMedNote('В демо без сервера отметка не сохраняется.'); return }
+    try {
+      await api.intake(b.record.patient_id, status)
+      setMedNote(status === 'taken' ? 'Отметка сохранена: принято сегодня.' : 'Отметка сохранена. Если пропуски повторяются, обсудите это с врачом — так можно подобрать удобную схему.')
+    } catch (e) { setMedNote(`Не сохранилось: ${(e as Error).message}`) }
   }
 
   const emergency = async () => {
     setSos(true)   // инструкция показывается сразу, не дожидаясь сервера
     if (mode === 'live') {
       try {
-        const r = await submitSelfReport(b.record.patient_id, { questionnaires: [], emergency: true })
-        onSubmitted(b.record.patient_id, r.evaluation, { questionnaires: [], emergency: true })
+        await api.selfReport(b.record.patient_id, { questionnaires: [], emergency: true }, newKey())
+        onSubmitted()
       } catch { /* инструкция уже на экране */ }
     }
   }
@@ -94,10 +107,11 @@ export function PatientApp({ b, mode, onSubmitted }: Props) {
               <div className="task">
                 <h3>Приняли лекарство сегодня?</h3>
                 <div className="choice-row">
-                  {([['taken', 'Принял(а)'], ['missed', 'Пропустил(а)'], ['unknown', 'Не помню']] as const).map(([v, l]) => (
-                    <button key={v} className="choice" aria-pressed={med === v} onClick={() => setMed(v)}>{l}</button>
+                  {([['taken', 'Принял(а)'], ['missed', 'Пропустил(а)']] as const).map(([v, l]) => (
+                    <button key={v} className="choice" aria-pressed={med === v} onClick={() => markIntake(v)}>{l}</button>
                   ))}
                 </div>
+                {medNote && <p className="faint" style={{ marginTop: 8 }}>{medNote}</p>}
               </div>
             )}
             <div className="task">
@@ -112,7 +126,7 @@ export function PatientApp({ b, mode, onSubmitted }: Props) {
                 <textarea id="ae" className="field" style={{ minHeight: 56 }} value={ae} onChange={e => setAe(e.target.value)} />
               </div>
             )}
-            <button className="big-btn" disabled={busy || (!answers && !diary.trim() && !med && !ae.trim())} onClick={() => send()}>
+            <button className="big-btn" disabled={busy || (!answers && !diary.trim() && !ae.trim())} onClick={() => send()}>
               {busy ? 'Отправляем…' : 'Отправить врачу'}
             </button>
             <p className="note-box">Врач читает сообщения по будням с 9 до 18. Приложение не следит за вашим состоянием круглосуточно.</p>
@@ -127,9 +141,8 @@ export function PatientApp({ b, mode, onSubmitted }: Props) {
           </>
         ) : (
           <>
-            <div className="note-box">Сообщения прочитает ваш врач в рабочее время. «Прочитано» не означает, что вопрос решён — врач ответит отдельно.</div>
-            <textarea className="field" placeholder="Вопрос врачу" aria-label="Вопрос врачу" />
-            <button className="big-btn">Отправить сообщение</button>
+            <div className="note-box">Сообщения прочитает ваш врач в рабочее время. «Прочитано» не означает, что вопрос решён — врач ответит отдельно. Если вам плохо прямо сейчас — нажмите красную кнопку внизу.</div>
+            <MessagesPanel pid={b.record.patient_id} mode={mode} role="patient" />
           </>
         )}
       </div>

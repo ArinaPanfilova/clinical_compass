@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { Decision, Finding } from '../types'
+import type { Alert, Decision, Finding } from '../types'
 
 const ROUTING_BADGE = {
   mandatory: <span className="badge must"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden><circle cx="5" cy="5" r="4" fill="currentColor" /></svg>Обязательно к психиатру</span>,
@@ -12,10 +12,13 @@ interface Props {
   f: Finding
   decision?: Decision
   onDecide: (action: Decision['action'], comment?: string) => Promise<void> | void
-  createdAt?: number
+  alert?: Alert                                   // алерт на сервере: статус и метки времени
+  onAccept?: (alertId: string) => Promise<void> | void
 }
 
-export function FindingItem({ f, decision, onDecide, createdAt }: Props) {
+const STAGE: Record<Alert['status'], number> = { created: 1, delivered: 2, accepted: 3, closed: 5 }
+
+export function FindingItem({ f, decision, onDecide, alert, onAccept }: Props) {
   const [mode, setMode] = useState<null | 'reject' | 'modify'>(null)
   const [comment, setComment] = useState('')
   const [now, setNow] = useState(Date.now())
@@ -29,9 +32,12 @@ export function FindingItem({ f, decision, onDecide, createdAt }: Props) {
   }, [isAlert, decision])
 
   const cls = ['finding', `p-${f.priority}`, `k-${f.kind}`, f.routing ? `r-${f.routing}` : '', decision ? 'decided' : ''].join(' ')
+  const createdAt = alert ? Date.parse(alert.created_at) : null
   const minutes = createdAt ? Math.max(0, Math.round((now - createdAt) / 60_000)) : null
-  // создан и доставлен — сразу; дальше ждём врача
-  const stage = decision ? 5 : accepted ? 3 : 2
+  // Без сервера: создан и доставлен — сразу, дальше ждём врача
+  const stage = decision ? 5 : alert ? STAGE[alert.status] : accepted ? 3 : 2
+  const canAccept = isAlert && (alert ? alert.status === 'created' || alert.status === 'delivered' : !accepted)
+  const accept = () => alert && onAccept ? onAccept(alert.id) : setAccepted(true)
 
   return (
     <article className={cls} aria-label={f.title}>
@@ -50,8 +56,11 @@ export function FindingItem({ f, decision, onDecide, createdAt }: Props) {
           {LIFECYCLE.map((s, i) => (
             <li key={s} className={i < stage ? 'done' : i === stage && !decision ? 'now' : ''}>{s}</li>
           ))}
-          {minutes !== null && !decision && <li className="timer">{minutes} мин назад</li>}
+          {minutes !== null && !decision && <li className="timer">{minutes < 1 ? 'только что' : `${minutes} мин назад`}</li>}
         </ol>
+      )}
+      {alert && alert.escalation_level > 0 && (
+        <p className="warn-line">Передан заместителю: лечащий врач не принял сигнал за отведённое время.</p>
       )}
 
       <details>
@@ -83,7 +92,7 @@ export function FindingItem({ f, decision, onDecide, createdAt }: Props) {
           </div>
         ) : (
           <>
-            {isAlert && !accepted && <button className="btn danger" onClick={() => setAccepted(true)}>Принять в работу</button>}
+            {canAccept && <button className="btn danger" onClick={accept}>Принять в работу</button>}
             <button className="btn primary" onClick={() => onDecide('confirm')}>Подтвердить</button>
             <div className="secondary">
               <button className="btn quiet" onClick={() => setMode('modify')}>Изменить</button>
@@ -97,7 +106,7 @@ export function FindingItem({ f, decision, onDecide, createdAt }: Props) {
 }
 
 const ACTION_LABEL: Record<string, string> = {
-  confirm: 'Подтверждено врачом', reject: 'Отклонено врачом', modify: 'Изменено врачом', accept_alert: 'Принято',
+  confirm: 'Подтверждено врачом', reject: 'Отклонено врачом', modify: 'Изменено врачом',
 }
 
 const AUTO: Record<string, string> = {

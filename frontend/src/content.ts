@@ -70,3 +70,15 @@ export const FACT_LABELS: Record<string, string> = {
   'context.mild_to_moderate': 'степень тяжести (лёгкая/средняя)',
   ...Object.fromEntries(Object.entries(SAFETY_LABELS).map(([k, v]) => [`safety.${k}`, v.toLowerCase()])),
 }
+
+// Демо-аккаунты (пароль у всех — demo). Без сервера вход локальный, только для просмотра.
+export const DEMO_ACCOUNTS: { login: string; name: string; note: string; role: 'doctor' | 'patient' | 'researcher'; id: string; patient_id: string | null }[] = [
+  { login: 'ivanova', name: 'Иванова Е. А.', note: 'Лечащий врач: 8 клинических сценариев', role: 'doctor', id: 'doc-ivanova', patient_id: null },
+  { login: 'petrov', name: 'Петров С. В.', note: 'Заместитель: получает непринятые алерты', role: 'doctor', id: 'doc-petrov', patient_id: null },
+  { login: 'anna', name: 'Анна К.', note: 'Пациентка, ГТР: Авиандр можно рассмотреть', role: 'patient', id: 'pat-P-001', patient_id: 'P-001' },
+  { login: 'maria', name: 'Мария С.', note: 'Пациентка, экстренный сценарий', role: 'patient', id: 'pat-P-005', patient_id: 'P-005' },
+  { login: 'alexey', name: 'Алексей Н.', note: 'Пациент на Авиандре, отмечает приём', role: 'patient', id: 'pat-P-008', patient_id: 'P-008' },
+  { login: 'researcher', name: 'Исследователь', note: 'Обезличенная аналитика Авиандра', role: 'researcher', id: 'res-1', patient_id: null },
+]
+
+export const PRIORITY_LABEL: Record<string, string> = { emergency: 'Экстренно', urgent: 'Срочно', planned: 'Планово', info: 'Для сведения' }

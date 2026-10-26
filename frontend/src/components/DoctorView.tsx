@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react'
-import { sendDecision, type Mode } from '../api'
+import type { Mode } from '../api'
 import { ALL_SAFETY_KEYS, DRUG_STATUS, FACT_LABELS, SAFETY_LABELS } from '../content'
-import type { Change, Decision, Finding, PatientBundle, ScalePoint } from '../types'
+import type { Alert, Change, Decision, Finding, PatientBundle, ScalePoint, User } from '../types'
 import { FindingItem } from './FindingItem'
+import { MessagesPanel } from './MessagesPanel'
 import { TrendChart } from './TrendChart'
 
 const RANK: Record<string, number> = { emergency: 0, urgent: 1, planned: 2, info: 3, none: 4 }
@@ -10,15 +11,18 @@ const RANK: Record<string, number> = { emergency: 0, urgent: 1, planned: 2, info
 interface Props {
   patients: PatientBundle[]
   mode: Mode
-  decisions: Decision[]
-  onDecision: (d: Decision) => void
-  alertTimes: Record<string, number>
+  user: User
+  selected: string | null
+  onSelect: (pid: string) => void
+  onDecide: (pid: string, f: Finding, action: Decision['action'], comment?: string) => Promise<void>
+  onAlertAction: (pid: string, alertId: string, action: 'accept') => Promise<void>
+  msgTick: number
 }
 
 export const shortName = (n: string) => n.replace(/\s*\(синт\.\)/, '')
 const initials = (n: string) => shortName(n).split(' ').map(w => w[0]).join('').slice(0, 2)
 
-export function DoctorView({ patients, mode, decisions, onDecision, alertTimes }: Props) {
+export function DoctorView({ patients, mode, user, selected, onSelect, onDecide, onAlertAction, msgTick }: Props) {
   const sorted = useMemo(() => [...patients].sort((a, b) => {
     const r = RANK[a.evaluation.triage_level] - RANK[b.evaluation.triage_level]
     if (r) return r
@@ -26,7 +30,6 @@ export function DoctorView({ patients, mode, decisions, onDecision, alertTimes }
     const mb = b.evaluation.findings.some(f => f.routing === 'mandatory') ? 0 : 1
     return ma - mb || a.record.name.localeCompare(b.record.name)
   }), [patients])
-  const [selected, setSelected] = useState(sorted[0]?.record.patient_id)
   const [q, setQ] = useState('')
   const p = patients.find(x => x.record.patient_id === selected) ?? sorted[0]
   const visible = sorted.filter(x => x.record.name.toLowerCase().includes(q.trim().toLowerCase()))
@@ -47,12 +50,13 @@ export function DoctorView({ patients, mode, decisions, onDecision, alertTimes }
         {groups.map(g => (
           <div key={g.title} className="roster-section">
             <div className="roster-group">{g.title}<span>{g.items.length}</span></div>
-            {g.items.map(x => <RosterItem key={x.record.patient_id} b={x} current={x === p} onClick={() => setSelected(x.record.patient_id)} />)}
+            {g.items.map(x => <RosterItem key={x.record.patient_id} b={x} current={x === p} onClick={() => onSelect(x.record.patient_id)} />)}
           </div>
         ))}
         {groups.length === 0 && <p className="roster-empty">Никого не нашли. Проверьте написание имени.</p>}
       </nav>
-      {p && <PatientCard key={p.record.patient_id} b={p} mode={mode} decisions={decisions} onDecision={onDecision} alertTimes={alertTimes} />}
+      {p && <PatientCard key={p.record.patient_id} b={p} mode={mode} user={user} onDecide={onDecide}
+        onAlertAction={onAlertAction} msgTick={msgTick} />}
     </div>
   )
 }
@@ -77,7 +81,7 @@ function RosterItem({ b, current, onClick }: { b: PatientBundle; current: boolea
     <button className={`roster-item tone-${tone}`} aria-current={current} onClick={onClick}>
       <span className="avatar" aria-hidden>{initials(b.record.name)}</span>
       <span className="roster-text">
-        <span className="who">{shortName(b.record.name)}</span>
+        <span className="who">{shortName(b.record.name)}{b.link === 'deputy' && <span className="chip-deputy">замещение</span>}</span>
         <span className="sub">{reason}</span>
       </span>
       <span className={`roster-score ${stale ? 'stale' : ''}`}>
@@ -104,20 +108,29 @@ function ScaleStat({ name, p, ch, active, onClick }: { name: string; p: ScalePoi
   )
 }
 
-function PatientCard({ b, mode, decisions, onDecision, alertTimes }: { b: PatientBundle } & Omit<Props, 'patients'>) {
+interface CardProps {
+  b: PatientBundle
+  mode: Mode
+  user: User
+  onDecide: Props['onDecide']
+  onAlertAction: Props['onAlertAction']
+  msgTick: number
+}
+
+function PatientCard({ b, mode, user, onDecide, onAlertAction, msgTick }: CardProps) {
   const { record: r, evaluation: e } = b
   const [scale, setScale] = useState<'phq9' | 'gad7'>(r.primary_scale)
   const [err, setErr] = useState<string | null>(null)
+  const decisions = b.decisions ?? []
+  const alerts = b.alerts ?? []
 
-  const decide = async (f: Finding, action: Decision['action'], comment?: string) => {
+  const guard = async (fn: () => Promise<void>) => {
     setErr(null)
-    const d: Decision = { patient_id: r.patient_id, finding_rule_id: f.rule_id, action, comment, at: new Date().toISOString() }
-    if (mode === 'live') {
-      try { await sendDecision(r.patient_id, f.rule_id, action, comment) } catch (x) { setErr(String((x as Error).message)); return }
-    }
-    onDecision(d)
+    try { await fn() } catch (x) { setErr(String((x as Error).message)) }
   }
-  const decisionFor = (f: Finding) => decisions.find(d => d.patient_id === r.patient_id && d.finding_rule_id === f.rule_id)
+  const decide = (f: Finding, action: Decision['action'], comment?: string) => guard(() => onDecide(r.patient_id, f, action, comment))
+  const decisionFor = (f: Finding) => [...decisions].reverse().find(d => d.finding_rule_id === f.rule_id)
+  const alertFor = (f: Finding): Alert | undefined => [...alerts].reverse().find(a => a.rule_id === f.rule_id)
 
   const main = e.findings.filter(f => f.kind !== 'data_quality' || f.priority === 'urgent')
   const dq = e.findings.filter(f => f.kind === 'data_quality' && f.priority !== 'urgent')
@@ -130,7 +143,7 @@ function PatientCard({ b, mode, decisions, onDecision, alertTimes }: { b: Patien
   const trend = e.details.trends[scale]
   const therapyStarts = r.therapy.current.filter(t => t.start_date).map(t => ({ date: t.start_date!, label: t.mnn.split(' ')[0] }))
   const drug = e.drug_checks[0]
-  const myDecisions = decisions.filter(d => d.patient_id === r.patient_id)
+  const myDecisions = decisions
   const adh = r.adherence
   const adhTotal = adh ? adh.confirmed + adh.missed + adh.unknown : 0
 
@@ -153,6 +166,9 @@ function PatientCard({ b, mode, decisions, onDecision, alertTimes }: { b: Patien
         <span className="synthetic" title={r.scenario}>Синтетический профиль</span>
       </header>
       <p className="scenario">{r.scenario}</p>
+      {b.link === 'deputy' && (
+        <p className="warn-line must">Замещение: пациент лечащего врача, сигнал не принят вовремя и передан вам ({user.display_name}). Доступ открыт только на время работы с этим сигналом.</p>
+      )}
 
       <div className="stats">
         <ScaleStat name="PHQ-9 · депрессия" p={last(b, 'phq9')} ch={e.details.changes.phq9} active={scale === 'phq9'} onClick={() => setScale('phq9')} />
@@ -186,7 +202,7 @@ function PatientCard({ b, mode, decisions, onDecision, alertTimes }: { b: Patien
         <div className="findings">
           {main.map(f => (
             <FindingItem key={f.rule_id} f={f} decision={decisionFor(f)} onDecide={(a, c) => decide(f, a, c)}
-              createdAt={alertTimes[`${r.patient_id}:${f.rule_id}`]} />
+              alert={alertFor(f)} onAccept={mode === 'live' ? (id => guard(() => onAlertAction(r.patient_id, id, 'accept'))) : undefined} />
           ))}
         </div>
         {dq.length > 0 && (
@@ -239,6 +255,11 @@ function PatientCard({ b, mode, decisions, onDecision, alertTimes }: { b: Patien
         </div>
 
         <div className="col">
+          <section className="panel">
+            <div className="panel-head"><h2>Сообщения</h2><span className="faint">не канал экстренной помощи</span></div>
+            <MessagesPanel pid={r.patient_id} mode={mode} role="doctor" tick={msgTick} />
+          </section>
+
           {drug && (
             <section className="panel">
               <div className="panel-head"><h2>Авиандр</h2><span className={`status-pill ${DRUG_STATUS[drug.status].tone}`}>{DRUG_STATUS[drug.status].label}</span></div>
@@ -316,4 +337,4 @@ function PatientCard({ b, mode, decisions, onDecision, alertTimes }: { b: Patien
   )
 }
 
-const ACTION: Record<string, string> = { confirm: 'Подтверждено', reject: 'Отклонено', modify: 'Изменено', accept_alert: 'Принято' }
+const ACTION: Record<string, string> = { confirm: 'Подтверждено', reject: 'Отклонено', modify: 'Изменено' }

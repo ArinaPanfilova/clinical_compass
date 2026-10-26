@@ -93,12 +93,54 @@ export interface PatientRecord {
 export interface PatientBundle {
   record: PatientRecord
   evaluation: Evaluation
+  link?: 'lead' | 'deputy' | 'self'
+  alerts?: Alert[]
+  decisions?: Decision[]
 }
 
 export interface Decision {
   patient_id: string
   finding_rule_id: string
-  action: 'confirm' | 'reject' | 'modify' | 'accept_alert'
-  comment?: string
+  action: 'confirm' | 'reject' | 'modify'
+  comment?: string | null
   at: string
+}
+
+export type Role = 'doctor' | 'patient' | 'researcher'
+
+export interface User {
+  id: string
+  role: Role
+  display_name: string
+  patient_id: string | null
+}
+
+export interface Alert {
+  id: string
+  patient_id: string
+  patient_name: string
+  rule_id: string
+  priority: Priority
+  title: string
+  status: 'created' | 'delivered' | 'accepted' | 'closed'
+  assigned_to: string
+  escalation_level: number
+  saved_at: string
+  created_at: string
+  delivered_at: string | null
+  accepted_at: string | null
+  accepted_by: string | null
+  closed_at: string | null
+  history: { status: string; at: string; user_id: string | null; note: string | null }[]
+}
+
+export interface Message {
+  id: number
+  patient_id: string
+  sender_id: string
+  sender_role: Role
+  text: string
+  created_at: string
+  delivered_at: string | null
+  read_at: string | null
 }
