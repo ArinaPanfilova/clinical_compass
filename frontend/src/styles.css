@@ -857,3 +857,4 @@ details[open] > :not(summary) { animation: reveal-down .2s var(--ease-out) both;
     transition-duration: .001ms !important; scroll-behavior: auto !important;
   }
 }
+.kr-line { font-size: 13px; padding: 8px 10px; border-radius: var(--r-s); background: var(--rx-soft); color: var(--ink); border-left: 3px solid var(--rx); }

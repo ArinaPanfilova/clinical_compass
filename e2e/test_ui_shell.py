@@ -14,6 +14,7 @@ def _page(browser: Browser, server: str, login: str, **ctx):
     page.set_default_timeout(8000)
     page.goto(server)
     page.get_by_role("button", name=DEMO_BUTTONS[login]).click()
+    expect(page.get_by_role("heading", name="Вход в Компас")).to_have_count(0)   # экран входа ушёл
     return c, page
 
 

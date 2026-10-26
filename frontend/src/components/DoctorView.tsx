@@ -7,6 +7,8 @@ import { plural } from './analytics/model'
 import { DocumentDialog } from './DocumentDialog'
 import { FindingItem } from './FindingItem'
 import { MessagesPanel } from './MessagesPanel'
+import { ReferralPanel } from './ReferralPanel'
+import { TherapyOptions } from './TherapyOptions'
 import { TrendChart } from './TrendChart'
 
 // Рабочее место врача — три панели во всю высоту экрана:
@@ -37,6 +39,8 @@ const humanize = (s: string) => s.replace(FACT_RE, m => FACT_LABELS[m] ?? m)
 const factsWord = (n: number) => `${n} ${plural(n, 'факт', 'факта', 'фактов')}`
 /** Причина «не хватает данных: a, b, c…» повторяет список «Уточните у пациента» — показываем её коротко. */
 function reasonText(x: string, unknown: string[]) {
+  if (x.startsWith('Не хватает данных для проверки') && unknown.length > 2)
+    return `Не хватает данных для проверки: ${factsWord(unknown.length)}, список ниже`
   const keys = x.match(FACT_RE) ?? []
   if (keys.length > 2 && x.includes(':') && keys.every(k => unknown.includes(k))) return `${x.slice(0, x.indexOf(':'))}: ${factsWord(keys.length)}, список ниже`
   return humanize(x)
@@ -188,6 +192,15 @@ function PatientCard({ b, mode, user, onDecide, onAlertAction, onReplace, msgTic
   const trend = e.details.trends[scale]
   const therapyStarts = r.therapy.current.filter(t => t.start_date).map(t => ({ date: t.start_date!, label: t.mnn.split(' ')[0] }))
   const drug = e.drug_checks[0]
+  // Место Авиандра в действующих КР: «можно рассмотреть» по инструкции ≠ «препарат выбора»
+  const krLine = (() => {
+    for (const g of b.therapy_options ?? []) for (const o of g.options) {
+      if (!o.drugs.some(d => d.mnn === 'маритупирдин')) continue
+      const ev = o.evidence.split(';').find(x => x.includes('маритупирдин'))?.split('—').pop()?.trim() ?? o.evidence
+      return `По КР «${g.guideline.title}» (${g.guideline.year}) Авиандр — ${o.line_label.toLowerCase()}: при недостаточном эффекте терапии первой и второй линий; ${ev}.`
+    }
+    return null
+  })()
   const unkSafety = drug ? drug.unknown_facts.filter(f => f.startsWith('safety.')) : []
   const unkOther = drug ? drug.unknown_facts.filter(f => !f.startsWith('safety.')) : []
   const adh = r.adherence
@@ -253,8 +266,12 @@ function PatientCard({ b, mode, user, onDecide, onAlertAction, onReplace, msgTic
                 alert={alertFor(f)} onAccept={mode === 'live' ? (id => guard(() => onAlertAction(r.patient_id, id, 'accept'))) : undefined} />
             ))}
           </div>
-          {/* МЕСТО для блока «Направление к психиатру»: section.panel здесь, сразу под находками —
-              основание (маршрутизация «обязательно / желательно») и оформление направления рядом. */}
+          {mode === 'live' && (
+            <section className="panel referral-panel">
+              <div className="panel-head"><h3>Направление к психиатру</h3><span className="faint">оформляет врач</span></div>
+              <ReferralPanel b={b} onReplace={onReplace} />
+            </section>
+          )}
           {dq.length > 0 && (
             <details className="dq-group">
               <summary>Качество данных и справочные отметки ({dq.length})</summary>
@@ -344,12 +361,17 @@ function PatientCard({ b, mode, user, onDecide, onAlertAction, onReplace, msgTic
               {e.findings.some(f => f.kind === 'alert' && !decisionFor(f)) && (
                 <p className="warn-line must">Есть открытый сигнал безопасности: вопросы терапии — после оценки врачом.</p>
               )}
+              {krLine && <p className="kr-line">{krLine}</p>}
               {drug.warnings.map(w => <p key={w} className="warn-line">{w}</p>)}
               <p className="faint source">{drug.source}. Система не назначает препарат и не рассчитывает дозу: решение и его обоснование вносит врач.</p>
             </section>
           )}
-          {/* МЕСТО для блока «Варианты терапии»: section.panel здесь, сразу под карточкой препарата —
-              сравнение вариантов опирается на её статус и на профиль безопасности ниже. */}
+          {b.therapy_options && (
+            <section className="panel therapy-panel">
+              <div className="panel-head"><h3>Варианты терапии</h3><span className="faint">справочно по КР Минздрава</span></div>
+              <TherapyOptions guides={b.therapy_options} />
+            </section>
+          )}
 
           <section className="panel sp-panel">
             <div className="sp-body">

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { api, detectMode, hasToken, loadMockPatients, setToken, type Mode } from './api'
 import { AnalyticsView, type AnalyticsQuery, type AviandrReport } from './components/AnalyticsView'
+import { ConsentScreen } from './components/ConsentScreen'
 import { DoctorWorkspace } from './components/DoctorWorkspace'
 import { Login } from './components/Login'
 import { Logo } from './components/Logo'
@@ -42,7 +43,13 @@ export default function App() {
       <span className="sr-only">Подключаемся к серверу…</span>
     </div>
   )
-  if (!user) return <Login mode={mode} onLogin={setUser} />
+  // После входа уточняем статус согласия пациента (/me); без сервера — локальный демо-вход
+  const onLogin = (u: User) => mode === 'live' ? api.me().then(setUser, () => setUser(u)) : setUser(u)
+  if (!user) return <Login mode={mode} onLogin={onLogin} />
+  if (user.consent_required && user.consent && user.patient_id) {
+    return <ConsentScreen consent={user.consent} pid={user.patient_id} onAccepted={() => api.me().then(setUser)}
+      onLogout={() => { setToken(null); setUser(null) }} />
+  }
   return <Shell mode={mode} user={user} onLogout={() => { setToken(null); setUser(null) }} />
 }
 

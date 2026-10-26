@@ -11,7 +11,7 @@ import urllib.request
 from pathlib import Path
 
 import pytest
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import expect, sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
 ESCALATE_AFTER_S = 4
@@ -71,6 +71,8 @@ def open_as(browser, server):
         page.set_default_timeout(8000)
         page.goto(server)
         page.get_by_role("button", name=DEMO_BUTTONS[login]).click()
+        # Дождаться ухода экрана входа: иначе следующий клик может попасть в другую демо-кнопку
+        expect(page.get_by_role("heading", name="Вход в Компас")).to_have_count(0)
         return page
 
     yield _open

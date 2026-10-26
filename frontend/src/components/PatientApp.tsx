@@ -3,6 +3,7 @@ import { api, newKey, type Mode, type SelfReportBody } from '../api'
 import { GAD7, GAD7_OPTIONS, INSTRUCTION, PHQ9, PHQ9_OPTIONS, SCALE_SOURCES } from '../content'
 import type { PatientBundle } from '../types'
 import { MessagesPanel } from './MessagesPanel'
+import { PatientReferrals } from './ReferralPanel'
 import { TrendChart } from './TrendChart'
 
 interface Props {
@@ -100,6 +101,7 @@ export function PatientApp({ b, mode, onSubmitted }: Props) {
         ) : tab === 'today' ? (
           <>
             {result && <p className={`note-box ${result.ok ? 'msg-ok' : 'msg-alert'}`} role="status">{result.text}</p>}
+            <PatientReferrals referrals={b.referrals ?? []} />
             <div className={`task ${due && !answers ? 'due' : ''}`}>
               <h3>Анкета за последние 2 недели</h3>
               <p className="muted">
