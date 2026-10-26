@@ -156,9 +156,18 @@ def create_app(db_path: str | Path, secret: str = "dev-secret-change-me", escala
             raise HTTPException(403, "Нет доступа к данным этого пациента")
         return kind
 
+    def decisions_for(conn: sqlite3.Connection, pid: str) -> list[dict]:
+        return [{**dict(r), "finding_rule_id": r["rule_id"], "evidence": loads(r["evidence"])}
+                for r in conn.execute("SELECT * FROM decisions WHERE patient_id = ? ORDER BY id", (pid,))]
+
     def bundle(conn: sqlite3.Connection, pid: str, link: str) -> dict:
+        """Карточка: запись, оценка ядра; для врача — ещё алерты пациента и журнал решений."""
         record = build_record(conn, pid)
-        return {"record": record, "evaluation": evaluate(record), "link": link}
+        doctor = link in ("lead", "deputy")
+        pa = [alerts.get_alert(conn, r[0]) for r in conn.execute(
+            "SELECT id FROM alerts WHERE patient_id = ? ORDER BY created_at", (pid,))] if doctor else []
+        return {"record": record, "evaluation": evaluate(record), "link": link, "alerts": pa,
+                "decisions": decisions_for(conn, pid) if doctor else []}
 
     @api.get("/health")
     def health(conn: sqlite3.Connection = Depends(get_conn)):
@@ -272,8 +281,7 @@ def create_app(db_path: str | Path, secret: str = "dev-secret-change-me", escala
     def list_decisions(pid: str, user: dict = Depends(current_user), conn: sqlite3.Connection = Depends(get_conn)):
         require_doctor(conn, user, "list_decisions", pid)
         require_patient_access(conn, user, pid, "list_decisions")
-        return [{**dict(r), "finding_rule_id": r["rule_id"], "evidence": loads(r["evidence"])}
-                for r in conn.execute("SELECT * FROM decisions WHERE patient_id = ? ORDER BY id", (pid,))]
+        return decisions_for(conn, pid)
 
     @api.get("/alerts")
     def list_alerts(user: dict = Depends(current_user), conn: sqlite3.Connection = Depends(get_conn)):

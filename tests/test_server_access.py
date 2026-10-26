@@ -114,7 +114,17 @@ def test_card_access_and_denials_are_audited(client, db_path):
 
 
 def test_bundle_contains_evaluation(client):
-    b = client.get("/api/patients/P-005", headers=auth(client, "ivanova")).json()
+    h = auth(client, "ivanova")
+    client.post("/api/patients/P-005/decisions", headers=h, json={"finding_rule_id": "SAFE-002", "action": "confirm"})
+    b = client.get("/api/patients/P-005", headers=h).json()
     assert b["evaluation"]["triage_level"] == "emergency"
     assert b["record"]["name"].startswith("Мария")
     assert b["link"] == "lead"
+    assert {a["rule_id"] for a in b["alerts"]} >= {"SAFE-001", "SAFE-002"}
+    assert [(d["finding_rule_id"], d["action"]) for d in b["decisions"]] == [("SAFE-002", "confirm")]
+
+
+def test_patient_bundle_hides_doctor_workflow(client):
+    """Пациенту не нужны служебные алерты и журнал решений врача."""
+    b = client.get("/api/patients/P-005", headers=auth(client, "maria")).json()
+    assert b["alerts"] == [] and b["decisions"] == []

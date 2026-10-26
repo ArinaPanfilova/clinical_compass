@@ -1,0 +1,348 @@
+{
+ "k_min": 1,
+ "scale": "gad7",
+ "caveat": "Наблюдение без контрольной группы. Изменение шкалы не отделяет эффект препарата от естественного течения, регрессии к среднему и отбора пациентов.",
+ "n": 40,
+ "empty": false,
+ "suppressed": false,
+ "kpis": {
+  "assigned": 40,
+  "active": 5,
+  "completed": 23,
+  "discontinued": 12,
+  "by_reason": {
+   "adverse_event": 3,
+   "inefficacy": 3,
+   "improvement": 2,
+   "switch": 1,
+   "lost_to_followup": 3
+  }
+ },
+ "composition": {
+  "age": {
+   "18–34": 13,
+   "35–49": 12,
+   "50–64": 6,
+   "65+": 9
+  },
+  "sex": {
+   "Ж": 29,
+   "М": 11
+  },
+  "indication": {
+   "F41.1": 27,
+   "F43.2": 13
+  },
+  "comorbidity": {
+   "none": 28,
+   "cardiovascular": 9,
+   "endocrine": 5
+  },
+  "concomitant": {
+   "none": 36,
+   "antidepressant": 4
+  }
+ },
+ "trajectories": {
+  "continued": [
+   {
+    "week": 0,
+    "n": 28,
+    "median": 15.5,
+    "q1": 13,
+    "q3": 16.2,
+    "hidden": false
+   },
+   {
+    "week": 2,
+    "n": 26,
+    "median": 13,
+    "q1": 11,
+    "q3": 15.8,
+    "hidden": false
+   },
+   {
+    "week": 4,
+    "n": 22,
+    "median": 12,
+    "q1": 9,
+    "q3": 14,
+    "hidden": false
+   },
+   {
+    "week": 6,
+    "n": 19,
+    "median": 11,
+    "q1": 7,
+    "q3": 14,
+    "hidden": false
+   },
+   {
+    "week": 8,
+    "n": 15,
+    "median": 8,
+    "q1": 7.5,
+    "q3": 11.5,
+    "hidden": false
+   },
+   {
+    "week": 10,
+    "n": 11,
+    "median": 6,
+    "q1": 3.5,
+    "q3": 10,
+    "hidden": false
+   },
+   {
+    "week": 12,
+    "n": 6,
+    "median": 8,
+    "q1": 6.2,
+    "q3": 9.8,
+    "hidden": false
+   }
+  ],
+  "stopped_ae": [
+   {
+    "week": 0,
+    "n": 3,
+    "median": 16,
+    "q1": 15.5,
+    "q3": 16.5,
+    "hidden": false
+   },
+   {
+    "week": 2,
+    "n": 2,
+    "median": 16,
+    "q1": 16,
+    "q3": 16,
+    "hidden": false
+   }
+  ],
+  "stopped_inefficacy": [
+   {
+    "week": 0,
+    "n": 3,
+    "median": 19,
+    "q1": 17.5,
+    "q3": 20,
+    "hidden": false
+   },
+   {
+    "week": 2,
+    "n": 2,
+    "median": 18.5,
+    "q1": 17.2,
+    "q3": 19.8,
+    "hidden": false
+   },
+   {
+    "week": 4,
+    "n": 3,
+    "median": 19,
+    "q1": 17,
+    "q3": 19,
+    "hidden": false
+   }
+  ],
+  "stopped_other": [
+   {
+    "week": 0,
+    "n": 6,
+    "median": 15,
+    "q1": 12,
+    "q3": 15.8,
+    "hidden": false
+   },
+   {
+    "week": 2,
+    "n": 4,
+    "median": 15,
+    "q1": 14.8,
+    "q3": 15.2,
+    "hidden": false
+   },
+   {
+    "week": 4,
+    "n": 2,
+    "median": 12.5,
+    "q1": 12.2,
+    "q3": 12.8,
+    "hidden": false
+   },
+   {
+    "week": 6,
+    "n": 1,
+    "median": 11,
+    "q1": 11,
+    "q3": 11,
+    "hidden": false
+   }
+  ]
+ },
+ "response": {
+  "scale": "gad7",
+  "denominator": 40,
+  "response": {
+   "n": 11,
+   "pct": 27.5,
+   "ci95": [
+    0.161,
+    0.428
+   ]
+  },
+  "mcid": {
+   "n": 23,
+   "pct": 57.5,
+   "ci95": [
+    0.422,
+    0.715
+   ]
+  },
+  "remission": {
+   "n": 5,
+   "pct": 12.5,
+   "ci95": [
+    0.055,
+    0.261
+   ]
+  },
+  "definitions": {
+   "response": "снижение ≥ 50 % от исходного",
+   "mcid": "снижение ≥ 4 баллов (Toussaint A. et al. J Affect Disord. 2020;265:395–401)",
+   "remission": "последнее значение < 5"
+  }
+ },
+ "adherence": {
+  "courses_with_data": 40,
+  "median_pct": 90.0,
+  "bands": {
+   "≥80%": 32,
+   "50–79%": 5,
+   "<50%": 3
+  },
+  "unknown_share_pct": 8.3,
+  "note": "Отметка не доказывает приём; отсутствие отметки не доказывает пропуск."
+ },
+ "safety": {
+  "courses": 40,
+  "with_ae": {
+   "n": 10,
+   "pct": 25.0,
+   "ci95": [
+    0.142,
+    0.402
+   ]
+  },
+  "serious": {
+   "n": 0,
+   "pct": 0.0,
+   "ci95": [
+    0.0,
+    0.088
+   ]
+  },
+  "stopped_due_to_ae": {
+   "n": 3,
+   "pct": 7.5,
+   "ci95": [
+    0.026,
+    0.199
+   ]
+  },
+  "by_term": [
+   {
+    "term": "боль в верхней части живота",
+    "mild": 1,
+    "moderate": 1,
+    "severe": 0,
+    "unknown": 0,
+    "total": 2
+   },
+   {
+    "term": "головная боль",
+    "mild": 1,
+    "moderate": 1,
+    "severe": 0,
+    "unknown": 0,
+    "total": 2
+   },
+   {
+    "term": "головокружение",
+    "mild": 1,
+    "moderate": 1,
+    "severe": 0,
+    "unknown": 0,
+    "total": 2
+   },
+   {
+    "term": "общая слабость",
+    "mild": 0,
+    "moderate": 2,
+    "severe": 0,
+    "unknown": 0,
+    "total": 2
+   },
+   {
+    "term": "парестезии",
+    "mild": 2,
+    "moderate": 0,
+    "severe": 0,
+    "unknown": 0,
+    "total": 2
+   },
+   {
+    "term": "боль в спине",
+    "mild": 0,
+    "moderate": 1,
+    "severe": 0,
+    "unknown": 0,
+    "total": 1
+   },
+   {
+    "term": "тошнота по утрам, умеренная",
+    "mild": 0,
+    "moderate": 0,
+    "severe": 0,
+    "unknown": 1,
+    "total": 1
+   }
+  ],
+  "note": "Возникло на фоне лечения ≠ вызвано лечением."
+ },
+ "benefit_index": {
+  "scale": "gad7",
+  "value_pct": 27.5,
+  "ci95": [
+   0.161,
+   0.428
+  ],
+  "numerator": 11,
+  "denominator": 40,
+  "components": {
+   "responders": 11,
+   "with_harm": 3
+  },
+  "formula": "Индекс устойчивой пользы = курсы с ответом (снижение шкалы ≥ 50 % на последнем наблюдении), без серьёзных НЯ и без отмены из-за НЯ / все начатые курсы с исходным измерением. Курсы без повторного измерения считаются курсами без пользы."
+ },
+ "labels": {
+  "stop_reasons": {
+   "completed": "Курс завершён",
+   "adverse_event": "Нежелательные явления",
+   "inefficacy": "Недостаточный эффект",
+   "improvement": "Улучшение, отменён досрочно",
+   "switch": "Смена препарата",
+   "lost_to_followup": "Потеря контакта"
+  },
+  "groups": {
+   "continued": "Продолжает или завершил курс",
+   "stopped_ae": "Отменён из-за НЯ",
+   "stopped_inefficacy": "Отменён из-за недостаточного эффекта",
+   "stopped_other": "Отменён по другим причинам"
+  }
+ },
+ "view": "own",
+ "synthetic": true,
+ "drug": "Авиандр"
+}
