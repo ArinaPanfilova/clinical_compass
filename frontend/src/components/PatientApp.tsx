@@ -6,6 +6,7 @@ import { MessagesPanel } from './MessagesPanel'
 import { PatientReferrals } from './ReferralPanel'
 import { TrendChart } from './TrendChart'
 import { reducedMotion } from '../hooks'
+import { plural } from './analytics/model'
 
 interface Props {
   b: PatientBundle
@@ -77,7 +78,7 @@ export function PatientApp({ b, mode, onSubmitted }: Props) {
     if (mode !== 'live') { setMedNote('В демо без сервера отметка не сохраняется.'); return }
     try {
       await api.intake(b.record.patient_id, status)
-      setMedNote(status === 'taken' ? 'Отметка сохранена: принято сегодня.' : 'Отметка сохранена. Если пропуски повторяются, обсудите это с врачом — так можно подобрать удобную схему.')
+      setMedNote(status === 'taken' ? 'Отметка сохранена: принято сегодня.' : 'Отметка сохранена. Если пропуски повторяются, обсудите это с врачом: схему приёма можно сделать удобнее.')
     } catch (e) { setMedNote(`Не сохранилось: ${(e as Error).message}`) }
   }
 
@@ -109,7 +110,7 @@ export function PatientApp({ b, mode, onSubmitted }: Props) {
             <div className={`task ${due && !answers ? 'due' : ''}`}>
               <h3>Анкета за последние 2 недели</h3>
               <p className="muted">
-                {due ? '16 вопросов о настроении и тревоге, около 3 минут.' : `Следующая анкета через ${14 - daysSince} дн. Вопросы охватывают две недели, поэтому чаще заполнять не нужно.`}
+                {due ? '16 вопросов о настроении и тревоге, около 3 минут.' : `Следующая анкета через ${14 - daysSince} ${plural(14 - daysSince, 'день', 'дня', 'дней')}. Вопросы в ней про последние две недели, поэтому чаще заполнять не нужно.`}
               </p>
               {answers
                 ? <p className="note-box msg-ok">Ответы готовы к отправке.</p>
@@ -130,7 +131,7 @@ export function PatientApp({ b, mode, onSubmitted }: Props) {
             )}
             <div className="task">
               <h3>Как вы сегодня?</h3>
-              <label className="muted" htmlFor="diary">Несколько слов своими словами — врач прочитает</label>
+              <label className="muted" htmlFor="diary">Напишите своими словами, врач прочитает</label>
               <textarea id="diary" className="field" value={diary} onChange={e => setDiary(e.target.value)} />
             </div>
             {onTherapy && (
@@ -158,11 +159,11 @@ export function PatientApp({ b, mode, onSubmitted }: Props) {
             <div className="mini-chart"><TrendChart compact scale="phq9" points={b.evaluation.details.scales.phq9 ?? []} /></div>
             <p className="muted" style={{ margin: '16px 0 8px' }}>Тревога (GAD-7): чем ниже, тем лучше.</p>
             <div className="mini-chart"><TrendChart compact scale="gad7" points={b.evaluation.details.scales.gad7 ?? []} /></div>
-            <p className="note-box">Баллы помогают врачу видеть изменения. Сами по себе они не ставят диагноз; обсудите их на приёме.</p>
+            <p className="note-box">Баллы помогают врачу видеть изменения, но диагноз по ним не ставят. Обсудите их на приёме.</p>
           </>
         ) : (
           <>
-            <div className="note-box">Сообщения прочитает ваш врач в рабочее время. «Прочитано» не означает, что вопрос решён — врач ответит отдельно. Если вам плохо прямо сейчас — нажмите красную кнопку внизу.</div>
+            <div className="note-box">Врач прочитает сообщение в рабочее время. Отметка «прочитано» ещё не значит, что вопрос решён: врач ответит отдельно. Если вам плохо прямо сейчас, нажмите красную кнопку внизу.</div>
             <MessagesPanel pid={b.record.patient_id} mode={mode} role="patient" />
           </>
         )}
@@ -180,9 +181,9 @@ export function PatientApp({ b, mode, onSubmitted }: Props) {
         <div className="modal-back" role="dialog" aria-modal="true" aria-labelledby="sos-title">
           <div className="sheet">
             <h2 id="sos-title">Если вы в опасности прямо сейчас</h2>
-            <p>Позвоните в экстренную службу. Врач получил уведомление{mode === 'demo' ? ' (в демо — без сервера)' : ''}, но не может приехать или ответить мгновенно.</p>
+            <p>Позвоните в экстренную службу. Врач получил уведомление{mode === 'demo' ? ' (в демо без сервера оно никуда не уходит)' : ''}, но не может приехать или ответить мгновенно.</p>
             <a className="call" href="tel:112">Позвонить 112</a>
-            <p className="faint">Контакты служб психологической помощи для вашего региона утверждает клиническая команда (заполнить перед апробацией).</p>
+            <p className="faint">Здесь будут телефоны служб психологической помощи вашего региона. Их утвердит клиническая команда перед апробацией.</p>
             <button className="btn" style={{ width: '100%', marginTop: 12 }} onClick={() => setSos(false)}>Закрыть</button>
           </div>
         </div>
@@ -218,7 +219,7 @@ function Questionnaire({ onDone, onCancel }: { onDone: (a: { phq9: (number | nul
           : <button className="btn primary" disabled={!done && vals.filter(v => v === null).length > 2} onClick={() => onDone({ phq9: vals.slice(0, 9), gad7: vals.slice(9) })}>Готово</button>}
         <button className="btn quiet" style={{ marginLeft: 'auto' }} onClick={onCancel}>Выйти</button>
       </div>
-      <p className="faint" style={{ marginTop: 14 }}>Можно пропустить вопрос. Ответ на вопрос 9 — о мыслях причинить себе вред — особенно важен для врача.</p>
+      <p className="faint" style={{ marginTop: 14 }}>Любой вопрос можно пропустить. Ответ на вопрос 9 (о мыслях причинить себе вред) особенно важен для врача.</p>
       <p className="faint" style={{ marginTop: 6, fontSize: 11.5 }}>{SCALE_SOURCES[items[i].s]}</p>
     </div>
   )

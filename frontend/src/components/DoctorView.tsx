@@ -197,7 +197,7 @@ function PatientCard({ b, mode, user, onDecide, onAlertAction, onReplace, msgTic
     for (const g of b.therapy_options ?? []) for (const o of g.options) {
       if (!o.drugs.some(d => d.mnn === 'маритупирдин')) continue
       const ev = o.evidence.split(';').find(x => x.includes('маритупирдин'))?.split('—').pop()?.trim() ?? o.evidence
-      return `По КР «${g.guideline.title}» (${g.guideline.year}) Авиандр — ${o.line_label.toLowerCase()}: при недостаточном эффекте терапии первой и второй линий; ${ev}.`
+      return `По КР «${g.guideline.title}» (${g.guideline.year}) Авиандр — ${o.line_label.toLowerCase()}: его рассматривают, если первая и вторая линии не дали достаточного эффекта (${ev}).`
     }
     return null
   })()
@@ -228,7 +228,7 @@ function PatientCard({ b, mode, user, onDecide, onAlertAction, onReplace, msgTic
         </header>
         <p className="scenario">{r.scenario}</p>
         {b.link === 'deputy' && (
-          <p className="warn-line must">Замещение: пациент лечащего врача, сигнал не принят вовремя и передан вам ({user.display_name}). Доступ открыт только на время работы с этим сигналом.</p>
+          <p className="warn-line must">Замещение: лечащий врач не принял сигнал вовремя, и сигнал передали вам ({user.display_name}). Доступ открыт только на время работы с ним.</p>
         )}
 
         <div className="stats">
@@ -259,7 +259,7 @@ function PatientCard({ b, mode, user, onDecide, onAlertAction, onReplace, msgTic
             <span className="faint">Клинические действия выполняет только врач</span>
           </div>
           {err && <p className="warn-line">{err}</p>}
-          {main.length === 0 && <p className="empty">Новых сигналов нет. Это не означает отсутствие опасности: данные могли не поступить.</p>}
+          {main.length === 0 && <p className="empty">Новых сигналов нет. Но отсутствие сигнала не означает отсутствие опасности: данные могли не поступить.</p>}
           <div className="findings">
             {main.map(f => (
               <FindingItem key={f.rule_id} f={f} decision={decisionFor(f)} onDecide={(a, c) => decide(f, a, c)}
@@ -299,7 +299,7 @@ function PatientCard({ b, mode, user, onDecide, onAlertAction, onReplace, msgTic
                       {ch.response && ' Снижение на 50% и больше.'}{ch.remission && ' Ниже порога ремиссии по шкале.'}
                     </p>
                   ) : <p className="change-line faint">Чтобы оценить изменение, нужно хотя бы два рассчитанных наблюдения.</p>}
-                  {trend && trend.coverage < 0.7 && <p className="warn-line">Полнота наблюдения {Math.round(trend.coverage * 100)}%, поэтому стабильность не предполагается.</p>}
+                  {trend && trend.coverage < 0.7 && <p className="warn-line">Полнота наблюдения {Math.round(trend.coverage * 100)}%: при таких пробелах нельзя считать состояние стабильным.</p>}
                 </div>
               )
             })}
@@ -315,7 +315,7 @@ function PatientCard({ b, mode, user, onDecide, onAlertAction, onReplace, msgTic
                 <div key={i} className={`diary-entry ${t?.flagged ? 'flag' : ''}`}>
                   <span className="diary-date">{day(d.date)}</span>
                   <p>{d.text}</p>
-                  {t?.flagged && <p className="faint">Найдено: <mark>{t.matched.join(', ')}</mark>. Поиск по словарю неполон — читайте все записи.</p>}
+                  {t?.flagged && <p className="faint">Найдено: <mark>{t.matched.join(', ')}</mark>. Словарь ловит не всё, поэтому читайте все записи.</p>}
                 </div>
               )
             })}
@@ -355,13 +355,13 @@ function PatientCard({ b, mode, user, onDecide, onAlertAction, onReplace, msgTic
                   <h4>Уточните у пациента</h4>
                   {unkOther.length > 0 && <ul className="fact-tags">{unkOther.map(x => <li key={x}>{FACT_LABELS[x] ?? x}</li>)}</ul>}
                   {/* факты профиля безопасности не повторяем: они ниже, с кнопками «да / нет» */}
-                  {unkSafety.length > 0 && <p className="fact-more">{unkOther.length ? 'И ещё ' : ''}{factsWord(unkSafety.length)} профиля безопасности — отметьте в блоке ниже</p>}
+                  {unkSafety.length > 0 && <p className="fact-more">{unkOther.length ? 'И ещё ' : ''}{factsWord(unkSafety.length)} профиля безопасности: отметьте их в блоке ниже</p>}
                 </div>
               )}
               {drug.cautions.length > 0 && <div className="sub-block"><h4>С осторожностью</h4><ul className="list">{drug.cautions.map(x => <li key={x}>{x}</li>)}</ul></div>}
               {drug.interactions.length > 0 && <div className="sub-block"><h4>Взаимодействия</h4><ul className="list">{drug.interactions.map(x => <li key={x}>{x}</li>)}</ul></div>}
               {e.findings.some(f => f.kind === 'alert' && !decisionFor(f)) && (
-                <p className="warn-line must">Есть открытый сигнал безопасности: вопросы терапии — после оценки врачом.</p>
+                <p className="warn-line must">Есть открытый сигнал безопасности. Вопросы терапии решаются после того, как врач его оценит.</p>
               )}
               {krLine && <p className="kr-line">{krLine}</p>}
               {drug.warnings.map(w => <p key={w} className="warn-line">{w}</p>)}
@@ -413,7 +413,7 @@ function PatientCard({ b, mode, user, onDecide, onAlertAction, onReplace, msgTic
                   )
                 })}
               </ul>
-              {unknown > 0 && mode === 'live' && <p className="faint source">«Нет данных» — уточните у пациента или загрузите документ. Неизвестное не считается отсутствием противопоказания.</p>}
+              {unknown > 0 && mode === 'live' && <p className="faint source">Пункты «нет данных» уточните у пациента или загрузите документ. Неизвестно не значит «противопоказания нет».</p>}
             </details>
             </div>
           </section>
@@ -428,7 +428,7 @@ function PatientCard({ b, mode, user, onDecide, onAlertAction, onReplace, msgTic
                   <div><b>{adh.missed}</b><span>пропустил</span></div>
                   <div><b className="unk">{adh.unknown}</b><span>без отметки</span></div>
                 </div>
-                <p className="faint note">Отметка не доказывает приём, её отсутствие — не пропуск.</p>
+                <p className="faint note">Отметка не доказывает приём, а её отсутствие не доказывает пропуск.</p>
               </>
             )}
             <h4 className="sub-h">Нежелательные явления</h4>
@@ -439,7 +439,7 @@ function PatientCard({ b, mode, user, onDecide, onAlertAction, onReplace, msgTic
                 ))}
               </ul>
             )}
-            <p className="faint note">Возникло на фоне лечения ≠ вызвано лечением.</p>
+            <p className="faint note">Если явление возникло на фоне лечения, это ещё не значит, что его вызвало лечение.</p>
           </section>
         </div>
 

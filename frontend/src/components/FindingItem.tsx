@@ -74,7 +74,7 @@ export function FindingItem({ f, decision, onDecide, alert, onAccept }: Props) {
         <ul>
           {f.sources.map(s => <li key={s}>{s}</li>)}
           <li>Данные: {Object.entries(f.evidence).map(([k, v]) => `${k} = ${v ?? 'нет данных'}`).join('; ')}</li>
-          <li>Правило {f.rule_id} v{f.rule_version}{f.rule_status === 'draft' ? ' — черновик, ждёт утверждения клиническим лидом' : ''}</li>
+          <li>Правило {f.rule_id} v{f.rule_version}{f.rule_status === 'draft' ? ' (черновик, ждёт утверждения клиническим лидом)' : ''}</li>
           {f.auto_actions.length > 0 && <li>Система уже сделала: {f.auto_actions.map(a => AUTO[a] ?? a).join(', ')}</li>}
         </ul>
       </details>
@@ -122,7 +122,7 @@ const ACTION_LABEL: Record<string, string> = {
 
 const AUTO: Record<string, string> = {
   notify_doctor: 'уведомила врача',
-  notify_deputy_on_timeout: 'передаст замещающему врачу при просрочке',
+  notify_deputy_on_timeout: 'передаст заместителю, если врач не примет сигнал вовремя',
   show_patient_emergency_instructions: 'показала пациенту экстренную инструкцию',
   create_review_task: 'создала задачу пересмотра',
   request_repeat_questionnaire: 'запросила повторную анкету',

@@ -12,7 +12,7 @@
     routing: mandatory
     message: >
       Первая версия рассчитана на взрослых. Шкалы и правила для несовершеннолетних не утверждены.
-      Нужен маршрут детско-подросткового специалиста.
+      Нужен маршрут к детско-подростковому специалисту.
     patient_message: null
     auto_actions: [notify_doctor]
   sources:
@@ -27,7 +27,7 @@
     kind: routing
     priority: urgent
     routing: mandatory
-    message: "PHQ-9 = {phq9.total} (тяжёлая выраженность симптомов). Консультация психиатра — обязательно (черновой порог)."
+    message: "PHQ-9 = {phq9.total}: тяжёлая выраженность симптомов. Консультация психиатра обязательна (порог пока черновой)."
     patient_message: null
     auto_actions: [notify_doctor, create_review_task]
   sources:
@@ -46,7 +46,7 @@
     kind: routing
     priority: planned
     routing: desirable
-    message: "PHQ-9 = {phq9.total}. Консультация психиатра — желательно (черновой порог)."
+    message: "PHQ-9 = {phq9.total}. Консультация психиатра желательна (порог пока черновой)."
     patient_message: null
     auto_actions: [create_review_task]
   sources:
@@ -62,7 +62,7 @@
     kind: routing
     priority: planned
     routing: desirable
-    message: "GAD-7 = {gad7.total} (тяжёлая выраженность тревоги). Консультация психиатра — желательно (черновой порог)."
+    message: "GAD-7 = {gad7.total}: тяжёлая выраженность тревоги. Консультация психиатра желательна (порог пока черновой)."
     patient_message: null
     auto_actions: [create_review_task]
   sources:
@@ -80,7 +80,7 @@
     routing: desirable
     message: >
       PHQ-9 вырос на {phq9.change.delta} балла(ов) от исходного (MCID = 5).
-      Пересмотреть план; изменение терапии — только решением врача.
+      Пересмотрите план. Терапию меняет только врач.
     patient_message: null
     auto_actions: [notify_doctor, create_review_task]
   sources:
@@ -95,7 +95,7 @@
     kind: review_task
     priority: urgent
     routing: desirable
-    message: "GAD-7 вырос на {gad7.change.delta} балла(ов) от исходного (MCID ≈ 4). Пересмотреть план."
+    message: "GAD-7 вырос на {gad7.change.delta} балла(ов) от исходного (MCID ≈ 4). Пересмотрите план."
     patient_message: null
     auto_actions: [notify_doctor, create_review_task]
   sources:
@@ -114,8 +114,8 @@
     priority: planned
     routing: desirable
     message: >
-      {therapy.weeks_on_current} нед. текущей терапии без снижения основной шкалы на ≥50%.
-      Пересмотр плана; консультация психиатра — желательно.
+      {therapy.weeks_on_current} нед. на текущей терапии, а основная шкала не снизилась на 50% и больше.
+      Пересмотрите план. Консультация психиатра желательна.
     patient_message: null
     auto_actions: [create_review_task]
   sources:

@@ -15,8 +15,8 @@ from typing import Optional
 
 from .scales import load_passport
 
-CAVEAT = ("Наблюдение без контрольной группы. Изменение шкалы не отделяет эффект препарата "
-          "от естественного течения, регрессии к среднему и отбора пациентов.")
+CAVEAT = ("Наблюдение без контрольной группы. По изменению шкалы нельзя отделить эффект препарата "
+          "от естественного течения болезни, регрессии к среднему и отбора пациентов.")
 
 STOP_REASONS = {
     "completed": "Курс завершён",
@@ -37,9 +37,9 @@ OUTCOME_GROUPS = {
 WEEKS = tuple(range(0, 13, 2))
 AGE_BANDS = ((18, 34, "18–34"), (35, 49, "35–49"), (50, 64, "50–64"), (65, 200, "65+"))
 
-BENEFIT_FORMULA = ("Индекс устойчивой пользы: доля курсов, где шкала снизилась на 50 % и больше к последнему "
-                   "наблюдению, не было серьёзных нежелательных явлений и отмены из-за них. Делим на все начатые "
-                   "курсы с исходным измерением; курс без повторного измерения считается курсом без пользы.")
+BENEFIT_FORMULA = ("Индекс устойчивой пользы: доля курсов, в которых к последнему наблюдению шкала снизилась "
+                   "на 50 % и больше, а серьёзных нежелательных явлений и отмены из-за них не было. Знаменатель: "
+                   "все начатые курсы с исходным измерением. Курс без повторного измерения считается курсом без пользы.")
 
 
 def outcome_group(course: dict) -> str:
@@ -217,7 +217,7 @@ def adherence(courses: list[dict]) -> dict:
             "median_pct": round(100 * statistics.median(pcts), 1) if pcts else None,
             "bands": bands,
             "unknown_share_pct": round(100 * unknown / total, 1) if total else None,
-            "note": "Отметка не доказывает приём; отсутствие отметки не доказывает пропуск."}
+            "note": "Отметка не доказывает приём, а её отсутствие не доказывает пропуск."}
 
 
 def safety(courses: list[dict]) -> dict:
@@ -237,7 +237,7 @@ def safety(courses: list[dict]) -> dict:
     return {"courses": n, "with_ae": _rate(with_ae, n), "serious": _rate(serious, n),
             "stopped_due_to_ae": _rate(stopped, n),
             "by_term": sorted(by_term.values(), key=lambda r: (-r["total"], r["term"])),
-            "note": "Возникло на фоне лечения ≠ вызвано лечением."}
+            "note": "Если явление возникло на фоне лечения, это ещё не значит, что его вызвало лечение."}
 
 
 def benefit_index(courses: list[dict], scale: str = "gad7") -> dict:
@@ -311,7 +311,7 @@ def aviandr_report(courses: list[dict], filters: Optional[dict] = None, scale: s
         return {**base, "n": 0, "empty": True, "suppressed": False}
     if len(cs) < k_min:
         return {**base, "n": None, "suppressed": True,
-                "message": f"В выборке меньше {k_min} курсов — показ скрыт для защиты от повторной идентификации."}
+                "message": f"В выборке меньше {k_min} курсов. Показ скрыт, чтобы исключить повторную идентификацию."}
     rep = {**base, "n": len(cs), "empty": False, "suppressed": False,
            "kpis": kpis(cs), "composition": composition(cs),
            "trajectories": trajectories(cs, scale, k_min), "response": response_rates(cs, scale),

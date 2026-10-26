@@ -65,7 +65,7 @@ def test_dynamics_shows_both_scales_at_once(browser, server):
 def test_phone_confirmation_appears_where_the_patient_looks(browser, server):
     """Длинный экран (пациент на терапии): кнопка «Отправить врачу» ниже первого экрана."""
     c, page = login(browser, server, "alexey", viewport={"width": 390, "height": 844}, is_mobile=True, has_touch=True)
-    page.get_by_label("Несколько слов своими словами").fill("Сегодня спокойнее, спал лучше")
+    page.get_by_label("Напишите своими словами").fill("Сегодня спокойнее, спал лучше")
     send = page.get_by_role("button", name="Отправить врачу")
     send.scroll_into_view_if_needed()
     send.click()

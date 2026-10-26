@@ -8,9 +8,9 @@
     priority: planned
     routing: null
     message: >
-      Пропущено самоотчётов подряд: {selfreport.missed_consecutive}. Полнота наблюдения снижена —
-      отсутствие данных не означает стабильность.
-    patient_message: "Напоминаем: врач ждёт вашу анкету — это займёт около 3 минут."
+      Пропущено самоотчётов подряд: {selfreport.missed_consecutive}. Наблюдение неполное,
+      а отсутствие данных не означает стабильность.
+    patient_message: "Врач ждёт вашу анкету. Это займёт около 3 минут."
     auto_actions: [request_repeat_questionnaire, create_review_task]
   sources:
     - "Проектный документ «Компас», раздел 9: «нет ответа пациента ≠ стабильно»"
@@ -24,7 +24,7 @@
     kind: data_quality
     priority: planned
     routing: null
-    message: "В PHQ-9 пропущено ≥3 пунктов — сумма не рассчитывается (правило APA). Запрошена повторная анкета."
+    message: "В PHQ-9 пропущено 3 пункта или больше, поэтому сумма не рассчитывается (правило APA). Запрошена повторная анкета."
     patient_message: null
     auto_actions: [request_repeat_questionnaire]
   sources:
@@ -39,7 +39,7 @@
     kind: data_quality
     priority: info
     routing: null
-    message: "Сумма PHQ-9 = {phq9.total} пересчитана пропорционально (пропущено 1–2 пункта). Интерпретировать с осторожностью."
+    message: "Сумма PHQ-9 = {phq9.total} пересчитана пропорционально (пропущено 1–2 пункта). Интерпретируйте с осторожностью."
     patient_message: null
     auto_actions: []
   sources:
@@ -57,7 +57,7 @@
     kind: review_task
     priority: planned
     routing: null
-    message: "PHQ-9 < 5 при исходном ≥10. Ремиссия по шкале ≠ клиническая ремиссия: требуется оценка врачом."
+    message: "PHQ-9 < 5 при исходном ≥10. Ремиссия по шкале ещё не означает клиническую ремиссию: её оценивает врач."
     patient_message: null
     auto_actions: [create_review_task]
   sources:

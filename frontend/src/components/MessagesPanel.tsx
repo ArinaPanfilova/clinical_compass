@@ -37,7 +37,7 @@ export function MessagesPanel({ pid, mode, role, tick = 0 }: { pid: string; mode
       await api.sendMessage(pid, text.trim())
       setText('')
       await load()
-    } catch (e) { setErr(`Не отправилось: ${(e as Error).message}. Текст сохранён — попробуйте ещё раз.`) } finally { setBusy(false) }
+    } catch (e) { setErr(`Не отправилось: ${(e as Error).message}. Текст на месте, попробуйте ещё раз.`) } finally { setBusy(false) }
   }
 
   const label = role === 'patient' ? 'Вопрос врачу' : 'Ответ пациенту'

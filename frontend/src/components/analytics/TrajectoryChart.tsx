@@ -52,7 +52,7 @@ export function TrajectoryPanel({ report }: { report: AviandrReportFull }) {
           )
         })}
         <span className="an-legend-note"><i className="band" />Q1–Q3 выбранной группы</span>
-        {anyHidden && <span className="an-legend-note">&lt;{k} под осью — {hiddenHint(k)}</span>}
+        {anyHidden && <span className="an-legend-note">&lt;{k} под осью ({hiddenHint(k)})</span>}
       </div>
 
       {groups.length === 0
@@ -105,11 +105,11 @@ function TrajectoryChart({ report, groups, active }: { report: AviandrReportFull
   // Четыре полупрозрачные полосы на неделях 0–6 сливаются в пятно.
   const band = active ?? groups[0]
   const summary = groups.map(g => `${report.labels.groups[g]}: ` + report.trajectories[g]
-    .map(p => p.hidden ? `неделя ${p.week} — скрыто` : `неделя ${p.week} — ${num(p.median ?? 0)} (${iqr(p)}), n ${p.n}`).join('; ')).join('. ')
+    .map(p => p.hidden ? `неделя ${p.week} скрыта` : `неделя ${p.week}, медиана ${num(p.median ?? 0)} (${iqr(p)}), n ${p.n}`).join('; ')).join('. ')
 
   return (
     <div ref={ref} className="an-chart" tabIndex={0} onKeyDown={onKey} onFocus={() => setWeek(w => w ?? 0)} onBlur={() => setWeek(null)}
-      aria-label={`График ${SCALE_NAME[scale]} по неделям. Стрелки влево и вправо — переход по неделям.`}>
+      aria-label={`График ${SCALE_NAME[scale]} по неделям. Стрелками влево и вправо можно переходить по неделям.`}>
       {width > 0 && (
         <svg key={scale} width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={summary}>
           {/* градации тяжести: тонкие линии и подписи справа */}

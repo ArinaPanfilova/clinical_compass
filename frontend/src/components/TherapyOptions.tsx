@@ -8,7 +8,7 @@ const MAIN_LINES = new Set(['first'])
 
 export function TherapyOptions({ guides }: { guides: TherapyGuide[] }) {
   const [all, setAll] = useState(false)
-  if (!guides.length) return <p className="empty">Для диагнозов пациента в базе нет клинических рекомендаций. Решение — по общим принципам, с консультацией психиатра при необходимости.</p>
+  if (!guides.length) return <p className="empty">Для диагнозов этого пациента в базе нет клинических рекомендаций. Решайте по общим принципам, при необходимости с консультацией психиатра.</p>
   return (
     <div className="therapy">
       {guides.map(g => {
@@ -16,9 +16,9 @@ export function TherapyOptions({ guides }: { guides: TherapyGuide[] }) {
         return (
           <div key={g.guideline.id} className="therapy-guide">
             <p className="therapy-src">
-              КР «{g.guideline.title}», {g.guideline.year}, ID {g.guideline.id} — <a href={g.guideline.url} target="_blank" rel="noreferrer">рубрикатор Минздрава</a>
+              КР «{g.guideline.title}», {g.guideline.year}, ID {g.guideline.id} · <a href={g.guideline.url} target="_blank" rel="noreferrer">рубрикатор Минздрава</a>
             </p>
-            {!g.diagnosis_confirmed && <p className="warn-line">Диагноз предварительный: справка по КР — после подтверждения диагноза.</p>}
+            {!g.diagnosis_confirmed && <p className="warn-line">Диагноз предварительный. Справка по КР применима после его подтверждения.</p>}
             <ul className="therapy-list">
               {shown.map(o => (
                 <li key={o.label} className={`line-${o.line}`}>

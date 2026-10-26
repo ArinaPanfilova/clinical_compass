@@ -67,13 +67,13 @@ def check_drug(card: dict, patient: dict) -> DrugCheck:
 
     if level == "none":
         res.status = "card_not_verified"
-        res.reasons.append("Карточка препарата не заполнена по инструкции — предложение не формируется")
+        res.reasons.append("Карточка препарата не заполнена по инструкции, поэтому система ничего не предлагает")
         return res
     if level == "secondary":
         res.warnings.append("Сведения о препарате из вторичного источника, не сверены с ГРЛС")
     elif level == "grls_team_checked":
-        res.warnings.append(f"Карточка сверена командой с инструкцией из ГРЛС ({card.get('checked_on')}); "
-                            "подпись клинического лида ожидается")
+        res.warnings.append(f"Команда сверила карточку с инструкцией из ГРЛС ({card.get('checked_on')}). "
+                            "Подписи клинического лида пока нет")
 
     blocking, unknown = [], []
     ctx = {**patient.get("context", {}), **{f"safety.{k}": v for k, v in patient.get("safety_profile", {}).items()}}
@@ -98,9 +98,9 @@ def check_drug(card: dict, patient: dict) -> DrugCheck:
             ind_status = "unknown"
             unknown.append("diagnosis.confirmed")
     if ind_status == "none":
-        blocking.append("Нет подтверждённого диагноза в пределах зарегистрированных показаний")
+        blocking.append("Нет подтверждённого диагноза, который входит в зарегистрированные показания")
     elif ind_status == "unknown":
-        res.reasons.append("Соответствие зарегистрированному показанию не подтверждено")
+        res.reasons.append("Не подтверждено, что пациент подходит под зарегистрированное показание")
 
     # 2. Возраст
     age, rng = patient.get("age"), card.get("age_range") or {}
@@ -108,9 +108,9 @@ def check_drug(card: dict, patient: dict) -> DrugCheck:
         unknown.append("patient.age")
     else:
         if rng.get("min") is not None and age < rng["min"]:
-            blocking.append(f"Возраст {age} < {rng['min']} (инструкция)")
+            blocking.append(f"Возраст {age}, по инструкции не меньше {rng['min']}")
         if rng.get("max") is not None and age > rng["max"]:
-            blocking.append(f"Возраст {age} > {rng['max']} (инструкция)")
+            blocking.append(f"Возраст {age}, по инструкции не больше {rng['max']}")
 
     # 3. Противопоказания: неизвестно ≠ отсутствует
     safety = patient.get("safety_profile", {})
@@ -146,5 +146,5 @@ def check_drug(card: dict, patient: dict) -> DrugCheck:
         labels.update({"patient.age": "возраст", "diagnosis.confirmed": "подтверждение диагноза"})
         res.reasons.append("Не хватает данных для проверки: " + "; ".join(labels.get(f, f) for f in res.unknown_facts))
     else:
-        res.reasons.append("В пределах зарегистрированных показаний; противопоказаний в профиле не выявлено")
+        res.reasons.append("Пациент подходит под зарегистрированное показание, противопоказаний в профиле нет")
     return res

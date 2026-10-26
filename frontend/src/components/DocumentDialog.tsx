@@ -40,8 +40,8 @@ export function DocumentDialog({ pid, onClose, onApplied }: { pid: string; onClo
     <div className="modal-back page" role="dialog" aria-modal="true" aria-labelledby="doc-title">
       <div className="sheet wide">
         <h2 id="doc-title">Документ пациента</h2>
-        <p className="faint">Выписка, осмотр или направление. Сведения извлекаются правилами со ссылкой на фрагмент текста;
-          в карточку попадает только то, что вы подтвердите.</p>
+        <p className="faint">Выписка, осмотр или направление. Правила находят в тексте сведения и показывают, откуда взято каждое.
+          В карточку попадёт только то, что вы подтвердите.</p>
         {!res ? (
           <>
             <label className="doc-label">Текст документа
@@ -58,7 +58,7 @@ export function DocumentDialog({ pid, onClose, onApplied }: { pid: string; onClo
           <>
             <p className="doc-status">Статус: извлечено, не проверено{x!.document_date ? ` · документ от ${new Date(x!.document_date).toLocaleDateString('ru-RU')}` : ''}</p>
             <h3>Профиль безопасности</h3>
-            {res.diff.length === 0 && <p className="empty">Сведений о противопоказаниях в тексте не найдено — профиль не меняется.</p>}
+            {res.diff.length === 0 && <p className="empty">Сведений о противопоказаниях в тексте не найдено, профиль остаётся прежним.</p>}
             <ul className="doc-facts">
               {res.diff.map(d => (
                 <li key={d.key} className={`kind-${d.kind}`}>
@@ -74,14 +74,14 @@ export function DocumentDialog({ pid, onClose, onApplied }: { pid: string; onClo
             </ul>
             <div className="doc-grid">
               <div><h3>Диагнозы</h3>
-                {x!.diagnoses.length ? <ul className="list">{x!.diagnoses.map((d, i) => <li key={i}><b>{d.code}</b>{d.status === 'suspected' ? ' (предварительный)' : ''} — <q className="doc-quote">{d.evidence.quote}</q></li>)}</ul> : <p className="empty">Не найдены.</p>}
+                {x!.diagnoses.length ? <ul className="list">{x!.diagnoses.map((d, i) => <li key={i}><b>{d.code}</b>{d.status === 'suspected' ? ' (предварительный)' : ''}: <q className="doc-quote">{d.evidence.quote}</q></li>)}</ul> : <p className="empty">Не найдены.</p>}
               </div>
               <div><h3>Препараты</h3>
-                {x!.medications.length ? <ul className="list">{x!.medications.map((m, i) => <li key={i}><b>{m.mnn}</b>{m.dose_mg ? ` ${m.dose_mg} мг` : ''}{m.status === 'cancelled' ? ' (отменён)' : ''} — <q className="doc-quote">{m.evidence.quote}</q></li>)}</ul> : <p className="empty">Не найдены.</p>}
+                {x!.medications.length ? <ul className="list">{x!.medications.map((m, i) => <li key={i}><b>{m.mnn}</b>{m.dose_mg ? ` ${m.dose_mg} мг` : ''}{m.status === 'cancelled' ? ' (отменён)' : ''}: <q className="doc-quote">{m.evidence.quote}</q></li>)}</ul> : <p className="empty">Не найдены.</p>}
               </div>
               <div><h3>Аллергии</h3>
                 {x!.allergies === null ? <p className="empty">Не упомянуты.</p> : x!.allergies.length === 0 ? <p className="empty">Отрицает.</p>
-                  : <ul className="list">{x!.allergies.map((a, i) => <li key={i}><b>{a.name}</b> — <q className="doc-quote">{a.evidence.quote}</q></li>)}</ul>}
+                  : <ul className="list">{x!.allergies.map((a, i) => <li key={i}><b>{a.name}</b>: <q className="doc-quote">{a.evidence.quote}</q></li>)}</ul>}
               </div>
             </div>
             <p className="faint">Диагнозы, препараты и аллергии показаны для сверки с карточкой. Не упомянутое в тексте остаётся «неизвестно», а не «нет».</p>

@@ -44,11 +44,11 @@ export function Login({ mode, onLogin }: { mode: Mode; onLogin: (u: User) => voi
         <Logo />
         <div className="hero-copy">
           <p className="hero-kicker">Цифровой ассистент врача</p>
-          <p className="hero-title">Пациенты с тревогой и депрессией — под наблюдением и между приёмами</p>
+          <p className="hero-title">Пациенты с тревогой и депрессией остаются под наблюдением и между приёмами</p>
           <ul className="hero-points">
-            <li><b>Сигнал о риске</b> приходит врачу сразу; если его не приняли вовремя, он уходит заместителю.</li>
+            <li><b>Сигнал о риске</b> приходит врачу сразу. Если врач не принял его вовремя, сигнал уходит заместителю.</li>
             <li><b>Каждая подсказка</b> показывает основание и источник. Решение принимает врач.</li>
-            <li><b>PHQ-9, GAD-7</b>, дневник, отметки приёма и профиль безопасности — в одной карточке.</li>
+            <li><b>PHQ-9, GAD-7</b>, дневник, отметки приёма и профиль безопасности собраны в одной карточке.</li>
           </ul>
         </div>
         <CompassArt />
@@ -58,7 +58,7 @@ export function Login({ mode, onLogin }: { mode: Mode; onLogin: (u: User) => voi
       <main className="login-main">
         <div className="login-card">
           <h1>Вход в Компас</h1>
-          <p className="muted">Ассистент врача для ведения взрослых пациентов с тревожной и депрессивной симптоматикой.
+          <p className="muted">Помогает врачу вести взрослых пациентов с тревогой и депрессией.
             Клинические решения принимает только врач.</p>
 
           <form className="login-form" onSubmit={submit}>
@@ -70,7 +70,7 @@ export function Login({ mode, onLogin }: { mode: Mode; onLogin: (u: User) => voi
 
           <div className="demo-head">
             <h2>Демо-аккаунты</h2>
-            <span className="faint">пароль у всех — demo · данные синтетические</span>
+            <span className="faint">пароль у всех: demo · данные синтетические</span>
           </div>
           {ROLE_GROUPS.map(g => (
             <section key={g.role} className="demo-group" aria-label={g.title}>
@@ -88,7 +88,7 @@ export function Login({ mode, onLogin }: { mode: Mode; onLogin: (u: User) => voi
               </div>
             </section>
           ))}
-          {mode === 'demo' && <p className="faint">Сервер не подключён: открываются демо-данные, правила не пересчитываются, алерты и сообщения недоступны.</p>}
+          {mode === 'demo' && <p className="faint">Сервер не подключён. Открыты демо-данные: правила не пересчитываются, алерты и сообщения не работают.</p>}
         </div>
       </main>
     </div>

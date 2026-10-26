@@ -18,8 +18,8 @@ export type { AnalyticsQuery, AviandrReport } from '../analyticsTypes'
 type Role = 'doctor' | 'researcher'
 
 // Пока отчёт не пришёл, оговорка всё равно видна (текст — как kompas_core.analytics.CAVEAT).
-const DEFAULT_CAVEAT = 'Наблюдение без контрольной группы. Изменение шкалы не отделяет эффект препарата ' +
-  'от естественного течения, регрессии к среднему и отбора пациентов.'
+const DEFAULT_CAVEAT = 'Наблюдение без контрольной группы. По изменению шкалы нельзя отделить эффект препарата ' +
+  'от естественного течения болезни, регрессии к среднему и отбора пациентов.'
 const DEFAULT_QUERY: AnalyticsQuery = { scale: 'gad7' }
 
 const SEX = [['', 'Все'], ['Ж', 'Ж'], ['М', 'М']]
@@ -70,7 +70,7 @@ export function AnalyticsView({ role, fetchReport }: { role: Role; fetchReport: 
   const n = report && report.n !== null ? report.n : null
   const subtitle = role === 'doctor'
     ? `Ваши пациенты${n !== null ? `, ${coursesWord(n)}` : ''}`
-    : `Все курсы организации, обезличенно; группы меньше ${k} человек скрыты`
+    : `Все курсы организации, обезличенно. Группы меньше ${k} человек скрыты`
   const reset = () => setQuery(q => ({ scale: q.scale }))
 
   let body: ReactNode
@@ -111,7 +111,7 @@ export function AnalyticsView({ role, fetchReport }: { role: Role; fetchReport: 
           <h1>Авиандр: наблюдение применения</h1>
           <p className="muted">{subtitle}</p>
         </div>
-        {report?.synthetic && <span className="an-synthetic" title="Курсы сгенерированы по условиям инструкции; это не реальные пациенты">Синтетические данные</span>}
+        {report?.synthetic && <span className="an-synthetic" title="Курсы сгенерированы по условиям инструкции, это не реальные пациенты">Синтетические данные</span>}
       </header>
 
       <Filters query={query} onChange={setQuery} onReset={reset} busy={loading && report !== null && !error} />
@@ -197,7 +197,7 @@ function Dashboard({ r }: { r: AviandrReportFull }) {
       <section className="panel an-composition" aria-labelledby="an-comp-h">
         <div className="panel-head">
           <h2 id="an-comp-h">Контекст выборки</h2>
-          <span className="faint">Состав курсов под текущим фильтром — с кем вы сравниваете</span>
+          <span className="faint">Состав курсов под текущим фильтром: с кем вы сравниваете</span>
         </div>
         <div className="an-comp-grid">
           {COMPOSITION_TITLES.map(([key, title]) => {
@@ -211,7 +211,7 @@ function Dashboard({ r }: { r: AviandrReportFull }) {
             )
           })}
         </div>
-        <p className="faint an-foot">Коморбидностей и сопутствующих препаратов у курса может быть несколько — сумма может превышать число курсов.</p>
+        <p className="faint an-foot">У курса бывает несколько коморбидностей и сопутствующих препаратов, поэтому сумма может превышать число курсов.</p>
       </section>
     </>
   )
@@ -287,7 +287,7 @@ function Kpis({ r }: { r: AviandrReportFull }) {
           <summary>Как считается</summary>
           <div className="an-formula-body">
             <p>{b.formula}</p>
-            <p className="faint">Ответили на терапию: {num(b.components.responders)}. С серьёзными нежелательными явлениями или отменой из-за них: {num(b.components.with_harm)}. Доверительный интервал по Вильсону.</p>
+            <p className="faint">Ответили на терапию: {num(b.components.responders)}. С серьёзными нежелательными явлениями или отменой из-за них: {num(b.components.with_harm)}. Доверительный интервал считается по Вильсону.</p>
           </div>
         </details>
       </div>
@@ -310,7 +310,7 @@ function ResponsePanel({ r }: { r: AviandrReportFull }) {
         <CiAxis />
       </div>
       <p className="faint an-foot">
-        Знаменатель — {coursesWord(res.denominator)} с исходным измерением; курс без повторного измерения считается курсом без ответа.
+        Знаменатель: {coursesWord(res.denominator)} с исходным измерением. Курс без повторного измерения считается курсом без ответа.
       </p>
     </section>
   )
@@ -396,7 +396,7 @@ function SafetyPanel({ r }: { r: AviandrReportFull }) {
           </table>
         </div>
       )}
-      <p className="faint an-foot">{s.note} Тяжесть «не оценена» не равна «лёгкой».</p>
+      <p className="faint an-foot">{s.note} Тяжесть «не оценена» не значит «лёгкая».</p>
     </section>
   )
 }

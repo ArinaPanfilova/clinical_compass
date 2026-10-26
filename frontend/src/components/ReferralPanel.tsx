@@ -33,7 +33,7 @@ export function ReferralPanel({ b, onReplace }: { b: PatientBundle; onReplace: (
   return (
     <div className="referral">
       {refs.length === 0 && !open && (
-        <p className="empty">{top ? `Система предлагает: ${NECESSITY_LABEL[top.routing!].toLowerCase()} к психиатру (${top.rule_id}). Решение — за вами.` : 'Сигналов маршрутизации нет.'}</p>
+        <p className="empty">{top ? `Система предлагает: ${NECESSITY_LABEL[top.routing!].toLowerCase()} к психиатру (${top.rule_id}). Решаете вы.` : 'Поводов направить к психиатру система не нашла.'}</p>
       )}
       {refs.map(r => (
         <div key={r.id} className={`ref-item ${r.necessity}`}>
@@ -86,7 +86,7 @@ export function PatientReferrals({ referrals }: { referrals: Referral[] }) {
       {active.map(r => (
         <div key={r.id} className={`task ref-patient ${r.necessity}`} role="note">
           <h3>Врач рекомендовал консультацию психиатра</h3>
-          <p>{NECESSITY_LABEL[r.necessity]}, {URGENCY_LABEL[r.urgency]}. {r.status === 'scheduled' ? 'Вы записаны на приём.' : 'Запишитесь на приём — врач подскажет, как.'}</p>
+          <p>{NECESSITY_LABEL[r.necessity]}, {URGENCY_LABEL[r.urgency]}. {r.status === 'scheduled' ? 'Вы записаны на приём.' : 'Запишитесь на приём, врач подскажет как.'}</p>
           <p className="faint">Это не диагноз: консультация нужна, чтобы подобрать помощь точнее.</p>
         </div>
       ))}

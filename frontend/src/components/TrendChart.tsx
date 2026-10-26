@@ -70,12 +70,12 @@ export function TrendChart({ scale, points, therapyStarts = [], expectedInterval
 
   if (empty) return <p className="muted">Анкет пока нет.</p>
   const cur = hi !== null ? scored[hi] : null
-  const summary = `Динамика ${label}: ${scored.map(p => `${fmt(p.date)} — ${p.total}`).join(', ')}`
+  const summary = `Динамика ${label}. ${scored.map(p => `${fmt(p.date)}: ${p.total}`).join(', ')}`
 
   return (
     <figure className={`chart ${compact ? 'compact' : ''}`} style={{ margin: 0 }} aria-label={`Динамика ${label}`}>
       <div ref={ref} className="chart-box" tabIndex={compact || !scored.length ? undefined : 0} onKeyDown={onKey} onBlur={() => setHi(null)}
-        aria-label={compact ? undefined : `${summary}. Стрелки влево и вправо — переход по анкетам.`}>
+        aria-label={compact ? undefined : `${summary}. Стрелками влево и вправо можно переходить по анкетам.`}>
         {width > 0 && (
           <svg key={scale} width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={summary}>
             {bands.map((b, i) => {

@@ -17,8 +17,8 @@ type Theme = 'system' | 'light' | 'dark'
 type Source = 'mock' | 'server'
 type Scenario = 'data' | 'empty' | 'suppressed' | 'error'
 
-const CAVEAT = 'Наблюдение без контрольной группы. Изменение шкалы не отделяет эффект препарата ' +
-  'от естественного течения, регрессии к среднему и отбора пациентов.'
+const CAVEAT = 'Наблюдение без контрольной группы. По изменению шкалы нельзя отделить эффект препарата ' +
+  'от естественного течения болезни, регрессии к среднему и отбора пациентов.'
 const LOGIN: Record<Role, string> = { doctor: 'ivanova', researcher: 'researcher' }
 const tokens: Partial<Record<Role, string>> = {}
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
@@ -45,7 +45,7 @@ async function fromMock(role: Role, scenario: Scenario, q: AnalyticsQuery): Prom
   if (scenario === 'empty') return { k_min: k, scale: q.scale, caveat: CAVEAT, n: 0, empty: true, suppressed: false, synthetic: true }
   if (scenario === 'suppressed') {
     return { k_min: 5, scale: q.scale, caveat: CAVEAT, n: null, suppressed: true, synthetic: true,
-      message: 'В выборке меньше 5 курсов — показ скрыт для защиты от повторной идентификации.' }
+      message: 'В выборке меньше 5 курсов. Показ скрыт, чтобы исключить повторную идентификацию.' }
   }
   const r = await fetch(`./mock/analytics-${role}.json`)
   if (!r.ok) throw new Error(`Нет файла mock/analytics-${role}.json`)

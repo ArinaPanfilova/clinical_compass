@@ -40,8 +40,8 @@ export function ConsentScreen({ consent, pid, onAccepted, onLogout }:
         </div>
         <button className="sos-inline" onClick={emergency}>Мне сейчас очень плохо</button>
         {sos && (
-          <p className="warn-line must" role="alert">Если вы в опасности прямо сейчас — звоните 112. Врач получил уведомление,
-            но приложение не ведёт круглосуточное наблюдение.</p>
+          <p className="warn-line must" role="alert">Если вы в опасности прямо сейчас, звоните 112. Врач получил уведомление,
+            но приложение не следит за вашим состоянием круглосуточно.</p>
         )}
       </main>
     </div>

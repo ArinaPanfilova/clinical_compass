@@ -84,7 +84,7 @@ export const FACT_LABELS: Record<string, string> = {
 // Демо-аккаунты (пароль у всех — demo). Без сервера вход локальный, только для просмотра.
 export const DEMO_ACCOUNTS: { login: string; name: string; note: string; role: 'doctor' | 'patient' | 'researcher'; id: string; patient_id: string | null }[] = [
   { login: 'ivanova', name: 'Иванова Е. А.', note: 'Лечащий врач: 8 клинических сценариев', role: 'doctor', id: 'doc-ivanova', patient_id: null },
-  { login: 'petrov', name: 'Петров С. В.', note: 'Заместитель: получает непринятые алерты', role: 'doctor', id: 'doc-petrov', patient_id: null },
+  { login: 'petrov', name: 'Петров С. В.', note: 'Заместитель: получает алерты, не принятые вовремя', role: 'doctor', id: 'doc-petrov', patient_id: null },
   { login: 'anna', name: 'Анна К.', note: 'Пациентка, ГТР: Авиандр можно рассмотреть', role: 'patient', id: 'pat-P-001', patient_id: 'P-001' },
   { login: 'maria', name: 'Мария С.', note: 'Пациентка, экстренный сценарий', role: 'patient', id: 'pat-P-005', patient_id: 'P-005' },
   { login: 'alexey', name: 'Алексей Н.', note: 'Пациент на Авиандре, отмечает приём', role: 'patient', id: 'pat-P-008', patient_id: 'P-008' },
