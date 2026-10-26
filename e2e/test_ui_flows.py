@@ -5,13 +5,17 @@ from playwright.sync_api import Page, expect
 
 from conftest import ESCALATE_AFTER_S
 
-OPT = ["Ни разу", "Несколько дней", "Более половины дней", "Почти каждый день"]
+# Варианты ответа — дословно по валидированным русским версиям (Золотарева, 2023)
+PHQ_OPT = ["Совсем нет", "В течение нескольких дней", "Более, чем половину этого времени", "Почти каждый день"]
+GAD_OPT = ["Совсем нет", "В течение нескольких дней", "Более чем половину этого времени", "Почти каждый день"]
 
 
 def fill_questionnaire(page: Page, item9: int) -> None:
     page.get_by_role("button", name="Заполнить анкету").click()
+    expect(page.get_by_text("Снижение интереса и удовольствия от привычных дел")).to_be_visible()
     for i in range(16):
-        page.get_by_role("radio", name=OPT[item9 if i == 8 else 1]).click()
+        opts = PHQ_OPT if i < 9 else GAD_OPT
+        page.get_by_role("radio", name=opts[item9 if i == 8 else 1], exact=True).click()
         if i < 15:
             expect(page.get_by_text(f"Вопрос {i + 2} из 16")).to_be_visible()
     page.get_by_role("button", name="Готово").click()

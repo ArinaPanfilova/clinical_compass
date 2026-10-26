@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { api, newKey, type Mode, type SelfReportBody } from '../api'
-import { GAD7, OPTIONS, PHQ9 } from '../content'
+import { GAD7, GAD7_OPTIONS, INSTRUCTION, PHQ9, PHQ9_OPTIONS, SCALE_SOURCES } from '../content'
 import type { PatientBundle } from '../types'
 import { MessagesPanel } from './MessagesPanel'
 import { TrendChart } from './TrendChart'
@@ -180,11 +180,12 @@ function Questionnaire({ onDone, onCancel }: { onDone: (a: { phq9: (number | nul
   const done = vals.every(v => v !== null)
   return (
     <div>
-      <p className="q-step">Вопрос {i + 1} из {items.length} · за последние 2 недели, как часто вас беспокоило</p>
+      <p className="q-step">Вопрос {i + 1} из {items.length} · {items[i].s === 'phq9' ? 'PHQ-9' : 'GAD-7'}</p>
+      <p className="faint q-instruction">{INSTRUCTION}</p>
       <div className="progress"><div style={{ width: `${((i + 1) / items.length) * 100}%` }} /></div>
       <p className="q-text">{items[i].t}</p>
       <div className="q-options" role="radiogroup">
-        {OPTIONS.map((o, v) => (
+        {(items[i].s === 'phq9' ? PHQ9_OPTIONS : GAD7_OPTIONS).map((o, v) => (
           <button key={o} role="radio" aria-checked={vals[i] === v} aria-pressed={vals[i] === v} onClick={() => pick(v)}>{o}</button>
         ))}
       </div>
@@ -196,6 +197,7 @@ function Questionnaire({ onDone, onCancel }: { onDone: (a: { phq9: (number | nul
         <button className="btn quiet" style={{ marginLeft: 'auto' }} onClick={onCancel}>Выйти</button>
       </div>
       <p className="faint" style={{ marginTop: 14 }}>Можно пропустить вопрос. Ответ на вопрос 9 — о мыслях причинить себе вред — особенно важен для врача.</p>
+      <p className="faint" style={{ marginTop: 6, fontSize: 11.5 }}>{SCALE_SOURCES[items[i].s]}</p>
     </div>
   )
 }
