@@ -77,6 +77,41 @@ def test_open_alert_is_not_duplicated_by_new_report(client):
     assert len(open_alerts(client, "P-001", "SAFE-002")) == 1
 
 
+def confirm(client, rule):
+    r = client.post("/api/patients/P-001/decisions", headers=auth(client, "ivanova"),
+                    json={"finding_rule_id": rule, "action": "confirm"})
+    assert r.status_code == 200, r.text
+
+
+@pytest.mark.parametrize("unrelated", [{"emergency": True}, {"medication_taken": "taken"},
+                                       {"diary_text": "сегодня спокойнее"}])
+def test_decided_alert_is_not_raised_again_by_unrelated_report(client, unrelated):
+    # Врач уже решил по п.9; отметка о приёме или экстренная кнопка не дают нового повода по тем же ответам
+    h = auth(client, "anna")
+    client.post("/api/patients/P-001/self-report", json=report(2), headers=h)
+    confirm(client, "SAFE-002")
+    client.post("/api/patients/P-001/self-report", json=unrelated, headers=h)
+    assert open_alerts(client, "P-001", "SAFE-002") == []
+
+
+def test_decided_alert_is_raised_again_by_new_questionnaire_with_same_answer(client):
+    h = auth(client, "anna")
+    client.post("/api/patients/P-001/self-report", json=report(2), headers=h)
+    confirm(client, "SAFE-002")
+    client.post("/api/patients/P-001/self-report", json=report(2), headers=h)
+    assert len(open_alerts(client, "P-001", "SAFE-002")) == 1
+
+
+def test_decided_emergency_is_raised_again_only_by_new_press(client):
+    h = auth(client, "anna")
+    client.post("/api/patients/P-001/self-report", json={"emergency": True}, headers=h)
+    confirm(client, "SAFE-001")
+    client.post("/api/patients/P-001/self-report", json={"medication_taken": "taken"}, headers=h)
+    assert open_alerts(client, "P-001", "SAFE-001") == []
+    client.post("/api/patients/P-001/self-report", json={"emergency": True}, headers=h)
+    assert len(open_alerts(client, "P-001", "SAFE-001")) == 1
+
+
 def test_invalid_questionnaire_rejected_and_nothing_saved(client, db_path):
     before = count(db_path, "SELECT COUNT(*) FROM assessments")
     bad = {"questionnaires": [{"scale": "phq9", "answers": [5] * 9}], "diary_text": "не должно сохраниться"}

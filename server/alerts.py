@@ -41,8 +41,13 @@ def get_alert(conn: sqlite3.Connection, aid: str) -> dict | None:
 
 
 def create_alerts(conn: sqlite3.Connection, pid: str, evaluation: dict, saved_at: str,
-                  created_at: str | None = None) -> list[dict]:
-    """Алерты по находкам kind='alert'. Открытый алерт по тому же правилу не дублируется."""
+                  created_at: str | None = None, new_facts: tuple[str, ...] | None = None) -> list[dict]:
+    """Алерты по находкам kind='alert'. Открытый алерт по тому же правилу не дублируется.
+
+    new_facts — префиксы фактов, которые принёс этот самоотчёт. Если по правилу уже был закрытый
+    решением врача алерт, новый создаётся только когда правило опирается на свежие данные:
+    иначе отметка о приёме подняла бы тот же сигнал по тем же старым ответам.
+    """
     lead, _ = access.lead_doctor(conn, pid)
     if lead is None:
         return []
@@ -50,8 +55,11 @@ def create_alerts(conn: sqlite3.Connection, pid: str, evaluation: dict, saved_at
     for f in evaluation["findings"]:
         if f["kind"] != "alert":
             continue
-        if conn.execute("SELECT 1 FROM alerts WHERE patient_id = ? AND rule_id = ? AND status != 'closed'",
-                        (pid, f["rule_id"])).fetchone():
+        statuses = {r[0] for r in conn.execute("SELECT status FROM alerts WHERE patient_id = ? AND rule_id = ?",
+                                               (pid, f["rule_id"]))}
+        if statuses - {"closed"}:
+            continue
+        if statuses and new_facts is not None and not any(k.startswith(new_facts) for k in f["evidence"]):
             continue
         aid, at = uuid.uuid4().hex, created_at or now()
         conn.execute("INSERT INTO alerts (id, patient_id, rule_id, priority, title, assigned_to, saved_at, created_at) "

@@ -313,7 +313,10 @@ def create_app(db_path: str | Path, secret: str = "dev-secret-change-me", escala
             if body.emergency:
                 conn.execute("UPDATE patients SET emergency_active = 1 WHERE id = ?", (pid,))
             ev = evaluate(build_record(conn, pid))
-            created = alerts.create_alerts(conn, pid, ev, saved_at)
+            new_facts = tuple([f"{q.scale}." for q in body.questionnaires] + ["primary."] * bool(body.questionnaires)
+                              + ["text."] * bool(body.diary_text) + ["ae."] * bool(body.adverse_event)
+                              + ["patient.emergency_button"] * body.emergency)
+            created = alerts.create_alerts(conn, pid, ev, saved_at, new_facts=new_facts)
             resp = {"saved_at": saved_at, "evaluation": ev, "alerts_created": [a["id"] for a in created],
                     "patient_messages": [f["patient_message"] for f in ev["findings"] if f.get("patient_message")]}
             if idempotency_key:
