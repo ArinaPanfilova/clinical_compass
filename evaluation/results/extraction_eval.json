@@ -1,0 +1,1961 @@
+{
+  "meta": {
+    "n": 300,
+    "test_seed": 2026,
+    "dev_seed": 42
+  },
+  "test": {
+    "n_docs": 300,
+    "groups": {
+      "diagnoses": {
+        "tp": 601,
+        "fp": 149,
+        "fn": 132,
+        "precision": 0.8013333333333333,
+        "recall": 0.819918144611187,
+        "f1": 0.8105192178017531
+      },
+      "medications": {
+        "tp": 638,
+        "fp": 14,
+        "fn": 36,
+        "precision": 0.9785276073619632,
+        "recall": 0.9465875370919882,
+        "f1": 0.9622926093514329
+      },
+      "doses": {
+        "tp": 595,
+        "fp": 0,
+        "fn": 36,
+        "precision": 1.0,
+        "recall": 0.9429477020602218,
+        "f1": 0.9706362153344209
+      },
+      "allergies": {
+        "tp": 65,
+        "fp": 0,
+        "fn": 78,
+        "precision": 1.0,
+        "recall": 0.45454545454545453,
+        "f1": 0.625
+      }
+    },
+    "safety": {
+      "epilepsy_or_organic_brain_lesion": {
+        "confusion": {
+          "True": {
+            "True": 43,
+            "False": 0,
+            "None": 8
+          },
+          "False": {
+            "True": 24,
+            "False": 75,
+            "None": 0
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 150
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 51,
+            "predicted": 67,
+            "precision": 0.6417910447761194,
+            "recall": 0.8431372549019608,
+            "f1": 0.7288135593220338
+          },
+          "False": {
+            "support": 99,
+            "predicted": 75,
+            "precision": 1.0,
+            "recall": 0.7575757575757576,
+            "f1": 0.8620689655172413
+          },
+          "None": {
+            "support": 150,
+            "predicted": 158,
+            "precision": 0.9493670886075949,
+            "recall": 1.0,
+            "f1": 0.974025974025974
+          }
+        },
+        "macro_f1": 0.8549694996217497,
+        "accuracy": 0.8933333333333333
+      },
+      "pregnancy": {
+        "confusion": {
+          "True": {
+            "True": 15,
+            "False": 0,
+            "None": 2
+          },
+          "False": {
+            "True": 1,
+            "False": 20,
+            "None": 16
+          },
+          "None": {
+            "True": 2,
+            "False": 0,
+            "None": 244
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 17,
+            "predicted": 18,
+            "precision": 0.8333333333333334,
+            "recall": 0.8823529411764706,
+            "f1": 0.8571428571428571
+          },
+          "False": {
+            "support": 37,
+            "predicted": 20,
+            "precision": 1.0,
+            "recall": 0.5405405405405406,
+            "f1": 0.7017543859649124
+          },
+          "None": {
+            "support": 246,
+            "predicted": 262,
+            "precision": 0.9312977099236641,
+            "recall": 0.991869918699187,
+            "f1": 0.9606299212598425
+          }
+        },
+        "macro_f1": 0.8398423881225373,
+        "accuracy": 0.93
+      },
+      "breastfeeding": {
+        "confusion": {
+          "True": {
+            "True": 10,
+            "False": 0,
+            "None": 6
+          },
+          "False": {
+            "True": 0,
+            "False": 42,
+            "None": 0
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 242
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 16,
+            "predicted": 10,
+            "precision": 1.0,
+            "recall": 0.625,
+            "f1": 0.7692307692307693
+          },
+          "False": {
+            "support": 42,
+            "predicted": 42,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "None": {
+            "support": 242,
+            "predicted": 248,
+            "precision": 0.9758064516129032,
+            "recall": 1.0,
+            "f1": 0.9877551020408163
+          }
+        },
+        "macro_f1": 0.918995290423862,
+        "accuracy": 0.98
+      },
+      "renal_gfr_below_60": {
+        "confusion": {
+          "True": {
+            "True": 35,
+            "False": 0,
+            "None": 10
+          },
+          "False": {
+            "True": 0,
+            "False": 86,
+            "None": 15
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 154
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 45,
+            "predicted": 35,
+            "precision": 1.0,
+            "recall": 0.7777777777777778,
+            "f1": 0.8750000000000001
+          },
+          "False": {
+            "support": 101,
+            "predicted": 86,
+            "precision": 1.0,
+            "recall": 0.8514851485148515,
+            "f1": 0.9197860962566845
+          },
+          "None": {
+            "support": 154,
+            "predicted": 179,
+            "precision": 0.8603351955307262,
+            "recall": 1.0,
+            "f1": 0.9249249249249248
+          }
+        },
+        "macro_f1": 0.9065703403938699,
+        "accuracy": 0.9166666666666666
+      },
+      "hepatic_insufficiency": {
+        "confusion": {
+          "True": {
+            "True": 55,
+            "False": 0,
+            "None": 6
+          },
+          "False": {
+            "True": 0,
+            "False": 57,
+            "None": 35
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 147
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 61,
+            "predicted": 55,
+            "precision": 1.0,
+            "recall": 0.9016393442622951,
+            "f1": 0.9482758620689655
+          },
+          "False": {
+            "support": 92,
+            "predicted": 57,
+            "precision": 1.0,
+            "recall": 0.6195652173913043,
+            "f1": 0.7651006711409396
+          },
+          "None": {
+            "support": 147,
+            "predicted": 188,
+            "precision": 0.7819148936170213,
+            "recall": 1.0,
+            "f1": 0.8776119402985074
+          }
+        },
+        "macro_f1": 0.8636628245028041,
+        "accuracy": 0.8633333333333333
+      },
+      "maoi_within_2_weeks": {
+        "confusion": {
+          "True": {
+            "True": 27,
+            "False": 0,
+            "None": 5
+          },
+          "False": {
+            "True": 0,
+            "False": 75,
+            "None": 10
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 183
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 32,
+            "predicted": 27,
+            "precision": 1.0,
+            "recall": 0.84375,
+            "f1": 0.9152542372881356
+          },
+          "False": {
+            "support": 85,
+            "predicted": 75,
+            "precision": 1.0,
+            "recall": 0.8823529411764706,
+            "f1": 0.9375
+          },
+          "None": {
+            "support": 183,
+            "predicted": 198,
+            "precision": 0.9242424242424242,
+            "recall": 1.0,
+            "f1": 0.9606299212598425
+          }
+        },
+        "macro_f1": 0.9377947195159927,
+        "accuracy": 0.95
+      },
+      "cardiovascular_disease": {
+        "confusion": {
+          "True": {
+            "True": 51,
+            "False": 0,
+            "None": 1
+          },
+          "False": {
+            "True": 21,
+            "False": 55,
+            "None": 15
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 157
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 52,
+            "predicted": 72,
+            "precision": 0.7083333333333334,
+            "recall": 0.9807692307692307,
+            "f1": 0.8225806451612903
+          },
+          "False": {
+            "support": 91,
+            "predicted": 55,
+            "precision": 1.0,
+            "recall": 0.6043956043956044,
+            "f1": 0.7534246575342465
+          },
+          "None": {
+            "support": 157,
+            "predicted": 173,
+            "precision": 0.9075144508670521,
+            "recall": 1.0,
+            "f1": 0.9515151515151515
+          }
+        },
+        "macro_f1": 0.8425068180702294,
+        "accuracy": 0.8766666666666667
+      },
+      "endocrine_disorder": {
+        "confusion": {
+          "True": {
+            "True": 64,
+            "False": 0,
+            "None": 0
+          },
+          "False": {
+            "True": 22,
+            "False": 44,
+            "None": 21
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 149
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 64,
+            "predicted": 86,
+            "precision": 0.7441860465116279,
+            "recall": 1.0,
+            "f1": 0.8533333333333333
+          },
+          "False": {
+            "support": 87,
+            "predicted": 44,
+            "precision": 1.0,
+            "recall": 0.5057471264367817,
+            "f1": 0.6717557251908397
+          },
+          "None": {
+            "support": 149,
+            "predicted": 170,
+            "precision": 0.8764705882352941,
+            "recall": 1.0,
+            "f1": 0.9341692789968652
+          }
+        },
+        "macro_f1": 0.8197527791736793,
+        "accuracy": 0.8566666666666667
+      },
+      "substance_dependence": {
+        "confusion": {
+          "True": {
+            "True": 47,
+            "False": 0,
+            "None": 12
+          },
+          "False": {
+            "True": 29,
+            "False": 67,
+            "None": 0
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 145
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 59,
+            "predicted": 76,
+            "precision": 0.618421052631579,
+            "recall": 0.7966101694915254,
+            "f1": 0.6962962962962964
+          },
+          "False": {
+            "support": 96,
+            "predicted": 67,
+            "precision": 1.0,
+            "recall": 0.6979166666666666,
+            "f1": 0.8220858895705522
+          },
+          "None": {
+            "support": 145,
+            "predicted": 157,
+            "precision": 0.9235668789808917,
+            "recall": 1.0,
+            "f1": 0.9602649006622517
+          }
+        },
+        "macro_f1": 0.8262156955097001,
+        "accuracy": 0.8633333333333333
+      },
+      "lactose_intolerance": {
+        "confusion": {
+          "True": {
+            "True": 44,
+            "False": 0,
+            "None": 6
+          },
+          "False": {
+            "True": 0,
+            "False": 28,
+            "None": 72
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 150
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 50,
+            "predicted": 44,
+            "precision": 1.0,
+            "recall": 0.88,
+            "f1": 0.9361702127659575
+          },
+          "False": {
+            "support": 100,
+            "predicted": 28,
+            "precision": 1.0,
+            "recall": 0.28,
+            "f1": 0.43750000000000006
+          },
+          "None": {
+            "support": 150,
+            "predicted": 228,
+            "precision": 0.6578947368421053,
+            "recall": 1.0,
+            "f1": 0.7936507936507937
+          }
+        },
+        "macro_f1": 0.7224403354722505,
+        "accuracy": 0.74
+      },
+      "hypersensitivity_aviandr": {
+        "confusion": {
+          "True": {
+            "True": 10,
+            "False": 0,
+            "None": 13
+          },
+          "False": {
+            "True": 0,
+            "False": 26,
+            "None": 17
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 234
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 23,
+            "predicted": 10,
+            "precision": 1.0,
+            "recall": 0.43478260869565216,
+            "f1": 0.6060606060606061
+          },
+          "False": {
+            "support": 43,
+            "predicted": 26,
+            "precision": 1.0,
+            "recall": 0.6046511627906976,
+            "f1": 0.7536231884057971
+          },
+          "None": {
+            "support": 234,
+            "predicted": 264,
+            "precision": 0.8863636363636364,
+            "recall": 1.0,
+            "f1": 0.9397590361445783
+          }
+        },
+        "macro_f1": 0.7664809435369939,
+        "accuracy": 0.9
+      }
+    },
+    "allergy_status": {
+      "accuracy": 0.7266666666666667,
+      "confusion": {
+        "denied → denied": 72,
+        "denied → not_mentioned": 29,
+        "not_mentioned → denied": 5,
+        "not_mentioned → not_mentioned": 91,
+        "present → not_mentioned": 48,
+        "present → present": 55
+      }
+    },
+    "dangerous": {
+      "total": 50,
+      "false_at_true": 0,
+      "none_at_true": 50,
+      "by_key": {
+        "hypersensitivity_aviandr": {
+          "false_at_true": 0,
+          "none_at_true": 13
+        },
+        "epilepsy_or_organic_brain_lesion": {
+          "false_at_true": 0,
+          "none_at_true": 8
+        },
+        "maoi_within_2_weeks": {
+          "false_at_true": 0,
+          "none_at_true": 5
+        },
+        "renal_gfr_below_60": {
+          "false_at_true": 0,
+          "none_at_true": 10
+        },
+        "hepatic_insufficiency": {
+          "false_at_true": 0,
+          "none_at_true": 6
+        },
+        "pregnancy": {
+          "false_at_true": 0,
+          "none_at_true": 2
+        },
+        "breastfeeding": {
+          "false_at_true": 0,
+          "none_at_true": 6
+        }
+      },
+      "contraindication_positives": 245,
+      "positives_by_key": {
+        "hypersensitivity_aviandr": 23,
+        "epilepsy_or_organic_brain_lesion": 51,
+        "maoi_within_2_weeks": 32,
+        "renal_gfr_below_60": 45,
+        "hepatic_insufficiency": 61,
+        "pregnancy": 17,
+        "breastfeeding": 16
+      },
+      "rule_of_three_upper": null,
+      "miss_rate_ci": [
+        0.20408163265306123,
+        0.15836591478172418,
+        0.2589340865042345
+      ],
+      "examples": [
+        {
+          "doc_id": "test-2026-0001",
+          "template": "Б",
+          "key": "renal_gfr_below_60",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0002",
+          "template": "Б",
+          "key": "hypersensitivity_aviandr",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0006",
+          "template": "А",
+          "key": "hypersensitivity_aviandr",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0018",
+          "template": "В",
+          "key": "hepatic_insufficiency",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0021",
+          "template": "Б",
+          "key": "renal_gfr_below_60",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0029",
+          "template": "Б",
+          "key": "epilepsy_or_organic_brain_lesion",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0030",
+          "template": "Б",
+          "key": "maoi_within_2_weeks",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0046",
+          "template": "Б",
+          "key": "hypersensitivity_aviandr",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0058",
+          "template": "В",
+          "key": "hepatic_insufficiency",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0063",
+          "template": "А",
+          "key": "renal_gfr_below_60",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0069",
+          "template": "А",
+          "key": "hypersensitivity_aviandr",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0072",
+          "template": "В",
+          "key": "hypersensitivity_aviandr",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0073",
+          "template": "Б",
+          "key": "hypersensitivity_aviandr",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0082",
+          "template": "А",
+          "key": "maoi_within_2_weeks",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0084",
+          "template": "В",
+          "key": "epilepsy_or_organic_brain_lesion",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0097",
+          "template": "В",
+          "key": "hypersensitivity_aviandr",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0137",
+          "template": "А",
+          "key": "breastfeeding",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0140",
+          "template": "А",
+          "key": "renal_gfr_below_60",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0141",
+          "template": "Б",
+          "key": "breastfeeding",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0149",
+          "template": "А",
+          "key": "renal_gfr_below_60",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0151",
+          "template": "В",
+          "key": "hepatic_insufficiency",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0159",
+          "template": "Б",
+          "key": "breastfeeding",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0171",
+          "template": "А",
+          "key": "breastfeeding",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0171",
+          "template": "А",
+          "key": "hypersensitivity_aviandr",
+          "predicted": null,
+          "evidence": null
+        },
+        {
+          "doc_id": "test-2026-0172",
+          "template": "Б",
+          "key": "renal_gfr_below_60",
+          "predicted": null,
+          "evidence": null
+        }
+      ]
+    },
+    "cautions_missed": {
+      "cardiovascular_disease": {
+        "false_at_true": 0,
+        "none_at_true": 1
+      },
+      "endocrine_disorder": {
+        "false_at_true": 0,
+        "none_at_true": 0
+      },
+      "substance_dependence": {
+        "false_at_true": 0,
+        "none_at_true": 12
+      },
+      "lactose_intolerance": {
+        "false_at_true": 0,
+        "none_at_true": 6
+      }
+    },
+    "by_template": {
+      "А": {
+        "n_docs": 106,
+        "groups": {
+          "diagnoses": {
+            "tp": 224,
+            "fp": 74,
+            "fn": 53,
+            "precision": 0.7516778523489933,
+            "recall": 0.8086642599277978,
+            "f1": 0.7791304347826086
+          },
+          "medications": {
+            "tp": 227,
+            "fp": 5,
+            "fn": 10,
+            "precision": 0.978448275862069,
+            "recall": 0.9578059071729957,
+            "f1": 0.9680170575692962
+          },
+          "doses": {
+            "tp": 207,
+            "fp": 0,
+            "fn": 10,
+            "precision": 1.0,
+            "recall": 0.9539170506912442,
+            "f1": 0.9764150943396226
+          },
+          "allergies": {
+            "tp": 18,
+            "fp": 0,
+            "fn": 32,
+            "precision": 1.0,
+            "recall": 0.36,
+            "f1": 0.5294117647058824
+          }
+        },
+        "safety_macro_f1": {
+          "epilepsy_or_organic_brain_lesion": 0.8275229523602978,
+          "pregnancy": 0.9318181818181818,
+          "breastfeeding": 0.8850574712643677,
+          "renal_gfr_below_60": 0.8486193655685182,
+          "hepatic_insufficiency": 1.0,
+          "maoi_within_2_weeks": 0.9441344620291989,
+          "cardiovascular_disease": 0.8409903164620146,
+          "endocrine_disorder": 0.8960519740129934,
+          "substance_dependence": 0.7634956238729824,
+          "lactose_intolerance": 0.829012629748939,
+          "hypersensitivity_aviandr": 0.7442949795820323
+        },
+        "dangerous": 15,
+        "false_at_true": 0
+      },
+      "Б": {
+        "n_docs": 86,
+        "groups": {
+          "diagnoses": {
+            "tp": 188,
+            "fp": 33,
+            "fn": 15,
+            "precision": 0.8506787330316742,
+            "recall": 0.9261083743842364,
+            "f1": 0.8867924528301887
+          },
+          "medications": {
+            "tp": 189,
+            "fp": 5,
+            "fn": 11,
+            "precision": 0.9742268041237113,
+            "recall": 0.945,
+            "f1": 0.9593908629441624
+          },
+          "doses": {
+            "tp": 177,
+            "fp": 0,
+            "fn": 11,
+            "precision": 1.0,
+            "recall": 0.9414893617021277,
+            "f1": 0.9698630136986303
+          },
+          "allergies": {
+            "tp": 22,
+            "fp": 0,
+            "fn": 18,
+            "precision": 1.0,
+            "recall": 0.55,
+            "f1": 0.7096774193548387
+          }
+        },
+        "safety_macro_f1": {
+          "epilepsy_or_organic_brain_lesion": 0.77010078387458,
+          "pregnancy": 0.7816627816627818,
+          "breastfeeding": 0.8238095238095239,
+          "renal_gfr_below_60": 0.8541498438213994,
+          "hepatic_insufficiency": 1.0,
+          "maoi_within_2_weeks": 0.88713236561735,
+          "cardiovascular_disease": 0.8233766233766234,
+          "endocrine_disorder": 0.9402209226770631,
+          "substance_dependence": 0.7349274080908264,
+          "lactose_intolerance": 0.8073615411076712,
+          "hypersensitivity_aviandr": 0.835343755071131
+        },
+        "dangerous": 17,
+        "false_at_true": 0
+      },
+      "В": {
+        "n_docs": 108,
+        "groups": {
+          "diagnoses": {
+            "tp": 189,
+            "fp": 42,
+            "fn": 64,
+            "precision": 0.8181818181818182,
+            "recall": 0.7470355731225297,
+            "f1": 0.7809917355371901
+          },
+          "medications": {
+            "tp": 222,
+            "fp": 4,
+            "fn": 15,
+            "precision": 0.9823008849557522,
+            "recall": 0.9367088607594937,
+            "f1": 0.958963282937365
+          },
+          "doses": {
+            "tp": 211,
+            "fp": 0,
+            "fn": 15,
+            "precision": 1.0,
+            "recall": 0.9336283185840708,
+            "f1": 0.965675057208238
+          },
+          "allergies": {
+            "tp": 25,
+            "fp": 0,
+            "fn": 28,
+            "precision": 1.0,
+            "recall": 0.4716981132075472,
+            "f1": 0.641025641025641
+          }
+        },
+        "safety_macro_f1": {
+          "epilepsy_or_organic_brain_lesion": 0.9459876543209877,
+          "pregnancy": 0.7802054154995332,
+          "breastfeeding": 1.0,
+          "renal_gfr_below_60": 1.0,
+          "hepatic_insufficiency": 0.49628450106157107,
+          "maoi_within_2_weeks": 0.9780280906688916,
+          "cardiovascular_disease": 0.8739319232385488,
+          "endocrine_disorder": 0.5515031571011214,
+          "substance_dependence": 0.9677351770375027,
+          "lactose_intolerance": 0.4960616725322608,
+          "hypersensitivity_aviandr": 0.7111565089093178
+        },
+        "dangerous": 18,
+        "false_at_true": 0
+      }
+    },
+    "top_errors": {
+      "diagnoses": [
+        [
+          "лишнее ('E14.9', 'confirmed')",
+          43
+        ],
+        [
+          "лишнее ('I10', 'confirmed')",
+          24
+        ],
+        [
+          "лишнее ('I25.9', 'confirmed')",
+          21
+        ],
+        [
+          "лишнее ('K72.9', 'confirmed')",
+          14
+        ],
+        [
+          "пропуск ('K72.1', 'confirmed')",
+          12
+        ],
+        [
+          "лишнее ('N18.9', 'confirmed')",
+          11
+        ],
+        [
+          "пропуск ('E10.9', 'confirmed')",
+          11
+        ],
+        [
+          "пропуск ('F41.0', 'suspected')",
+          7
+        ]
+      ],
+      "renal_gfr_below_60": [
+        [
+          "эталон False → None",
+          15
+        ],
+        [
+          "эталон True → None",
+          10
+        ]
+      ],
+      "cardiovascular_disease": [
+        [
+          "эталон False → True",
+          21
+        ],
+        [
+          "эталон False → None",
+          15
+        ],
+        [
+          "эталон True → None",
+          1
+        ]
+      ],
+      "medications": [
+        [
+          "лишнее ('авиандр', 'current')",
+          14
+        ],
+        [
+          "пропуск ('миртазапин', 'current')",
+          12
+        ],
+        [
+          "пропуск ('дулоксетин', 'current')",
+          7
+        ],
+        [
+          "пропуск ('бромдигидрохлорфенилбензодиазепин', 'current')",
+          7
+        ],
+        [
+          "пропуск ('миртазапин', 'cancelled')",
+          4
+        ],
+        [
+          "пропуск ('дулоксетин', 'cancelled')",
+          4
+        ],
+        [
+          "пропуск ('кетоконазол', 'current')",
+          2
+        ]
+      ],
+      "doses": [
+        [
+          "пропуск ('дулоксетин', 60.0)",
+          9
+        ],
+        [
+          "пропуск ('миртазапин', 15.0)",
+          8
+        ],
+        [
+          "пропуск ('миртазапин', 30.0)",
+          8
+        ],
+        [
+          "пропуск ('бромдигидрохлорфенилбензодиазепин', 1.0)",
+          5
+        ],
+        [
+          "пропуск ('кетоконазол', 200.0)",
+          2
+        ],
+        [
+          "пропуск ('бромдигидрохлорфенилбензодиазепин', 0.5)",
+          2
+        ],
+        [
+          "пропуск ('дулоксетин', 30.0)",
+          2
+        ]
+      ],
+      "allergies": [
+        [
+          "пропуск авиандр",
+          16
+        ],
+        [
+          "пропуск цефтриаксон",
+          13
+        ],
+        [
+          "пропуск пенициллин",
+          12
+        ],
+        [
+          "пропуск амоксициллин",
+          9
+        ],
+        [
+          "пропуск прокаин",
+          7
+        ],
+        [
+          "пропуск метамизол натрия",
+          6
+        ],
+        [
+          "пропуск йод",
+          5
+        ],
+        [
+          "пропуск лидокаин",
+          3
+        ]
+      ],
+      "hypersensitivity_aviandr": [
+        [
+          "эталон False → None",
+          17
+        ],
+        [
+          "эталон True → None",
+          13
+        ]
+      ],
+      "epilepsy_or_organic_brain_lesion": [
+        [
+          "эталон False → True",
+          24
+        ],
+        [
+          "эталон True → None",
+          8
+        ]
+      ],
+      "endocrine_disorder": [
+        [
+          "эталон False → True",
+          22
+        ],
+        [
+          "эталон False → None",
+          21
+        ]
+      ],
+      "lactose_intolerance": [
+        [
+          "эталон False → None",
+          72
+        ],
+        [
+          "эталон True → None",
+          6
+        ]
+      ],
+      "hepatic_insufficiency": [
+        [
+          "эталон False → None",
+          35
+        ],
+        [
+          "эталон True → None",
+          6
+        ]
+      ],
+      "substance_dependence": [
+        [
+          "эталон False → True",
+          29
+        ],
+        [
+          "эталон True → None",
+          12
+        ]
+      ],
+      "pregnancy": [
+        [
+          "эталон False → None",
+          16
+        ],
+        [
+          "эталон None → True",
+          2
+        ],
+        [
+          "эталон True → None",
+          2
+        ],
+        [
+          "эталон False → True",
+          1
+        ]
+      ],
+      "maoi_within_2_weeks": [
+        [
+          "эталон False → None",
+          10
+        ],
+        [
+          "эталон True → None",
+          5
+        ]
+      ],
+      "breastfeeding": [
+        [
+          "эталон True → None",
+          6
+        ]
+      ]
+    },
+    "latency_ms": {
+      "p50": 1.9925105152651668,
+      "p95": 3.114672936499119
+    }
+  },
+  "dev": {
+    "n_docs": 300,
+    "groups": {
+      "diagnoses": {
+        "tp": 727,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "medications": {
+        "tp": 696,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "doses": {
+        "tp": 632,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "allergies": {
+        "tp": 135,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      }
+    },
+    "safety": {
+      "epilepsy_or_organic_brain_lesion": {
+        "confusion": {
+          "True": {
+            "True": 57,
+            "False": 0,
+            "None": 0
+          },
+          "False": {
+            "True": 0,
+            "False": 85,
+            "None": 0
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 158
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 57,
+            "predicted": 57,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "False": {
+            "support": 85,
+            "predicted": 85,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "None": {
+            "support": 158,
+            "predicted": 158,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "macro_f1": 1.0,
+        "accuracy": 1.0
+      },
+      "pregnancy": {
+        "confusion": {
+          "True": {
+            "True": 24,
+            "False": 0,
+            "None": 0
+          },
+          "False": {
+            "True": 0,
+            "False": 40,
+            "None": 0
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 236
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 24,
+            "predicted": 24,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "False": {
+            "support": 40,
+            "predicted": 40,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "None": {
+            "support": 236,
+            "predicted": 236,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "macro_f1": 1.0,
+        "accuracy": 1.0
+      },
+      "breastfeeding": {
+        "confusion": {
+          "True": {
+            "True": 16,
+            "False": 0,
+            "None": 0
+          },
+          "False": {
+            "True": 0,
+            "False": 44,
+            "None": 0
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 240
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 16,
+            "predicted": 16,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "False": {
+            "support": 44,
+            "predicted": 44,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "None": {
+            "support": 240,
+            "predicted": 240,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "macro_f1": 1.0,
+        "accuracy": 1.0
+      },
+      "renal_gfr_below_60": {
+        "confusion": {
+          "True": {
+            "True": 54,
+            "False": 0,
+            "None": 0
+          },
+          "False": {
+            "True": 0,
+            "False": 97,
+            "None": 0
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 149
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 54,
+            "predicted": 54,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "False": {
+            "support": 97,
+            "predicted": 97,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "None": {
+            "support": 149,
+            "predicted": 149,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "macro_f1": 1.0,
+        "accuracy": 1.0
+      },
+      "hepatic_insufficiency": {
+        "confusion": {
+          "True": {
+            "True": 46,
+            "False": 0,
+            "None": 0
+          },
+          "False": {
+            "True": 0,
+            "False": 99,
+            "None": 0
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 155
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 46,
+            "predicted": 46,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "False": {
+            "support": 99,
+            "predicted": 99,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "None": {
+            "support": 155,
+            "predicted": 155,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "macro_f1": 1.0,
+        "accuracy": 1.0
+      },
+      "maoi_within_2_weeks": {
+        "confusion": {
+          "True": {
+            "True": 38,
+            "False": 0,
+            "None": 0
+          },
+          "False": {
+            "True": 0,
+            "False": 90,
+            "None": 0
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 172
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 38,
+            "predicted": 38,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "False": {
+            "support": 90,
+            "predicted": 90,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "None": {
+            "support": 172,
+            "predicted": 172,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "macro_f1": 1.0,
+        "accuracy": 1.0
+      },
+      "cardiovascular_disease": {
+        "confusion": {
+          "True": {
+            "True": 63,
+            "False": 0,
+            "None": 0
+          },
+          "False": {
+            "True": 0,
+            "False": 109,
+            "None": 0
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 128
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 63,
+            "predicted": 63,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "False": {
+            "support": 109,
+            "predicted": 109,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "None": {
+            "support": 128,
+            "predicted": 128,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "macro_f1": 1.0,
+        "accuracy": 1.0
+      },
+      "endocrine_disorder": {
+        "confusion": {
+          "True": {
+            "True": 44,
+            "False": 0,
+            "None": 0
+          },
+          "False": {
+            "True": 0,
+            "False": 86,
+            "None": 0
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 170
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 44,
+            "predicted": 44,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "False": {
+            "support": 86,
+            "predicted": 86,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "None": {
+            "support": 170,
+            "predicted": 170,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "macro_f1": 1.0,
+        "accuracy": 1.0
+      },
+      "substance_dependence": {
+        "confusion": {
+          "True": {
+            "True": 57,
+            "False": 0,
+            "None": 0
+          },
+          "False": {
+            "True": 0,
+            "False": 98,
+            "None": 0
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 145
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 57,
+            "predicted": 57,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "False": {
+            "support": 98,
+            "predicted": 98,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "None": {
+            "support": 145,
+            "predicted": 145,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "macro_f1": 1.0,
+        "accuracy": 1.0
+      },
+      "lactose_intolerance": {
+        "confusion": {
+          "True": {
+            "True": 47,
+            "False": 0,
+            "None": 0
+          },
+          "False": {
+            "True": 0,
+            "False": 92,
+            "None": 0
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 161
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 47,
+            "predicted": 47,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "False": {
+            "support": 92,
+            "predicted": 92,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "None": {
+            "support": 161,
+            "predicted": 161,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "macro_f1": 1.0,
+        "accuracy": 1.0
+      },
+      "hypersensitivity_aviandr": {
+        "confusion": {
+          "True": {
+            "True": 25,
+            "False": 0,
+            "None": 0
+          },
+          "False": {
+            "True": 0,
+            "False": 41,
+            "None": 0
+          },
+          "None": {
+            "True": 0,
+            "False": 0,
+            "None": 234
+          }
+        },
+        "per_value": {
+          "True": {
+            "support": 25,
+            "predicted": 25,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "False": {
+            "support": 41,
+            "predicted": 41,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "None": {
+            "support": 234,
+            "predicted": 234,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "macro_f1": 1.0,
+        "accuracy": 1.0
+      }
+    },
+    "allergy_status": {
+      "accuracy": 1.0,
+      "confusion": {
+        "denied → denied": 86,
+        "not_mentioned → not_mentioned": 113,
+        "present → present": 101
+      }
+    },
+    "dangerous": {
+      "total": 0,
+      "false_at_true": 0,
+      "none_at_true": 0,
+      "by_key": {
+        "hypersensitivity_aviandr": {
+          "false_at_true": 0,
+          "none_at_true": 0
+        },
+        "epilepsy_or_organic_brain_lesion": {
+          "false_at_true": 0,
+          "none_at_true": 0
+        },
+        "maoi_within_2_weeks": {
+          "false_at_true": 0,
+          "none_at_true": 0
+        },
+        "renal_gfr_below_60": {
+          "false_at_true": 0,
+          "none_at_true": 0
+        },
+        "hepatic_insufficiency": {
+          "false_at_true": 0,
+          "none_at_true": 0
+        },
+        "pregnancy": {
+          "false_at_true": 0,
+          "none_at_true": 0
+        },
+        "breastfeeding": {
+          "false_at_true": 0,
+          "none_at_true": 0
+        }
+      },
+      "contraindication_positives": 260,
+      "positives_by_key": {
+        "hypersensitivity_aviandr": 25,
+        "epilepsy_or_organic_brain_lesion": 57,
+        "maoi_within_2_weeks": 38,
+        "renal_gfr_below_60": 54,
+        "hepatic_insufficiency": 46,
+        "pregnancy": 24,
+        "breastfeeding": 16
+      },
+      "rule_of_three_upper": 0.011538461538461539,
+      "miss_rate_ci": [
+        0.0,
+        0.0,
+        0.014560251302296528
+      ],
+      "examples": []
+    },
+    "cautions_missed": {
+      "cardiovascular_disease": {
+        "false_at_true": 0,
+        "none_at_true": 0
+      },
+      "endocrine_disorder": {
+        "false_at_true": 0,
+        "none_at_true": 0
+      },
+      "substance_dependence": {
+        "false_at_true": 0,
+        "none_at_true": 0
+      },
+      "lactose_intolerance": {
+        "false_at_true": 0,
+        "none_at_true": 0
+      }
+    },
+    "by_template": {
+      "А": {
+        "n_docs": 110,
+        "groups": {
+          "diagnoses": {
+            "tp": 282,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "medications": {
+            "tp": 246,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "doses": {
+            "tp": 224,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "allergies": {
+            "tp": 46,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "safety_macro_f1": {
+          "epilepsy_or_organic_brain_lesion": 1.0,
+          "pregnancy": 1.0,
+          "breastfeeding": 1.0,
+          "renal_gfr_below_60": 1.0,
+          "hepatic_insufficiency": 1.0,
+          "maoi_within_2_weeks": 1.0,
+          "cardiovascular_disease": 1.0,
+          "endocrine_disorder": 1.0,
+          "substance_dependence": 1.0,
+          "lactose_intolerance": 1.0,
+          "hypersensitivity_aviandr": 1.0
+        },
+        "dangerous": 0,
+        "false_at_true": 0
+      },
+      "Б": {
+        "n_docs": 88,
+        "groups": {
+          "diagnoses": {
+            "tp": 212,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "medications": {
+            "tp": 203,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "doses": {
+            "tp": 184,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "allergies": {
+            "tp": 42,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "safety_macro_f1": {
+          "epilepsy_or_organic_brain_lesion": 1.0,
+          "pregnancy": 1.0,
+          "breastfeeding": 1.0,
+          "renal_gfr_below_60": 1.0,
+          "hepatic_insufficiency": 1.0,
+          "maoi_within_2_weeks": 1.0,
+          "cardiovascular_disease": 1.0,
+          "endocrine_disorder": 1.0,
+          "substance_dependence": 1.0,
+          "lactose_intolerance": 1.0,
+          "hypersensitivity_aviandr": 1.0
+        },
+        "dangerous": 0,
+        "false_at_true": 0
+      },
+      "В": {
+        "n_docs": 102,
+        "groups": {
+          "diagnoses": {
+            "tp": 233,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "medications": {
+            "tp": 247,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "doses": {
+            "tp": 224,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          },
+          "allergies": {
+            "tp": 47,
+            "fp": 0,
+            "fn": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0
+          }
+        },
+        "safety_macro_f1": {
+          "epilepsy_or_organic_brain_lesion": 1.0,
+          "pregnancy": 1.0,
+          "breastfeeding": 1.0,
+          "renal_gfr_below_60": 1.0,
+          "hepatic_insufficiency": 1.0,
+          "maoi_within_2_weeks": 1.0,
+          "cardiovascular_disease": 1.0,
+          "endocrine_disorder": 1.0,
+          "substance_dependence": 1.0,
+          "lactose_intolerance": 1.0,
+          "hypersensitivity_aviandr": 1.0
+        },
+        "dangerous": 0,
+        "false_at_true": 0
+      }
+    },
+    "top_errors": {},
+    "latency_ms": {
+      "p50": 1.7117310198955238,
+      "p95": 2.5681508646812294
+    }
+  }
+}
