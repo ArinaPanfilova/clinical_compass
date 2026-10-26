@@ -7,6 +7,7 @@ from .rules_engine import run_rules, load_rules, check_auto_actions
 from .drugs import check_drug, load_card
 from .text_screen import screen_text
 from .analytics import aviandr_report
+from .therapy import therapy_options
 from .extraction import extract
 
 __all__ = [
@@ -15,5 +16,5 @@ __all__ = [
     "classify_change", "reliable_change_threshold", "trend",
     "run_rules", "load_rules", "check_auto_actions",
     "check_drug", "load_card", "screen_text",
-    "aviandr_report", "extract",
+    "aviandr_report", "therapy_options", "extract",
 ]

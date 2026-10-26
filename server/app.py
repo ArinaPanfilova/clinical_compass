@@ -22,6 +22,7 @@ from pydantic import BaseModel, Field
 
 from kompas_core import ENGINE_VERSION, aviandr_report, evaluate_patient, extract, load_card, score
 from kompas_core.scales import ScaleInputError
+from kompas_core.therapy import therapy_options
 
 from . import access, alerts
 from .consent import CONSENT, VERSION as CONSENT_VERSION
@@ -207,7 +208,8 @@ def create_app(db_path: str | Path, secret: str = "dev-secret-change-me", escala
             "SELECT id FROM alerts WHERE patient_id = ? ORDER BY created_at", (pid,))] if doctor else []
         refs = [dict(r) for r in conn.execute("SELECT * FROM referrals WHERE patient_id = ? ORDER BY id", (pid,))]
         return {"record": record, "evaluation": evaluate(record), "link": link, "alerts": pa,
-                "decisions": decisions_for(conn, pid) if doctor else [], "referrals": refs}
+                "decisions": decisions_for(conn, pid) if doctor else [], "referrals": refs,
+                "therapy_options": therapy_options(record) if doctor else []}
 
     @api.get("/health")
     def health(conn: sqlite3.Connection = Depends(get_conn)):

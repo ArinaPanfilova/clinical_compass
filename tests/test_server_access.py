@@ -122,9 +122,10 @@ def test_bundle_contains_evaluation(client):
     assert b["link"] == "lead"
     assert {a["rule_id"] for a in b["alerts"]} >= {"SAFE-001", "SAFE-002"}
     assert [(d["finding_rule_id"], d["action"]) for d in b["decisions"]] == [("SAFE-002", "confirm")]
+    assert b["therapy_options"][0]["guideline"]["id"] == "301_3"            # F32.1 → КР депрессии
 
 
 def test_patient_bundle_hides_doctor_workflow(client):
     """Пациенту не нужны служебные алерты и журнал решений врача."""
     b = client.get("/api/patients/P-005", headers=auth(client, "maria")).json()
-    assert b["alerts"] == [] and b["decisions"] == []
+    assert b["alerts"] == [] and b["decisions"] == [] and b["therapy_options"] == []
