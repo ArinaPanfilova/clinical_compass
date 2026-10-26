@@ -5,3 +5,7 @@ __pycache__/
 *.pyc
 synthetic/cohort.jsonl
 data/
+*.tsbuildinfo
+*.db
+*.db-wal
+*.db-shm
