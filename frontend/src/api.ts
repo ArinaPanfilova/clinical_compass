@@ -1,4 +1,4 @@
-import type { Alert, Decision, DocumentExtraction, Message, PatientBundle, User } from './types'
+import type { Alert, Decision, DocumentExtraction, Message, PatientBundle, Referral, User } from './types'
 
 // Два режима:
 // live — работает сервер (python -m server) по адресу /api: вход, роли, алерты, сообщения;
@@ -87,6 +87,11 @@ export const api = {
     req<DocumentExtraction>(`/patients/${pid}/documents/extract`, { method: 'POST', json: { text } }),
   updateSafety: (pid: string, facts: Record<string, boolean | null>, source: 'document' | 'manual', document_id?: number) =>
     req<PatientBundle>(`/patients/${pid}/safety-profile`, { method: 'POST', json: { facts, source, document_id } }),
+  issueReferral: (pid: string, body: Pick<Referral, 'necessity' | 'urgency' | 'reason' | 'rule_id'>) =>
+    req<Referral>(`/patients/${pid}/referrals`, { method: 'POST', json: body }),
+  referralStatus: (id: number, status: Referral['status'], note?: string) =>
+    req<Referral>(`/referrals/${id}/status`, { method: 'POST', json: { status, note } }),
+  acceptConsent: (version: string) => req<{ ok: boolean }>('/consent', { method: 'POST', json: { version } }),
   reset: () => req<{ ok: boolean }>('/demo/reset', { method: 'POST' }),
   // SSE: EventSource не умеет заголовки, поэтому токен — параметром
   stream: () => new EventSource(`${BASE}/events/stream?token=${encodeURIComponent(token ?? '')}`),

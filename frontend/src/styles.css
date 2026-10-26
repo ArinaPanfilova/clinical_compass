@@ -449,3 +449,20 @@ ul, ol { margin: 0; }
 .mini { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 0 9px; font-size: 12.5px; line-height: 22px; color: var(--ink-2); }
 .mini:hover { border-color: var(--brand); color: var(--brand-ink); }
 .panel-head .btn { margin-left: auto; padding: 4px 10px; font-size: 13px; white-space: nowrap; }
+
+/* ---------- Направление и согласие ---------- */
+.referral { display: grid; gap: 10px; }
+.ref-item { display: grid; gap: 4px; padding: 10px 12px; border-radius: var(--r-m); border: 1px solid var(--line); border-left: 3px solid var(--want); }
+.ref-item.mandatory { border-left-color: var(--must); }
+.ref-item p { font-size: 14px; }
+.ref-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.ref-form { display: grid; gap: 8px; }
+.ref-choice { border: 0; padding: 0; margin: 0; display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+.ref-choice legend { margin-bottom: 4px; }
+.ref-choice label { display: inline-flex; gap: 6px; align-items: center; font-size: 14px; }
+.ref-patient { border-left: 4px solid var(--want); }
+.ref-patient.mandatory { border-left-color: var(--must); }
+.consent-points { display: grid; gap: 8px; padding-left: 18px; color: var(--ink-2); }
+.consent-check { display: flex; gap: 10px; align-items: flex-start; font-weight: 500; }
+.consent-check input { margin-top: 4px; }
+.sos-inline { border: 0; border-radius: var(--r-m); padding: 12px; background: var(--must); color: #fff; font-weight: 600; }

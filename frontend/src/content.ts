@@ -92,3 +92,7 @@ export const DEMO_ACCOUNTS: { login: string; name: string; note: string; role: '
 ]
 
 export const PRIORITY_LABEL: Record<string, string> = { emergency: 'Экстренно', urgent: 'Срочно', planned: 'Планово', info: 'Для сведения' }
+
+export const NECESSITY_LABEL = { mandatory: 'Обязательно', desirable: 'Желательно' } as const
+export const URGENCY_LABEL = { emergency: 'экстренно', urgent: 'срочно', planned: 'планово' } as const
+export const REFERRAL_STATUS = { issued: 'оформлено', scheduled: 'записан на приём', completed: 'консультация состоялась', cancelled: 'отменено' } as const

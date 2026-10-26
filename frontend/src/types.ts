@@ -96,6 +96,7 @@ export interface PatientBundle {
   link?: 'lead' | 'deputy' | 'self'
   alerts?: Alert[]
   decisions?: Decision[]
+  referrals?: Referral[]
 }
 
 export interface Decision {
@@ -108,11 +109,29 @@ export interface Decision {
 
 export type Role = 'doctor' | 'patient' | 'researcher'
 
+export interface Consent { version: string; title: string; points: string[]; basis: string }
+
 export interface User {
   id: string
   role: Role
   display_name: string
   patient_id: string | null
+  consent_required?: boolean
+  consent?: Consent | null
+}
+
+export interface Referral {
+  id: number
+  patient_id: string
+  doctor_id: string
+  necessity: 'mandatory' | 'desirable'
+  urgency: 'emergency' | 'urgent' | 'planned'
+  reason: string
+  rule_id: string | null
+  status: 'issued' | 'scheduled' | 'completed' | 'cancelled'
+  note: string | null
+  created_at: string
+  updated_at: string
 }
 
 export interface Alert {
